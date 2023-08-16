@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/TagCloud@2.2.0/dist/TagCloud.min.js"></script>
+    <title>Viraj Patel Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mediastyle.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+    <canvas class="webgl"></canvas>
+    <section class="section">
+        <div>
+            <h1 style="margin-left: 10px;">Viraj Patel</h1>
+            <p class="bioText">I'm a web/mobile developer with an enthusiatic approach to creating beautiful and engaging applications and services.</p>
+            <p id="nativetext" class="noticeText">You're on mobile, use a desktop browser to interact with this natively.</p>
+        </div>
+    </section>
+    <div class="sectionTwo">
+        <h2 class="sectionTwoTitle">Projects</h2>
+        <div class="maindiv">
+            <div id="projects" class="cardcenter">
+                <div id="cardOne" class="card" onclick="location.href='https://play.google.com/store/apps/details?id=com.cople.viraj.projectbridge&hl=en_US&gl=US'">
+                    <p class="cardTitle">Cople Android</p>
+                    <p class="cardText">Cople is an android social media app written in Java that allows users to connect, share, and control their privacy. To know more just click here to go to the official google play page for Cople. There's support for wearos.</p>
+                </div>
+        
+                <div class="card">
+                    <p class="cardTitle">Cople IOS</p>
+                    <p class="cardText">This is the same project as cople android, but this project of Cople is specifically for ios devices along with support for ipados, watchos, carplay, and tvos.</p>
+                </div>
+        
+                <div class="card" onclick="location.href='https://cople.app/pwa'">
+                    <p class="cardTitle">Cople Web</p>
+                    <p class="cardText">This version of cople is pwa and is designed specifically for desktop browser.</p>
+                </div>
+        
+                <div class="card" onclick="location.href='https://cople.app/mobile'">
+                    <p class="cardTitle">Cople PWA</p>
+                    <p class="cardText">This version of cople is also pwa but is designed for mobile/tablet browsers.</p>
+                </div>
+        
+                <div class="card" onclick="location.href='https://github.com/viraj325/ContactSpring'">
+                    <p class="cardTitle">Contact Spring</p>
+                    <p class="cardText">Locally hosted CRUD contact directory application created using Spring written in Java, HTML, and CSS.</p>
+                </div>
+        
+                <div class="card" onclick="location.href='https://github.com/ACLPKotlinOrg/ACLPKotlin'">
+                    <p class="cardTitle">ACLPKotlin</p>
+                    <p class="cardText">ACLPKotlin is an open-source android application project written in Kotlin that automatically generates programming files via user's speech.</p>
+                </div>
+        
+                <div class="card" onclick="location.href='https://cople.app'">
+                    <p class="cardTitle">Cople Landing Page</p>
+                    <p class="cardText">The official static landing site for Cople Project, created using Javascript(jQuery), HTML, and CSS</p>
+                </div>
+        
+                <div class="card" onclick="location.href='https://www.npmjs.com/package/water_faker'">
+                    <h4 class="cardTitle" >Water Faker</h4>
+                    <p class="cardText">Water is an open-source project written in node.js and allows clients/users to generate random fake user-related data with a lot of advanced customization options.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cloudDiv" id="cloud_jquery">
+        <h2 class="sectionTwoTitle">Skills/Tools</h2>
+        <div class="content"></div>
+    </div>
+    <div class="cloudDiv" id="cloud_jquery_mobile">
+        <h2 class="sectionTwoTitle">Skills</h2>
+        <p class="cloudP">JavaScript, CSS, HTML, PHP, Python, Java, Swift, Dart</p>
+
+        <h2 class="sectionTwoTitle">Tools</h2>
+        <p class="cloudP"> ReactJS, git, Jetpack Compose, Flutter, PostgreSQL, SwiftUI, NodeJS, Firebase, Spring, MongoDB, AWS, MySQL, jQuery, Flask, Jira, Github, NPM</p>
+    </div>
+    <section class="section">
+        <div style="width: 90%; text-align: center;">
+            <h2>Contact me</h2>
+            <form id="email" action="mailto:virajpatel325@gmail.com" method="GET" enctype="text/plain">
+                <input placeholder="Name" class="textfield" type="text" name="name"><br>
+                <input placeholder="E-mail" class="textfield" type="text" name="mail"><br>
+                <input placeholder="Message" class="textfield" type="text" name="comment"><br>
+            </form>
+
+            <div class="buttonDiv">
+                <input class="sendButton" form="email" type="submit" value="Send">
+                <button class="linkedinButton" onclick="location.href='https://www.linkedin.com/in/viraj-patel-b9baa3143/'"></button>
+                <button class="githubButton" onclick="location.href='https://github.com/viraj325'"></button>
+            </div>
+        </div>
+    </section>
+    <script src="./three.min.js"></script>
+    <script src="./gsap.min.js"></script>
+    <script src="./script.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("cardOne").mouseenter(function() {
+                console.log("hit");
+                $("myModal").css("display", "block");
+            });
+            
+            $("cardOne").mouseleave(function(){
+                $("myModal").css("display", "none");
+            });
+        });
+    </script>
+    <script>
+        if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            console.log("Mobile");
+            $("#nativetext").show();
+            $("#cloud_jquery").hide();
+            $("#cloud_jquery_mobile").show();
+        } else {
+            console.log("Dekstop");
+            $("#nativetext").hide();
+            $("#cloud_jquery").show();
+            $("#cloud_jquery_mobile").hide();
+        }
+
+        $(window).on('resize', function() {
+            var win = $(this); //this = window
+            if (win.width() <= 820) {
+                $("#nativetext").show();
+                $("#cloud_jquery").hide();
+                $("#cloud_jquery_mobile").show();
+            } else {
+                $("#nativetext").hide();
+                $("#cloud_jquery").show();
+                $("#cloud_jquery_mobile").hide();
+            }
+        });
+    </script>
+    <script>
+        var modal = document.getElementById("myModal");
+        var divOne = document.getElementById("cardOne");
+        var btn = document.getElementById("myBtn");
+        var span = document.getElementsByClassName("close")[0];
+    
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+            
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+    
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>    
+</body>
+</html>
