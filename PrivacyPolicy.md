@@ -1,4 +1,5 @@
 # Privacy Policy
+* Note: This policy applies to all applications/services provided by Viraj Patel.
 
 **Effective Date:** March 13th, 2025 
 **Last Updated:** March 13th, 2025 
