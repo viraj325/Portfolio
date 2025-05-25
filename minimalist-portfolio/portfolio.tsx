@@ -13,7 +13,7 @@ export default function Component() {
           <div className="text-center mb-24">
             <div className="relative inline-block mb-10">
               <Image
-                src="/placeholder.svg?height=200&width=200"
+                src="https://picsum.photos/200"
                 alt="Profile"
                 width={200}
                 height={200}
@@ -21,13 +21,17 @@ export default function Component() {
               />
             </div>
             <h1 className="text-5xl font-extralight text-gray-900 dark:text-gray-100 mb-6 tracking-tight leading-tight">
-              Alex Johnson
+              Viraj Patel
             </h1>
             <p className="text-2xl font-light text-gray-900 dark:text-gray-100 mb-3 tracking-wide">
-              <span className="text-amber-600 dark:text-amber-400">Creative</span> Developer
+              <span className="text-amber-600 dark:text-amber-400">Software</span> Engineer
             </p>
             <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed tracking-wide font-light">
-              Crafting digital experiences with passion and precision
+              Professional engineer with a passion for building scalable web applications and
+              <span className="text-amber-600 dark:text-amber-400"> innovative</span> solutions. I love
+              <span className="text-amber-600 dark:text-amber-400"> solving problems</span> and
+              <span className="text-amber-600 dark:text-amber-400"> creating</span> user-friendly
+              experiences. My goal is to make technology accessible and enjoyable for everyone.
             </p>
           </div>
 
@@ -60,11 +64,11 @@ export default function Component() {
               <div className="space-y-12">
                 {[
                   {
-                    period: "2022 - Present",
-                    title: "Senior Frontend Developer",
-                    company: "TechFlow Inc.",
+                    period: "2025 - Present",
+                    title: "Senior Software Engineer",
+                    company: "NetJets",
                     description:
-                      "Leading the development of next-generation web applications using React and TypeScript. Mentoring junior developers and establishing best practices for the frontend team.",
+                      "NetJets is a leading private aviation company, providing fractional ownership and jet card services. As a Senior Software Engineer, I lead the development of scalable web applications and design systems.",
                     achievements: [
                       "Improved app performance by 40%",
                       "Led team of 5 developers",
@@ -72,32 +76,16 @@ export default function Component() {
                     ],
                   },
                   {
-                    period: "2020 - 2022",
-                    title: "Full Stack Developer",
-                    company: "Digital Solutions Co.",
+                    period: "2022 - 2025",
+                    title: "Software Engineer",
+                    company: "JPMorganChase",
                     description:
-                      "Built scalable web applications from concept to deployment. Collaborated with designers and product managers to deliver user-centered solutions.",
+                      "JPMorgan Chase is a global leader in financial services, providing solutions to clients in over 100 countries. As a Software Engineer, I developed and maintained web applications for internal and external users.",
                     achievements: [
                       "Launched 3 major products",
                       "Reduced load times by 60%",
                       "Integrated payment systems",
                     ],
-                  },
-                  {
-                    period: "2019 - 2020",
-                    title: "Frontend Developer",
-                    company: "StartupXYZ",
-                    description:
-                      "Developed responsive web interfaces and mobile applications. Worked in an agile environment with rapid iteration cycles.",
-                    achievements: ["Built MVP in 3 months", "Implemented responsive design", "Optimized for mobile"],
-                  },
-                  {
-                    period: "2018 - 2019",
-                    title: "Junior Developer",
-                    company: "WebCraft Agency",
-                    description:
-                      "Started my professional journey building websites and learning modern development practices. Gained experience in various technologies and frameworks.",
-                    achievements: ["Completed 20+ projects", "Learned React & Node.js", "Client satisfaction 95%"],
                   },
                 ].map((job, index) => (
                   <div key={index} className="relative pl-16 group cursor-pointer">
