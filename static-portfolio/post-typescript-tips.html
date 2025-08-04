@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeScript Tips for Better Code - Alex Johnson</title>
+    <meta name="description" content="Advanced TypeScript patterns and techniques for more maintainable code">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet>
+    <style>
+        :root {
+            --amber-25: #fffbf0;
+            --amber-50: #fffbeb;
+            --amber-100: #fef3c7;
+            --amber-400: #fbbf24;
+            --amber-500: #f59e0b;
+            --amber-600: #d97706;
+            --amber-800: #92400e;
+            --amber-900: #78350f;
+            --amber-950: #451a03;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --gray-950: #030712;
+        }
+
+        [data-theme="dark"] {
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #9ca3af;
+            --bg-primary: #030712;
+            --bg-secondary: rgba(17, 24, 39, 0.3);
+            --bg-card: rgba(17, 24, 39, 0.5);
+            --border-primary: #374151;
+            --border-secondary: #1f2937;
+            --accent-primary: #fbbf24;
+            --accent-secondary: #f59e0b;
+            --gradient-from: rgba(120, 53, 15, 0.15);
+            --gradient-via1: rgba(69, 26, 3, 0.08);
+            --gradient-via2: rgba(17, 24, 39, 0.12);
+            --gradient-to: #030712;
+            --shadow-color: rgba(120, 53, 15, 0.2);
+        }
+
+        [data-theme="light"] {
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --text-tertiary: #4b5563;
+            --bg-primary: #ffffff;
+            --bg-secondary: rgba(255, 255, 255, 0.5);
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --border-primary: #e5e7eb;
+            --border-secondary: #f3f4f6;
+            --accent-primary: #d97706;
+            --accent-secondary: #f59e0b;
+            --gradient-from: rgba(254, 243, 199, 0.4);
+            --gradient-via1: rgba(255, 251, 235, 0.2);
+            --gradient-via2: rgba(255, 251, 240, 0.1);
+            --gradient-to: #ffffff;
+            --shadow-color: rgba(254, 243, 199, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            transition: all 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .gradient-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, var(--gradient-from), var(--gradient-via1), var(--gradient-via2), var(--gradient-to));
+            animation: gradient-pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes gradient-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 20;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background: rgba(17, 24, 39, 0.8);
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-primary);
+        }
+
+        .theme-toggle svg {
+            width: 16px;
+            height: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .sun-icon {
+            color: var(--accent-primary);
+        }
+
+        .moon-icon {
+            color: var(--accent-secondary);
+            position: absolute;
+            transform: rotate(90deg) scale(0);
+        }
+
+        [data-theme="dark"] .sun-icon {
+            transform: rotate(-90deg) scale(0);
+        }
+
+        [data-theme="dark"] .moon-icon {
+            transform: rotate(0deg) scale(1);
+        }
+
+        .nav-button {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 20;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-weight: 300;
+            transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] .nav-button {
+            background: rgba(17, 24, 39, 0.8);
+        }
+
+        .nav-button:hover {
+            background: var(--bg-primary);
+            color: var(--accent-primary);
+        }
+
+        .nav-button svg {
+            width: 14px;
+            height: 14px;
+            color: var(--accent-primary);
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 64px 24px;
+        }
+
+        .post-header {
+            margin-bottom: 64px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            font-weight: 300;
+        }
+
+        .post-date {
+            color: var(--accent-primary);
+        }
+
+        .post-category {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .post-title {
+            font-size: 2.5rem;
+            font-weight: 200;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+
+        .post-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.025em;
+            line-height: 1.4;
+        }
+
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        .tag {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-weight: 300;
+        }
+
+        .post-content {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.025em;
+        }
+
+        .post-content h2 {
+            font-size: 1.875rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            margin: 48px 0 24px 0;
+            letter-spacing: 0.025em;
+        }
+
+        .post-content h3 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            margin: 40px 0 20px 0;
+            letter-spacing: 0.025em;
+        }
+
+        .post-content h2 .accent,
+        .post-content h3 .accent {
+            color: var(--accent-primary);
+        }
+
+        .post-content p {
+            margin-bottom: 24px;
+        }
+
+        .post-content ul, .post-content ol {
+            margin: 24px 0;
+            padding-left: 24px;         }
+
+        .post-content li {
+            margin-bottom: 8px;
+        }
+
+        .post-content code {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: var(--accent-primary);
+        }
+
+        .post-content pre {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+
+        .post-content blockquote {
+            border-left: 4px solid var(--accent-primary);
+            padding-left: 24px;
+            margin: 24px 0;
+            font-style: italic;
+            color: var(--text-tertiary);
+        }
+
+        .post-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-secondary);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 300;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-secondary);
+        }
+
+        .nav-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .post-title {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 48px 16px;
+            }
+
+            .post-navigation {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="container">
+        <div class="gradient-bg"></div>
+        
+        <a href="blog.html" class="nav-button">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Blog
+        </a>
+        
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+
+        <div class="content">
+            <article class="post-header">
+                <div class="post-meta">
+                    <span class="post-date">December 20, 2024</span>
+                    <span class="post-category">Tutorial</span>
+                </div>
+                <h1 class="post-title">TypeScript Tips for Better Code</h1>
+                <p class="post-subtitle">
+                    Advanced TypeScript patterns and techniques that will help you write more maintainable and type-safe code. From utility types to conditional types.
+                </p>
+                <div class="post-tags">
+                    <span class="tag">TypeScript</span>
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">Code Quality</span>
+                </div>
+            </article>
+
+            <div class="post-content">
+                <p>
+                    TypeScript has evolved from a simple type checker to a powerful language that enables developers to write more reliable and maintainable code. After years of working with TypeScript in production, I've discovered patterns and techniques that significantly improve code quality and developer experience.
+                </p>
+
+                <h2><span class="accent">Utility</span> Types Mastery</h2>
+                
+                <p>
+                    TypeScript's built-in utility types are incredibly powerful, yet many developers only scratch the surface. Here are some advanced patterns:
+                </p>
+
+                <h3><span class="accent">Pick</span> and Omit</h3>
+                
+                <pre><code>interface User {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  createdAt: Date;
+}
+
+// Create a public user type without sensitive data
+type PublicUser = Omit<User, 'password'>;
+
+// Create a user creation payload
+type CreateUserPayload = Pick<User, 'name' | 'email' | 'password'>;
+
+// Even better: combine with conditional logic
+type UserResponse<T extends boolean> = T extends true 
+  ? User 
+  : PublicUser;</code></pre>
+
+                <h3><span class="accent">Partial</span> and Required</h3>
+                
+                <pre><code>// Make all properties optional for updates
+type UpdateUserPayload = Partial<User>;
+
+// Make specific optional properties required
+type UserWithRequiredEmail = Required<Pick<User, 'email'>> & 
+                             Partial<Omit<User, 'email'>>;</code></pre>
+
+                <h2><span class="accent">Advanced</span> Type Patterns</h2>
+
+                <h3><span class="accent">Branded</span> Types</h3>
+                
+                <p>
+                    Create types that are structurally identical but logically distinct:
+                </p>
+
+                <pre><code>type UserId = string & { readonly brand: unique symbol };
+type PostId = string & { readonly brand: unique symbol };
+
+const createUserId = (id: string): UserId => id as UserId;
+const createPostId = (id: string): PostId => id as PostId;
+
+// This prevents accidental mixing of IDs
+function getUser(userId: UserId) { /* ... */ }
+function getPost(postId: PostId) { /* ... */ }
+
+const userId = createUserId('user-123');
+const postId = createPostId('post-456');
+
+getUser(postId); // TypeScript error!</code></pre>
+
+                <h3><span class="accent">Template</span> Literal Types</h3>
+                
+                <p>
+                    Create powerful string patterns with type safety:
+                </p>
+
+                <pre><code>type EventType = 'click' | 'hover' | 'focus';
+type ElementType = 'button' | 'input' | 'div';
+
+// Generate all possible event handler names
+type EventHandler<T extends EventType> = `on${Capitalize<T>}`;
+
+// Even more advanced: generate CSS selectors
+type CSSSelector<T extends ElementType> = 
+  | T 
+  | `.${string}` 
+  | `#${string}` 
+  | `${T}.${string}`;
+
+type ButtonSelector = CSSSelector<'button'>; 
+// 'button' | '.${string}' | '#${string}' | 'button.${string}'</code></pre>
+
+                <h2><span class="accent">Conditional</span> Types Deep Dive</h2>
+                
+                <p>
+                    Conditional types enable sophisticated type logic:
+                </p>
+
+                <pre><code>// Extract array element type
+type ArrayElement<T> = T extends (infer U)[] ? U : never;
+
+type StringArray = string[];
+type ElementType = ArrayElement<StringArray>; // string
+
+// Create a deep readonly type
+type DeepReadonly<T> = {
+  readonly [P in keyof T]: T[P] extends object 
+    ? DeepReadonly<T[P]> 
+    : T[P];
+};
+
+// Function return type extraction
+type ReturnType<T> = T extends (...args: any[]) => infer R ? R : never;
+
+// Async function return type
+type AsyncReturnType<T> = T extends (...args: any[]) => Promise<infer R> 
+  ? R 
+  : never;</code></pre>
+
+                <h2><span class="accent">Generic</span> Constraints</h2>
+                
+                <p>
+                    Use constraints to create more expressive and safe generic functions:
+                </p>
+
+                <pre><code>// Constrain to objects with specific properties
+function updateEntity<T extends { id: string }>(
+  entity: T, 
+  updates: Partial<Omit<T, 'id'>>
+): T {
+  return { ...entity, ...updates };
+}
+
+// Constrain to specific keys
+function pluck<T, K extends keyof T>(obj: T, keys: K[]): T[K][] {
+  return keys.map(key => obj[key]);
+}
+
+// Usage
+const user = { id: '1', name: 'John', email: 'john@example.com' };
+const values = pluck(user, ['name', 'email']); // string[]</code></pre>
+
+                <h2><span class="accent">Mapped</span> Types</h2>
+                
+                <p>
+                    Create types that transform existing types systematically:
+                </p>
+
+                <pre><code>// Make all properties optional except specified ones
+type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
+
+// Create event handlers from event names
+type EventHandlers<T extends Record<string, any>> = {
+  [K in keyof T as `on${Capitalize<string & K>}`]: (
+    event: T[K]
+  ) => void;
+};
+
+type Events = {
+  click: MouseEvent;
+  keypress: KeyboardEvent;
+};
+
+type Handlers = EventHandlers<Events>;
+// {
+//   onClick: (event: MouseEvent) => void;
+//   onKeypress: (event: KeyboardEvent) => void;
+// }</code></pre>
+
+                <h2><span class="accent">Error</span> Handling Patterns</h2>
+                
+                <p>
+                    TypeScript enables powerful error handling patterns:
+                </p>
+
+                <pre><code>// Result type for better error handling
+type Result<T, E = Error> = 
+  | { success: true; data: T }
+  | { success: false; error: E };
+
+async function fetchUser(id: string): Promise<Result<User>> {
+  try {
+    const user = await api.getUser(id);
+    return { success: true, data: user };
+  } catch (error) {
+    return { success: false, error: error as Error };
+  }
+}
+
+// Usage with type narrowing
+const result = await fetchUser('123');
+if (result.success) {
+  console.log(result.data.name); // TypeScript knows this is User
+} else {
+  console.error(result.error.message); // TypeScript knows this is Error
+}</code></pre>
+
+                <h2><span class="accent">Performance</span> Considerations</h2>
+                
+                <p>
+                    TypeScript compilation performance matters in large codebases:
+                </p>
+
+                <h3>Optimize <span class="accent">Import</span> Types</h3>
+                
+                <pre><code>// Use type-only imports when possible
+import type { User } from './types';
+import { validateUser } from './validation';
+
+// This helps with tree-shaking and compilation speed</code></pre>
+
+                <h3>Avoid <span class="accent">Complex</span> Types</h3>
+                
+                <pre><code>// Instead of deeply nested conditional types
+type Complex<T> = T extends A ? B extends C ? D : E : F;
+
+// Break them down
+type StepOne<T> = T extends A ? B : never;
+type StepTwo<T> = StepOne<T> extends C ? D : E;
+type Simple<T> = T extends A ? StepTwo<T> : F;</code></pre>
+
+                <h2><span class="accent">Testing</span> with Types</h2>
+                
+                <p>
+                    Ensure your types work correctly with compile-time tests:
+                </p>
+
+                <pre><code>// Type assertion tests
+type Equals<X, Y> = (<T>() => T extends X ? 1 : 2) extends 
+                    (<T>() => T extends Y ? 1 : 2) ? true : false;
+
+// Test your utility types
+type Test1 = Equals<ArrayElement<string[]>, string>; // true
+type Test2 = Equals<DeepReadonly<{ a: { b: number } }>, 
+                   { readonly a: { readonly b: number } }>; // true
+
+// Use expectType utility
+declare function expectType<T>(value: T): void;
+
+const user: User = { /* ... */ };
+expectType<PublicUser>(omit(user, 'password'));</code></pre>
+
+                <h2><span class="accent">Configuration</span> Best Practices</h2>
+                
+                <p>
+                    Your <code>tsconfig.json</code> significantly impacts your TypeScript experience:
+                </p>
+
+                <pre><code>{
+  "compilerOptions": {
+    "strict": true,                    // Enable all strict checks
+    "noUncheckedIndexedAccess": true, // Safer array/object access
+    "exactOptionalPropertyTypes": true, // Stricter optional properties
+    "noImplicitReturns": true,        // Ensure all code paths return
+    "noFallthroughCasesInSwitch": true, // Safer switch statements
+    "noImplicitOverride": true,       // Explicit override keyword
+    "allowUnusedLabels": false,       // Catch unused labels
+    "allowUnreachableCode": false     // Catch unreachable code
+  }
+}</code></pre>
+
+                <h2><span class="accent">Real-World</span> Application</h2>
+                
+                <p>
+                    Here's how these patterns come together in a practical example:
+                </p>
+
+                <pre><code>// API client with full type safety
+class ApiClient<TUser extends { id: string }> {
+  async create<TPayload extends Omit<TUser, 'id'>>(
+    payload: TPayload
+  ): Promise<Result<TUser>> {
+    // Implementation
+  }
+
+  async update<TUpdates extends Partial<Omit<TUser, 'id'>>>(
+    id: TUser['id'],
+    updates: TUpdates
+  ): Promise<Result<TUser & TUpdates>> {
+    // Implementation
+  }
+
+  async list<TFilters extends Partial<TUser>>(
+    filters?: TFilters
+  ): Promise<Result<TUser[]>> {
+    // Implementation
+  }
+}
+
+// Usage
+const userClient = new ApiClient<User>();
+const result = await userClient.update('123', { name: 'New Name' });
+
+if (result.success) {
+  // result.data is fully typed as User with updates applied
+  console.log(result.data.name);
+}</code></pre>
+
+                <blockquote>
+                    "TypeScript is not just about preventing runtime errors—it's about encoding your domain knowledge into the type system."
+                </blockquote>
+
+                <p>
+                    These advanced TypeScript patterns enable you to catch more errors at compile time, improve code documentation, and create more maintainable applications. The key is to gradually adopt these patterns as your team's TypeScript expertise grows.
+                </p>
+
+                <p>
+                    Remember: the goal isn't to use every advanced feature, but to use the right features that solve real problems in your codebase. Start simple and evolve your type system as your needs become more complex.
+                </p>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="post-future-web.html" class="nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Previous Post
+                </a>
+                <a href="post-leading-team.html" class="nav-link">
+                    Next Post
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference or default to 'light'
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        body.setAttribute('data-theme', currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>

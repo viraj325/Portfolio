@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lessons from Leading a Development Team - Alex Johnson</title>
+    <meta name="description" content="Reflections on transitioning from individual contributor to team lead">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --amber-25: #fffbf0;
+            --amber-50: #fffbeb;
+            --amber-100: #fef3c7;
+            --amber-400: #fbbf24;
+            --amber-500: #f59e0b;
+            --amber-600: #d97706;
+            --amber-800: #92400e;
+            --amber-900: #78350f;
+            --amber-950: #451a03;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --gray-950: #030712;
+        }
+
+        [data-theme="dark"] {
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #9ca3af;
+            --bg-primary: #030712;
+            --bg-secondary: rgba(17, 24, 39, 0.3);
+            --bg-card: rgba(17, 24, 39, 0.5);
+            --border-primary: #374151;
+            --border-secondary: #1f2937;
+            --accent-primary: #fbbf24;
+            --accent-secondary: #f59e0b;
+            --gradient-from: rgba(120, 53, 15, 0.15);
+            --gradient-via1: rgba(69, 26, 3, 0.08);
+            --gradient-via2: rgba(17, 24, 39, 0.12);
+            --gradient-to: #030712;
+            --shadow-color: rgba(120, 53, 15, 0.2);
+        }
+
+        [data-theme="light"] {
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --text-tertiary: #4b5563;
+            --bg-primary: #ffffff;
+            --bg-secondary: rgba(255, 255, 255, 0.5);
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --border-primary: #e5e7eb;
+            --border-secondary: #f3f4f6;
+            --accent-primary: #d97706;
+            --accent-secondary: #f59e0b;
+            --gradient-from: rgba(254, 243, 199, 0.4);
+            --gradient-via1: rgba(255, 251, 235, 0.2);
+            --gradient-via2: rgba(255, 251, 240, 0.1);
+            --gradient-to: #ffffff;
+            --shadow-color: rgba(254, 243, 199, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            transition: all 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .gradient-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, var(--gradient-from), var(--gradient-via1), var(--gradient-via2), var(--gradient-to));
+            animation: gradient-pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes gradient-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 20;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background: rgba(17, 24, 39, 0.8);
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-primary);
+        }
+
+        .theme-toggle svg {
+            width: 16px;
+            height: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .sun-icon {
+            color: var(--accent-primary);
+        }
+
+        .moon-icon {
+            color: var(--accent-secondary);
+            position: absolute;
+            transform: rotate(90deg) scale(0);
+        }
+
+        [data-theme="dark"] .sun-icon {
+            transform: rotate(-90deg) scale(0);
+        }
+
+        [data-theme="dark"] .moon-icon {
+            transform: rotate(0deg) scale(1);
+        }
+
+        .nav-button {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 20;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-weight: 300;
+            transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] .nav-button {
+            background: rgba(17, 24, 39, 0.8);
+        }
+
+        .nav-button:hover {
+            background: var(--bg-primary);
+            color: var(--accent-primary);
+        }
+
+        .nav-button svg {
+            width: 14px;
+            height: 14px;
+            color: var(--accent-primary);
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 64px 24px;
+        }
+
+        .post-header {
+            margin-bottom: 64px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            font-weight: 300;
+        }
+
+        .post-date {
+            color: var(--accent-primary);
+        }
+
+        .post-category {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .post-title {
+            font-size: 2.5rem;
+            font-weight: 200;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+
+        .post-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.025em;
+            line-height: 1.4;
+        }
+
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        .tag {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-weight: 300;
+        }
+
+        .post-content {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.025em;
+        }
+
+        .post-content h2 {
+            font-size: 1.875rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            margin: 48px 0 24px 0;
+            letter-spacing: 0.025em;
+        }
+
+        .post-content h3 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            margin: 40px 0 20px 0;
+            letter-spacing: 0.025em;
+        }
+
+        .post-content h2 .accent,
+        .post-content h3 .accent {
+            color: var(--accent-primary);
+        }
+
+        .post-content p {
+            margin-bottom: 24px;
+        }
+
+        .post-content ul, .post-content ol {
+            margin: 24px 0;
+            padding-left: 24px;
+        }
+
+        .post-content li {
+            margin-bottom: 8px;
+        }
+
+        .post-content blockquote {
+            border-left: 4px solid var(--accent-primary);
+            padding-left: 24px;
+            margin: 24px 0;
+            font-style: italic;
+            color: var(--text-tertiary);
+        }
+
+        .post-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-secondary);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 300;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-secondary);
+        }
+
+        .nav-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .post-title {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 48px 16px;
+            }
+
+            .post-navigation {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="container">
+        <div class="gradient-bg"></div>
+        
+        <a href="blog.html" class="nav-button">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Blog
+        </a>
+        
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+
+        <div class="content">
+            <article class="post-header">
+                <div class="post-meta">
+                    <span class="post-date">December 12, 2024</span>
+                    <span class="post-category">Career</span>
+                </div>
+                <h1 class="post-title">Lessons from Leading a Development Team</h1>
+                <p class="post-subtitle">
+                    Reflections on transitioning from individual contributor to team lead, including the challenges, victories, and key insights gained along the way.
+                </p>
+                <div class="post-tags">
+                    <span class="tag">Leadership</span>
+                    <span class="tag">Team Management</span>
+                    <span class="tag">Career Growth</span>
+                </div>
+            </article>
+
+            <div class="post-content">
+                <p>
+                    Two years ago, I transitioned from being a senior developer to leading a team of five engineers. The journey has been humbling, challenging, and ultimately rewarding. Here are the most important lessons I've learned about technical leadership.
+                </p>
+
+                <h2><span class="accent">The</span> Mindset Shift</h2>
+                
+                <p>
+                    The biggest change wasn't learning new technical skills—it was fundamentally changing how I measured success. As an individual contributor, success was measured by the code I wrote, the features I shipped, and the bugs I fixed. As a team lead, success became about amplifying others.
+                </p>
+
+                <blockquote>
+                    "Your job as a leader is not to be the smartest person in the room. It's to make everyone else smarter."
+                </blockquote>
+
+                <p>
+                    This shift was initially difficult. I had to resist the urge to jump in and solve technical problems myself, instead focusing on helping team members grow and find solutions independently.
+                </p>
+
+                <h2><span class="accent">Building</span> Trust</h2>
+                
+                <p>
+                    Trust is the foundation of effective leadership, but it's earned through consistent actions, not words. Here's what I learned about building trust:
+                </p>
+
+                <h3><span class="accent">Transparency</span> in Decision Making</h3>
+                
+                <ul>
+                    <li>Share the "why" behind decisions, even when they're unpopular</li>
+                    <li>Admit when you don't know something</li>
+                    <li>Be open about your own mistakes and learning process</li>
+                    <li>Provide context about broader business decisions that affect the team</li>
+                </ul>
+
+                <h3><span class="accent">Consistency</span> in Actions</h3>
+                
+                <p>
+                    Team members watch how you handle different situations. Consistency in your responses, feedback style, and decision-making process builds predictability and trust.
+                </p>
+
+                <h2><span class="accent">Effective</span> Communication</h2>
+                
+                <p>
+                    Communication became my most important skill. Leading a team means constantly translating between different stakeholders: developers, product managers, designers, and executives.
+                </p>
+
+                <h3><span class="accent">One-on-Ones</span> Are Critical</h3>
+                
+                <p>
+                    Weekly one-on-ones became the cornerstone of my management practice. These aren't status updates—they're opportunities to:
+                </p>
+
+                <ul>
+                    <li>Understand individual career goals and motivations</li>
+                    <li>Identify and remove blockers</li>
+                    <li>Provide coaching and feedback</li>
+                    <li>Build personal relationships</li>
+                </ul>
+
+                <p>
+                    I learned to ask better questions: "What's energizing you right now?" "What would you like to be doing more of?" "How can I better support you?"
+                </p>
+
+                <h3><span class="accent">Managing</span> Up</h3>
+                
+                <p>
+                    Protecting my team from unnecessary context switching and politics became a key responsibility. This meant:
+                </p>
+
+                <ul>
+                    <li>Filtering and prioritizing requests from other teams</li>
+                    <li>Advocating for team needs in leadership meetings</li>
+                    <li>Translating business requirements into technical tasks</li>
+                    <li>Celebrating team achievements to upper management</li>
+                </ul>
+
+                <h2><span class="accent">Technical</span> Leadership</h2>
+                
+                <p>
+                    Being a technical leader is different from being the most technical person. It's about making good architectural decisions, maintaining code quality, and ensuring sustainable development practices.
+                </p>
+
+                <h3><span class="accent">Architecture</span> and Standards</h3>
+                
+                <p>
+                    I learned to balance flexibility with consistency. Establishing coding standards and architectural patterns helped the team move faster while maintaining quality:
+                </p>
+
+                <ul>
+                    <li>Created shared libraries and reusable components</li>
+                    <li>Established code review guidelines and best practices</li>
+                    <li>Implemented automated testing and CI/CD pipelines</li>
+                    <li>Documented architectural decisions and their rationale</li>
+                </ul>
+
+                <h3><span class="accent">Knowledge</span> Sharing</h3>
+                
+                <p>
+                    Preventing knowledge silos became crucial for team resilience:
+                </p>
+
+                <ul>
+                    <li>Regular tech talks and code reviews</li>
+                    <li>Pair programming sessions</li>
+                    <li>Documentation culture</li>
+                    <li>Cross-training on critical systems</li>
+                </ul>
+
+                <h2><span class="accent">Handling</span> Difficult Situations</h2>
+                
+                <p>
+                    Leadership inevitably involves difficult conversations and challenging situations. Here are some scenarios I've navigated:
+                </p>
+
+                <h3><span class="accent">Performance</span> Issues</h3>
+                
+                <p>
+                    Addressing performance problems early and directly is crucial. I learned to:
+                </p>
+
+                <ul>
+                    <li>Focus on specific behaviors and outcomes, not personality</li>
+                    <li>Create clear improvement plans with measurable goals</li>
+                    <li>Provide additional support and resources</li>
+                    <li>Document conversations and progress consistently</li>
+                </ul>
+
+                <p>
+                    Most importantly, I learned that sometimes performance issues stem from misaligned expectations or lack of clarity rather than capability.
+                </p>
+
+                <h3><span class="accent">Conflict</span> Resolution</h3>
+                
+                <p>
+                    Technical disagreements are common and healthy, but personal conflicts can be destructive. I developed a framework for handling disputes:
+                </p>
+
+                <ul>
+                    <li>Listen to all perspectives before forming opinions</li>
+                    <li>Focus on shared goals and values</li>
+                    <li>Facilitate discussions rather than imposing solutions</li>
+                    <li>Know when to make executive decisions</li>
+                </ul>
+
+                <h2><span class="accent">Growing</span> Others</h2>
+                
+                <p>
+                    Perhaps the most rewarding aspect of leadership has been watching team members grow and advance in their careers.
+                </p>
+
+                <h3><span class="accent">Mentoring</span> and Coaching</h3>
+                
+                <p>
+                    Each team member has different learning styles and career aspirations. I learned to tailor my approach:
+                </p>
+
+                <ul>
+                    <li><strong>For junior developers:</strong> Focus on fundamentals and provide structured learning paths</li>
+                    <li><strong>For mid-level developers:</strong> Challenge them with complex problems and system design</li>
+                    <li><strong>For senior developers:</strong> Encourage leadership opportunities and cross-functional collaboration</li>
+                </ul>
+
+                <h3><span class="accent">Creating</span> Opportunities</h3>
+                
+                <p>
+                    I made it a priority to create growth opportunities within existing projects:
+                </p>
+
+                <ul>
+                    <li>Rotating team members through different areas of the codebase</li>
+                    <li>Encouraging conference talks and blog posts</li>
+                    <li>Delegating leadership of specific features or initiatives</li>
+                    <li>Supporting attendance at workshops and training programs</li>
+                </ul>
+
+                <h2><span class="accent">Measuring</span> Success</h2>
+                
+                <p>
+                    Leadership success is harder to measure than individual contributor success, but I've found these metrics valuable:
+                </p>
+
+                <ul>
+                    <li><strong>Team velocity:</strong> Are we delivering value consistently?</li>
+                    <li><strong>Code quality:</strong> Are we maintaining technical standards?</li>
+                    <li><strong>Team satisfaction:</strong> Are people engaged and growing?</li>
+                    <li><strong>Knowledge distribution:</strong> Is expertise shared across the team?</li>
+                    <li><strong>Career progression:</strong> Are team members advancing?</li>
+                </ul>
+
+                <h2><span class="accent">Common</span> Mistakes</h2>
+                
+                <p>
+                    Looking back, here are the mistakes I made and what I learned from them:
+                </p>
+
+                <h3><span class="accent">Micromanaging</span></h3>
+                
+                <p>
+                    Early on, I struggled to let go of control. I learned that micromanaging destroys trust and prevents growth. Instead, I focused on setting clear expectations and providing support when needed.
+                </p>
+
+                <h3><span class="accent">Avoiding</span> Difficult Conversations</h3>
+                
+                <p>
+                    I initially postponed challenging discussions, hoping problems would resolve themselves. They rarely do. I learned that addressing issues early and directly is always better than letting them fester.
+                </p>
+
+                <h3><span class="accent">Not</span> Saying No</h3>
+                
+                <p>
+                    Trying to please everyone leads to team burnout and missed deadlines. Learning to push back on unrealistic requests and protect team capacity became essential.
+                </p>
+
+                <h2><span class="accent">The</span> Ongoing Journey</h2>
+                
+                <p>
+                    Leadership is not a destination—it's an ongoing journey of learning and growth. Some practices that continue to help me:
+                </p>
+
+                <ul>
+                    <li><strong>Regular feedback:</strong> Asking for feedback from team members and peers</li>
+                    <li><strong>Continuous learning:</strong> Reading leadership books and attending workshops</li>
+                    <li><strong>Peer support:</strong> Regular discussions with other technical leaders</li>
+                    <li><strong>Self-reflection:</strong> Weekly reviews of what went well and what could improve</li>
+                </ul>
+
+                <blockquote>
+                    "The best leaders are those who are constantly learning and adapting their approach based on their team's needs."
+                </blockquote>
+
+                <h2><span class="accent">Final</span> Thoughts</h2>
+                
+                <p>
+                    Leading a development team has been one of the most challenging and rewarding experiences of my career. The transition from individual contributor to leader requires developing entirely new skills and perspectives.
+                </p>
+
+                <p>
+                    The most important lesson I've learned is that leadership is about serving others, not commanding them. When you focus on removing obstacles, providing growth opportunities, and creating an environment where people can do their best work, amazing things happen.
+                </p>
+
+                <p>
+                    If you're considering making the transition to leadership, know that it's normal to feel overwhelmed at first. Be patient with yourself, seek out mentors, and remember that your primary job is to make your team successful.
+                </p>
+
+                <p>
+                    The code you write as an individual contributor affects the product. The people you develop as a leader affect the entire organization—and that's a responsibility worth embracing.
+                </p>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="post-typescript-tips.html" class="nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Previous Post
+                </a>
+                <a href="post-open-source.html" class="nav-link">
+                    Next Post
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference or default to 'light'
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        body.setAttribute('data-theme', currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>

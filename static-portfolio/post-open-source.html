@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contributing to Open Source Projects - Alex Johnson</title>
+    <meta name="description" content="A beginner's guide to making meaningful contributions to open source projects">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --amber-25: #fffbf0;
+            --amber-50: #fffbeb;
+            --amber-100: #fef3c7;
+            --amber-400: #fbbf24;
+            --amber-500: #f59e0b;
+            --amber-600: #d97706;
+            --amber-800: #92400e;
+            --amber-900: #78350f;
+            --amber-950: #451a03;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --gray-950: #030712;
+        }
+
+        [data-theme="dark"] {
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #9ca3af;
+            --bg-primary: #030712;
+            --bg-secondary: rgba(17, 24, 39, 0.3);
+            --bg-card: rgba(17, 24, 39, 0.5);
+            --border-primary: #374151;
+            --border-secondary: #1f2937;
+            --accent-primary: #fbbf24;
+            --accent-secondary: #f59e0b;
+            --gradient-from: rgba(120, 53, 15, 0.15);
+            --gradient-via1: rgba(69, 26, 3, 0.08);
+            --gradient-via2: rgba(17, 24, 39, 0.12);
+            --gradient-to: #030712;
+            --shadow-color: rgba(120, 53, 15, 0.2);
+        }
+
+        [data-theme="light"] {
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --text-tertiary: #4b5563;
+            --bg-primary: #ffffff;
+            --bg-secondary: rgba(255, 255, 255, 0.5);
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --border-primary: #e5e7eb;
+            --border-secondary: #f3f4f6;
+            --accent-primary: #d97706;
+            --accent-secondary: #f59e0b;
+            --gradient-from: rgba(254, 243, 199, 0.4);
+            --gradient-via1: rgba(255, 251, 235, 0.2);
+            --gradient-via2: rgba(255, 251, 240, 0.1);
+            --gradient-to: #ffffff;
+            --shadow-color: rgba(254, 243, 199, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            transition: all 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .gradient-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, var(--gradient-from), var(--gradient-via1), var(--gradient-via2), var(--gradient-to));
+            animation: gradient-pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes gradient-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 20;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background: rgba(17, 24, 39, 0.8);
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-primary);
+        }
+
+        .theme-toggle svg {
+            width: 16px;
+            height: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .sun-icon {
+            color: var(--accent-primary);
+        }
+
+        .moon-icon {
+            color: var(--accent-secondary);
+            position: absolute;
+            transform: rotate(90deg) scale(0);
+        }
+
+        [data-theme="dark"] .sun-icon {
+            transform: rotate(-90deg) scale(0);
+        }
+
+        [data-theme="dark"] .moon-icon {
+            transform: rotate(0deg) scale(1);
+        }
+
+        .nav-button {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 20;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-weight: 300;
+            transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] .nav-button {
+            background: rgba(17, 24, 39, 0.8);
+        }
+
+        .nav-button:hover {
+            background: var(--bg-primary);
+            color: var(--accent-primary);
+        }
+
+        .nav-button svg {
+            width: 14px;
+            height: 14px;
+            color: var(--accent-primary);
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 64px 24px;
+        }
+
+        .post-header {
+            margin-bottom: 64px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            font-weight: 300;
+        }
+
+        .post-date {
+            color: var(--accent-primary);
+        }
+
+        .post-category {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .post-title {
+            font-size: 2.5rem;
+            font-weight: 200;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+
+        .post-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.025em;
+            line-height: 1.4;
+        }
+
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        .tag {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-weight: 300;
+        }
+
+        .post-content {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.025em;
+        }
+
+        .post-content h2 {
+            font-size: 1.875rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            margin: 48px 0 24px 0;
+            letter-spacing: 0.025em;
+        }
+
+        .post-content h3 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            margin: 40px 0 20px 0;
+            letter-spacing: 0.025em;
+        }
+
+        .post-content h2 .accent,
+        .post-content h3 .accent {
+            color: var(--accent-primary);
+        }
+
+        .post-content p {
+            margin-bottom: 24px;
+        }
+
+        .post-content ul, .post-content ol {
+            margin: 24px 0;
+            padding-left: 24px;
+        }
+
+        .post-content li {
+            margin-bottom: 8px;
+        }
+
+        .post-content code {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: var(--accent-primary);
+        }
+
+        .post-content pre {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+
+        .post-content blockquote {
+            border-left: 4px solid var(--accent-primary);
+            padding-left: 24px;
+            margin: 24px 0;
+            font-style: italic;
+            color: var(--text-tertiary);
+        }
+
+        .post-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-secondary);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 300;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-secondary);
+        }
+
+        .nav-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .post-title {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 48px 16px;
+            }
+
+            .post-navigation {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="container">
+        <div class="gradient-bg"></div>
+        
+        <a href="blog.html" class="nav-button">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Blog
+        </a>
+        
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+
+        <div class="content">
+            <article class="post-header">
+                <div class="post-meta">
+                    <span class="post-date">November 30, 2024</span>
+                    <span class="post-category">Open Source</span>
+                </div>
+                <h1 class="post-title">Contributing to Open Source Projects</h1>
+                <p class="post-subtitle">
+                    A beginner's guide to making meaningful contributions to open source projects, from finding the right project to submitting your first pull request.
+                </p>
+                <div class="post-tags">
+                    <span class="tag">Open Source</span>
+                    <span class="tag">GitHub</span>
+                    <span class="tag">Community</span>
+                </div>
+            </article>
+
+            <div class="post-content">
+                <p>
+                    Contributing to open source projects has been one of the most rewarding aspects of my development career. It's taught me about collaboration, exposed me to different coding styles, and connected me with an amazing global community of developers.
+                </p>
+
+                <p>
+                    If you've been thinking about getting involved but don't know where to start, this guide will walk you through the entire process, from finding your first project to becoming a regular contributor.
+                </p>
+
+                <h2><span class="accent">Why</span> Contribute?</h2>
+                
+                <p>
+                    Before diving into the how, let's talk about the why. Open source contributions offer benefits that extend far beyond the code:
+                </p>
+
+                <ul>
+                    <li><strong>Skill Development:</strong> Exposure to different architectures and coding practices</li>
+                    <li><strong>Portfolio Building:</strong> Public contributions demonstrate your abilities</li>
+                    <li><strong>Networking:</strong> Connect with experienced developers and potential employers</li>
+                    <li><strong>Career Growth:</strong> Many tech companies value open source experience</li>
+                    <li><strong>Giving Back:</strong> Help improve tools that you use daily</li>
+                </ul>
+
+                <blockquote>
+                    "Open source is not just about code—it's about building communities and solving problems together."
+                </blockquote>
+
+                <h2><span class="accent">Finding</span> the Right Project</h2>
+                
+                <p>
+                    The key to successful open source contribution is finding projects that align with your interests, skill level, and available time.
+                </p>
+
+                <h3><span class="accent">Start</span> Small</h3>
+                
+                <p>
+                    Don't aim for React or Vue.js as your first contribution. Look for smaller projects where:
+                </p>
+
+                <ul>
+                    <li>You can understand the codebase relatively quickly</li>
+                    <li>Maintainers are responsive to issues and pull requests</li>
+                    <li>There's good documentation for contributors</li>
+                    <li>The community is welcoming to newcomers</li>
+                </ul>
+
+                <h3><span class="accent">Use</span> What You Know</h3>
+                
+                <p>
+                    Start with tools and libraries you already use. You'll have context about the problem space and motivation to improve the project. Check the GitHub repositories of:
+                </p>
+
+                <ul>
+                    <li>Libraries in your current project's <code>package.json</code></li>
+                    <li>Tools you use daily (editors, CLI tools, etc.)</li>
+                    <li>Documentation sites and tutorials you've found helpful</li>
+                </ul>
+
+                <h3><span class="accent">GitHub</span> Resources</h3>
+                
+                <p>
+                    GitHub has several features to help you find beginner-friendly projects:
+                </p>
+
+                <pre><code># Search for issues labeled "good first issue"
+label:"good first issue" language:javascript
+
+# Find projects that need help
+label:"help wanted" stars:>100 language:typescript
+
+# Look for documentation improvements
+label:documentation is:open</code></pre>
+
+                <p>
+                    Other helpful resources include:
+                </p>
+
+                <ul>
+                    <li><strong>Up For Grabs:</strong> A curated list of tasks for new contributors</li>
+                    <li><strong>First Timers Only:</strong> Issues specifically for first-time contributors</li>
+                    <li><strong>CodeTriage:</strong> Get a different open source issue in your inbox daily</li>
+                </ul>
+
+                <h2><span class="accent">Types</span> of Contributions</h2>
+                
+                <p>
+                    Contributions don't have to be code. Some of the most valuable contributions are:
+                </p>
+
+                <h3><span class="accent">Documentation</span></h3>
+                
+                <ul>
+                    <li>Fix typos and grammar issues</li>
+                    <li>Improve unclear explanations</li>
+                    <li>Add missing examples</li>
+                    <li>Translate documentation to other languages</li>
+                </ul>
+
+                <h3><span class="accent">Bug</span> Reports</h3>
+                
+                <ul>
+                    <li>Report issues with clear reproduction steps</li>
+                    <li>Provide detailed error messages and environment info</li>
+                    <li>Test proposed fixes</li>
+                </ul>
+
+                <h3><span class="accent">Testing</span></h3>
+                
+                <ul>
+                    <li>Add test cases for edge conditions</li>
+                    <li>Improve test coverage</li>
+                    <li>Test beta versions and provide feedback</li>
+                </ul>
+
+                <h3><span class="accent">Code</span></h3>
+                
+                <ul>
+                    <li>Fix bugs</li>
+                    <li>Implement new features</li>
+                    <li>Refactor and optimize existing code</li>
+                    <li>Add accessibility improvements</li>
+                </ul>
+
+                <h2><span class="accent">Making</span> Your First Contribution</h2>
+                
+                <p>
+                    Once you've found a project and identified an issue to work on, here's the step-by-step process:
+                </p>
+
+                <h3>1. <span class="accent">Read</span> the Guidelines</h3>
+                
+                <p>
+                    Most projects have contributing guidelines in files like <code>CONTRIBUTING.md</code> or <code>README.md</code>. These typically cover:
+                </p>
+
+                <ul>
+                    <li>Code style and formatting requirements</li>
+                    <li>Testing expectations</li>
+                    <li>Pull request process</li>
+                    <li>Communication channels</li>
+                </ul>
+
+                <h3>2. <span class="accent">Set</span> Up Your Environment</h3>
+                
+                <pre><code># Fork the repository on GitHub
+# Clone your fork locally
+git clone https://github.com/yourusername/project-name.git
+cd project-name
+
+# Add the original repository as upstream
+git remote add upstream https://github.com/original-owner/project-name.git
+
+# Install dependencies and run tests
+npm install
+npm test</code></pre>
+
+                <h3>3. <span class="accent">Create</span> a Branch</h3>
+                
+                <pre><code># Create a descriptive branch name
+git checkout -b fix-button-accessibility
+
+# Make your changes
+# Write/update tests
+# Ensure all tests pass</code></pre>
+
+                <h3>4. <span class="accent">Write</span> Good Commit Messages</h3>
+                
+                <pre><code># Follow the project's commit message format
+# Example:
+fix: improve button accessibility with proper ARIA labels
+
+- Add aria-label attributes to icon-only buttons
+- Include role="button" for clickable divs
+- Update test suite to verify accessibility attributes
+
+Fixes #123</code></pre>
+
+                <h3>5. <span class="accent">Submit</span> Your Pull Request</h3>
+                
+                <p>
+                    A good pull request includes:
+                </p>
+
+                <ul>
+                    <li>Clear title and description</li>
+                    <li>Reference to the issue it addresses</li>
+                    <li>Screenshots or demos for UI changes</li>
+                    <li>Testing instructions for reviewers</li>
+                </ul>
+
+                <h2><span class="accent">Working</span> with Maintainers</h2>
+                
+                <p>
+                    Maintainers are volunteers who dedicate their time to keeping projects running. Here's how to work effectively with them:
+                </p>
+
+                <h3><span class="accent">Be</span> Patient</h3>
+                
+                <p>
+                    Response times can vary greatly. Don't take slow responses personally—maintainers often juggle multiple projects alongside full-time jobs.
+                </p>
+
+                <h3><span class="accent">Accept</span> Feedback Gracefully</h3>
+                
+                <p>
+                    Code reviews are learning opportunities. Even if your implementation is rejected, you've learned something valuable about the project's architecture and priorities.
+                </p>
+
+                <h3><span class="accent">Follow</span> Up Appropriately</h3>
+                
+                <pre><code># Good: Polite follow-up after reasonable time
+"Hi! Just checking if there's anything else needed for this PR. 
+Happy to make any additional changes."
+
+# Avoid: Demanding immediate attention
+"Why hasn't this been merged yet??"</code></pre>
+
+                <h2><span class="accent">Common</span> Mistakes</h2>
+                
+                <p>
+                    Learn from these common pitfalls:
+                </p>
+
+                <h3><span class="accent">Not</span> Following Guidelines</h3>
+                
+                <p>
+                    Ignoring code style, commit message formats, or testing requirements will slow down the review process.
+                </p>
+
+                <h3><span class="accent">Making</span> Changes Too Large</h3>
+                
+                <p>
+                    Smaller, focused pull requests are easier to review and more likely to be accepted.
+                </p>
+
+                <h3><span class="accent">Not</span> Testing Thoroughly</h3>
+                
+                <p>
+                    Always test your changes in different environments and edge cases.
+                </p>
+
+                <h3><span class="accent">Poor</span> Communication</h3>
+                
+                <p>
+                    Keep maintainers informed about your progress and any blockers you encounter.
+                </p>
+
+                <h2><span class="accent">Building</span> Long-term Relationships</h2>
+                
+                <p>
+                    The most rewarding open source experiences come from building ongoing relationships with projects and communities:
+                </p>
+
+                <h3><span class="accent">Become</span> a Regular</h3>
+                
+                <ul>
+                    <li>Make multiple small contributions rather than one-off large ones</li>
+                    <li>Help triage issues and review other contributors' pull requests</li>
+                    <li>Participate in project discussions and planning</li>
+                    <li>Help newcomers get started</li>
+                </ul>
+
+                <h3><span class="accent">Understand</span> the Project's Vision</h3>
+                
+                <p>
+                    Successful contributors understand not just the code, but the project's goals, constraints, and roadmap.
+                </p>
+
+                <h2><span class="accent">Advanced</span> Contributions</h2>
+                
+                <p>
+                    As you gain experience, consider these ways to make bigger impacts:
+                </p>
+
+                <h3><span class="accent">Feature</span> Development</h3>
+                
+                <p>
+                    Work on larger features by:
+                </p>
+
+                <ul>
+                    <li>Discussing the approach before starting implementation</li>
+                    <li>Breaking large features into smaller, reviewable chunks</li>
+                    <li>Writing RFCs (Request for Comments) for significant changes</li>
+                </ul>
+
+                <h3><span class="accent">Mentoring</span> Others</h3>
+                
+                <p>
+                    Help newcomers by:
+                </p>
+
+                <ul>
+                    <li>Creating "good first issue" labels and descriptions</li>
+                    <li>Reviewing beginner pull requests</li>
+                    <li>Writing contributor guides and tutorials</li>
+                </ul>
+
+                <h2><span class="accent">The</span> Ripple Effect</h2>
+                
+                <p>
+                    Your open source contributions create ripple effects that extend far beyond the immediate code changes:
+                </p>
+
+                <ul>
+                    <li>Improved tools benefit entire development communities</li>
+                    <li>Your contributions inspire others to get involved</li>
+                    <li>You build a network of professional relationships</li>
+                    <li>Your public work becomes part of your professional portfolio</li>
+                </ul>
+
+                <blockquote>
+                    "Every expert was once a beginner. Every pro was once an amateur. Every icon was once an unknown."
+                </blockquote>
+
+                <h2><span class="accent">Getting</span> Started Today</h2>
+                
+                <p>
+                    The best time to start contributing to open source was yesterday. The second best time is today. Here's your action plan:
+                </p>
+
+                <ol>
+                    <li>Look at your current project's dependencies</li>
+                    <li>Find one with good documentation and an active community</li>
+                    <li>Read through open issues and find a documentation fix or small bug</li>
+                    <li>Read the contributing guidelines carefully</li>
+                    <li>Make your first pull request</li>
+                </ol>
+
+                <p>
+                    Remember, the goal isn't to become a maintainer overnight. It's to start learning, contributing, and connecting with the amazing community of developers who make open source possible.
+                </p>
+
+                <p>
+                    Your first contribution might be fixing a typo in a README file. That's perfect—every journey starts with a single step, and the open source community will be there to support you along the way.
+                </p>
+            </div>
+
+            <nav class="post-navigation">
+                <a href="post-leading-team.html" class="nav-link">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Previous Post
+                </a>
+                <a href="post-react-applications.html" class="nav-link">
+                    Next Post
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference or default to 'light'
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        body.setAttribute('data-theme', currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>
