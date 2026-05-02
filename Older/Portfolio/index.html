@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="styles.css">
+        <title>Viraj Patel Portfolio</title>
+    </head>
+    <body>
+		<div class="cursor"></div>
+		<script>
+			const cursor = document.querySelector('.cursor');
+			document.addEventListener('mousemove', e => {
+				//console.log(e) in case for testing in the future
+				cursor.setAttribute("style", "top: " + (e.pageY-10) + "px; left: " + (e.pageX-10) + "px;")
+			})
+		</script>
+        <div class="divcenter">
+            <div class="navbar">
+                <a href="#top">Top</a>
+                <a href="#projects">Projects</a>
+                <a href="mailto:virajpatel325@gmail.com">Contact</a>
+            </div>
+        </div>
+        <div class="maindiv">
+            <div class="divcenter">
+                <div id="top" class="bio">
+                    <p class="bioText">I'm a mobile and a web developer, who loves to play around with new tech by building amazing and magical applications.
+                    </p>
+                </div>
+            </div>
+            <div id="projects" class="cardcenter">
+                <div id="cardOne" class="card">
+                    <p>Cople Android</p>
+                    <button id="myBtn" class="button">Click Me</button>
+                </div>
+
+                <div class="card">
+                    <p class="cardText">Cople IOS</p>
+                </div>
+
+                <div class="card">
+                    <p>Cople Web</p>
+                </div>
+
+                <div class="card">
+                    <p>Cople PWA</p>
+                </div>
+
+                <div class="card">
+                    <p>Blog</p>
+                </div>
+
+                <div class="card">
+                    <p>VTrendingDB</p>
+                </div>
+
+                <div class="card">
+                    <p>CopleLandingPage</p>
+                </div>
+
+                <div class="card">
+                    <p></p>
+                </div>
+            </div>
+            <!--<div class="divcenter">
+                <div class="bio">
+                    <p>Leading Open Source</p>
+                </div>
+            </div>
+            <div class="divcenter">
+                <div class="bio">
+                    <h3>Languages</h3>
+                    <h3>Frameworks/Libraries</h3>
+                </div>
+            </div>
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>Some text in the Modal..</p>
+                </div>
+            </div>
+          <div class="divcenter">
+                <form id="contact" action="mailto:virajpatel325@gmail.com" method="post" enctype="text/plain">
+                    <h3>Send me a E-mail:</h3><br>
+                    <input placeholder="Name" class="textfield" type="text" name="name"><br>
+                    <input placeholder="E-mail" class="textfield" type="text" name="mail"><br>
+                    <input placeholder="Message" class="textfield" type="text" name="comment" size="50"><br>
+                    <div class="divcenter">
+                        <input class="sendButton" type="submit" value="Send">
+                    </div>
+                </form>
+            </div>-->
+        </div>
+    </body>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$("cardOne").mouseenter(function(){
+			console.log("hit");
+			$("myModal").css("display", "block");
+		});
+		
+		$("cardOne").mouseleave(function(){
+			$("myModal").css("display", "none");
+		});
+		});
+	</script>
+    <script>
+        var modal = document.getElementById("myModal");
+		var divOne = document.getElementById("cardOne");
+        var btn = document.getElementById("myBtn");
+        var span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+		
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</html>
