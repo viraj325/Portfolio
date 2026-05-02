@@ -811,32 +811,21 @@
             border-radius: 18px;
             border: 1px solid rgba(209, 213, 219, 0.16);
             background: linear-gradient(135deg, #242b33, #1b2128);
-            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.35);
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.25), 0 0 20px rgba(203, 213, 225, 0.05);
             color: #f8fafc;
             position: relative;
             overflow: hidden;
-            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
+            transition: transform 0.25s ease;
         }
 
         .nfc-card[hidden] {
             display: none;
         }
 
-        .nfc-card:hover {
-            border-color: rgba(209, 213, 219, 0.32);
-            box-shadow: 0 22px 50px rgba(203, 213, 225, 0.16), 0 0 24px rgba(203, 213, 225, 0.1);
-            transform: translateY(-3px);
-        }
-
         [data-theme="dark"] .nfc-card {
             border-color: rgba(209, 213, 219, 0.16);
             background: linear-gradient(135deg, #1e252d, #131922);
-            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        [data-theme="dark"] .nfc-card:hover {
-            border-color: rgba(209, 213, 219, 0.3);
-            box-shadow: 0 24px 54px rgba(203, 213, 225, 0.14), 0 0 26px rgba(203, 213, 225, 0.08);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3), 0 0 22px rgba(203, 213, 225, 0.06);
         }
 
         .nfc-card-top,
@@ -895,11 +884,26 @@
         }
 
         .nfc-card-chip {
-            width: 36px;
-            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 14px;
+            min-width: 60px;
             border-radius: 6px;
-            border: 1px solid rgba(203, 213, 225, 0.18);
+            border: 1px solid rgba(203, 213, 225, 0.24);
             background: rgba(203, 213, 225, 0.08);
+            color: #f8fafc;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nfc-card-chip:hover {
+            background: rgba(203, 213, 225, 0.14);
+            border-color: rgba(203, 213, 225, 0.36);
         }
 
         .hero .subtitle {
@@ -1241,6 +1245,132 @@
 
         .final-section h2 {
             margin-bottom: 32px;
+        }
+
+        .final-section.last-updated {
+            margin-top: 120px;
+        }
+
+        .companies-section {
+            margin-bottom: 96px;
+        }
+
+        .companies-section h2 {
+            font-size: 1.875rem;
+            font-weight: 200;
+            color: var(--text-primary);
+            margin-bottom: 32px;
+            letter-spacing: 0.025em;
+        }
+
+        .companies-section h2 .accent {
+            color: var(--accent-primary);
+        }
+
+        .companies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .company-card {
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .company-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .company-card a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .company-logo {
+            height: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            text-align: center;
+            line-height: 1.2;
+            transition: color 0.3s ease;
+            margin-bottom: 0;
+        }
+
+        .company-card:hover .company-logo {
+            color: var(--accent-primary);
+        }
+
+        .company-name {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .company-card:hover .company-name {
+            color: var(--accent-primary);
+        }
+
+        .company-arrow {
+            display: none;
+            width: 18px;
+            height: 18px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .company-card:hover .company-arrow {
+            display: inline-block;
+            transform: translateX(6px);
+        }
+
+        .company-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            display: block;
+        }
+
+        .final-section.last-updated h2 {
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0;
+            margin-right: 6px;
+        }
+
+        .final-section.last-updated p {
+            font-size: 1rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+        }
+
+        .nfc-card-disclaimer {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(203, 213, 225, 0.6);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
         }
 
         @media (max-width: 768px) {
@@ -1900,13 +2030,14 @@
                     <span class="accent">Software</span> Engineer, Senior
                 </p>
                 <div class="nfc-card" id="nfcCard" hidden>
+                    <span class="nfc-card-disclaimer">Opened via NFC</span>
                     <div class="nfc-card-top">
                         <span class="nfc-card-label">NFC Connect</span>
                         <span class="nfc-card-name">Viraj Patel</span>
                         <span class="nfc-card-role">Software Engineer</span>
                     </div>
                     <div class="nfc-card-bottom">
-                        <div class="nfc-card-chip" aria-hidden="true"></div>
+                        <button class="nfc-card-chip">Save</button>
                         <div class="nfc-card-meta">
                             <span>Columbus, OH</span>
                             <span>viraj325</span>
@@ -2008,17 +2139,60 @@
                 </div>
             </section>
 
+            <!-- Companies Section -->
+            <section class="companies-section">
+                <h2><span class="accent">Companies</span></h2>
+                <div class="companies-grid">
+                    <div class="company-card">
+                        <a href="https://www.wellsfargo.com" target="_blank" rel="noopener noreferrer">
+                        <div class="company-logo">Wells Fargo</div>
+                        <h3 class="company-name">
+                            Wells Fargo
+                            <svg class="company-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </h3>
+                        <p class="company-description">One of the largest financial services companies in the world, providing banking, investment, and mortgage services to millions of customers globally.</p>
+                    </a>
+                    </div>
+                    <div class="company-card">
+                        <a href="https://www.netjets.com" target="_blank" rel="noopener noreferrer">
+                        <div class="company-logo">NetJets</div>
+                        <h3 class="company-name">
+                            NetJets
+                            <svg class="company-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </h3>
+                        <p class="company-description">Leading fractional aircraft ownership company, enabling accessible private aviation through shared ownership and on-demand charter services worldwide.</p>
+                    </a>
+                    </div>
+                    <div class="company-card">
+                        <a href="https://www.jpmorganchase.com" target="_blank" rel="noopener noreferrer">
+                        <div class="company-logo">JPMorgan Chase</div>
+                        <h3 class="company-name">
+                            JPMorgan Chase
+                            <svg class="company-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </h3>
+                        <p class="company-description">Leading global financial services firm offering banking, asset management, and capital markets services to corporations, institutions, and individual clients.</p>
+                    </a>
+                    </div>
+                </div>
+            </section>
+
             <!-- Simple Connect Section -->
             <section class="final-section">
-                <h2>Let's <span class="accent">Collaborate</span></h2>
+                <h2><span class="accent">Let's</span> Collaborate</h2>
                 <p>
                     I'm always interested in new opportunities and meaningful projects.
                 </p>
             </section>
 
-            <section class="final-section">
-                <h2>Last <span class="accent">Updated </span></h2>
-                <p>Feb 10th, 2026</p>
+            <section class="final-section last-updated">
+                <h2>Last <span class="accent">Updated:</span></h2>
+                <p>May 2, 2026</p>
             </section>
         </div>
     </div>
