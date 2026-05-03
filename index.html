@@ -1476,6 +1476,16 @@
             display: block;
         }
 
+        .company-status {
+            margin-top: 4px;
+            margin-bottom: 8px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+        }
+
         .company-stock {
             margin-top: 12px;
             display: inline-flex;
@@ -1520,14 +1530,24 @@
             padding: 0 10px;
         }
 
+        .blog-strip-wrap::before,
         .blog-strip-wrap::after {
             content: '';
             position: absolute;
             top: 0;
-            right: 0;
             width: clamp(44px, 8vw, 96px);
             height: 100%;
             pointer-events: none;
+            z-index: 2;
+        }
+
+        .blog-strip-wrap::before {
+            left: 0;
+            background: linear-gradient(to left, rgba(0, 0, 0, 0), var(--bg-primary));
+        }
+
+        .blog-strip-wrap::after {
+            right: 0;
             background: linear-gradient(to right, rgba(0, 0, 0, 0), var(--bg-primary));
         }
 
@@ -2510,8 +2530,9 @@
                                 <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
                         </h3>
+                        <p class="company-status">Public company</p>
                         <p class="company-description">One of the largest financial services companies in the world, providing banking, investment, and mortgage services to millions of customers globally.</p>
-                        <p class="company-stock"><span class="stock-icon up" aria-hidden="true">▲</span> Public · WFC · $80.90</p>
+                        <p class="company-stock"><span class="stock-icon up" aria-hidden="true">▲</span> WFC · $80.90</p>
                     </a>
                     </div>
                     <div class="company-card">
@@ -2523,8 +2544,9 @@
                                 <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
                         </h3>
+                        <p class="company-status">Private company</p>
                         <p class="company-description">Leading fractional aircraft ownership company, enabling accessible private aviation through shared ownership and on-demand charter services worldwide.</p>
-                        <p class="company-stock"><span class="stock-icon up" aria-hidden="true">▲</span> Private · BRK.B · $473.01</p>
+                        <p class="company-stock"><span class="stock-icon up" aria-hidden="true">▲</span> BRK.B · $473.01</p>
                     </a>
                     </div>
                     <div class="company-card">
@@ -2536,8 +2558,9 @@
                                 <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
                         </h3>
+                        <p class="company-status">Public company</p>
                         <p class="company-description">Leading global financial services firm offering banking, asset management, and capital markets services to corporations, institutions, and individual clients.</p>
-                        <p class="company-stock"><span class="stock-icon down" aria-hidden="true">▼</span> Public · JPM · $312.47</p>
+                        <p class="company-stock"><span class="stock-icon down" aria-hidden="true">▼</span> JPM · $312.47</p>
                     </a>
                     </div>
                 </div>
@@ -2874,37 +2897,10 @@
                 [[-12, 43], [-20, 44], [-25, 48], [-22, 50], [-15, 49], [-12, 43]]
             ];
 
-            const containsPoint = (lat, lon, polygon) => {
-                let inside = false;
-
-                for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-                    const [latI, lonI] = polygon[i];
-                    const [latJ, lonJ] = polygon[j];
-                    const intersects = ((latI > lat) !== (latJ > lat)) &&
-                        (lon < (lonJ - lonI) * (lat - latI) / (latJ - latI) + lonI);
-
-                    if (intersects) inside = !inside;
-                }
-
-                return inside;
-            };
-
-            const isLand = (lat, lon) => landPolygons.some((polygon) => containsPoint(lat, lon, polygon));
-            const dotStep = window.innerWidth <= 640 ? 3.2 : 2.15;
-            const mapPoints = [];
-            let rowIndex = 0;
-
-            for (let lat = 82; lat >= -58; lat -= dotStep) {
-                const rowOffset = rowIndex % 2 === 0 ? 0 : dotStep / 2;
-
-                for (let lon = -178 + rowOffset; lon <= 178; lon += dotStep) {
-                    if (isLand(lat, lon)) {
-                        mapPoints.push({ lat, lon });
-                    }
-                }
-
-                rowIndex++;
-            }
+            const projectPoint = (lat, lon, mapLeft, mapTop, mapWidth, mapHeight) => ({
+                x: mapLeft + ((lon + 180) / 360) * mapWidth,
+                y: mapTop + ((84 - lat) / 150) * mapHeight
+            });
 
             let width = 0;
             let height = 0;
@@ -2920,70 +2916,40 @@
                 drawMap();
             };
 
-            const getThemeColors = () => {
-                const isDark = body.getAttribute('data-theme') === 'dark';
-
-                return {
-                    dot: isDark ? '209, 213, 219' : '24, 24, 27',
-                    active: isDark ? '251, 191, 36' : '217, 119, 6'
-                };
-            };
-
-            const projectPoint = (lat, lon, mapLeft, mapTop, mapWidth, mapHeight) => ({
-                x: mapLeft + ((lon + 180) / 360) * mapWidth,
-                y: mapTop + ((84 - lat) / 150) * mapHeight
-            });
-
             const drawMap = () => {
-                const colors = getThemeColors();
+                const isDark = body.getAttribute('data-theme') === 'dark';
+                const stroke = isDark ? 'rgba(209, 213, 219, 0.68)' : 'rgba(31, 41, 55, 0.64)';
+                const activeStroke = isDark ? 'rgba(251, 191, 36, 0.95)' : 'rgba(217, 119, 6, 0.9)';
                 const mapWidth = Math.min(width * 0.96, height * 1.95);
                 const mapHeight = mapWidth * 0.52;
                 const mapLeft = (width - mapWidth) / 2;
                 const mapTop = (height - mapHeight) / 2;
-                const dotSize = Math.max(1.15, Math.min(width, height) * 0.0042);
-                const hitRadius = Math.max(7, dotSize * 4.2);
-                const influenceRadius = Math.max(24, dotSize * 14);
 
                 context.clearRect(0, 0, width, height);
+                context.lineWidth = 1.1;
+                context.lineJoin = 'round';
+                context.lineCap = 'round';
 
-                mapPoints.forEach((point) => {
-                    const { x, y } = projectPoint(point.lat, point.lon, mapLeft, mapTop, mapWidth, mapHeight);
-                    let lift = 0;
-
-                    if (pointer.active) {
-                        const distance = Math.hypot(x - pointer.x, y - pointer.y);
-                        if (distance < influenceRadius) {
-                            lift = Math.pow(1 - distance / influenceRadius, 1.8);
-                        }
-                    }
-
-                    const size = dotSize + lift * dotSize * 0.9;
-                    const alpha = 0.56 + lift * 0.42;
-                    const yOffset = lift * 5;
-                    const colorMix = lift;
-                    const color = colorMix > 0
-                        ? `rgba(${colors.active}, ${0.45 + colorMix * 0.5})`
-                        : `rgba(${colors.dot}, ${alpha})`;
-
-                    if (lift > 0.01) {
-                        context.shadowColor = `rgba(${colors.active}, ${0.22 + lift * 0.25})`;
-                        context.shadowBlur = 5 + lift * 12;
-                        context.shadowOffsetY = 2;
-                    } else {
-                        context.shadowColor = 'transparent';
-                        context.shadowBlur = 0;
-                        context.shadowOffsetY = 0;
-                    }
-
-                    context.fillStyle = color;
+                landPolygons.forEach((polygon) => {
+                    let minDistance = Infinity;
                     context.beginPath();
-                    context.arc(x, y - yOffset, size, 0, Math.PI * 2);
-                    context.fill();
-                });
 
-                context.shadowColor = 'transparent';
-                context.shadowBlur = 0;
-                context.shadowOffsetY = 0;
+                    polygon.forEach(([lat, lon], idx) => {
+                        const point = projectPoint(lat, lon, mapLeft, mapTop, mapWidth, mapHeight);
+
+                        if (pointer.active) {
+                            minDistance = Math.min(minDistance, Math.hypot(point.x - pointer.x, point.y - pointer.y));
+                        }
+
+                        if (idx === 0) context.moveTo(point.x, point.y);
+                        else context.lineTo(point.x, point.y);
+                    });
+
+                    context.closePath();
+                    const isNear = pointer.active && minDistance < 44;
+                    context.strokeStyle = isNear ? activeStroke : stroke;
+                    context.stroke();
+                });
             };
 
             canvas.addEventListener('pointermove', (event) => {
