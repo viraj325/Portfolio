@@ -906,6 +906,91 @@
             border-color: rgba(203, 213, 225, 0.36);
         }
 
+        .nfc-card {
+            border: 1px solid rgba(203, 213, 225, 0.14);
+            background: linear-gradient(140deg, #22282f 0%, #13171c 38%, #1c242d 100%);
+            box-shadow: 0 32px 80px rgba(8, 15, 24, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 0 30px rgba(56, 189, 248, 0.06);
+            backdrop-filter: blur(8px);
+        }
+
+        .terminal-cta {
+            width: clamp(280px, 100%, 420px);
+            margin: 36px auto 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.85rem;
+            padding: 16px 26px;
+            border-radius: 16px;
+            border: 1px solid var(--accent-primary);
+            background: transparent;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-align: center;
+            box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.12), 0 0 26px rgba(251, 191, 36, 0.25);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: visible;
+        }
+
+        .terminal-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.22), 0 0 36px rgba(251, 191, 36, 0.35);
+            border-color: rgba(251, 191, 36, 1);
+        }
+
+        .terminal-cta svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2.2;
+            transition: transform 0.3s ease;
+        }
+
+        .terminal-cta:hover svg {
+            transform: translateX(4px);
+        }
+
+        .terminal-cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 14px;
+            box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.08);
+            pointer-events: none;
+        }
+
+        .terminal-cta > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 9px;
+            height: 1em;
+            background: var(--accent-primary);
+            border-radius: 2px;
+            animation: blinkCursor 1s steps(1, end) infinite;
+            margin-left: 0.4rem;
+        }
+
+        .terminal-cta:hover .terminal-cursor {
+            transform: translateX(1px);
+        }
+
+        @keyframes blinkCursor {
+            0%, 49% {
+                opacity: 1;
+            }
+            50%, 100% {
+                opacity: 0;
+            }
+        }
+
         .hero .subtitle {
             font-size: 1.5rem;
             font-weight: 300;
@@ -1327,14 +1412,17 @@
         }
 
         .company-arrow {
-            display: none;
+            opacity: 0;
+            visibility: hidden;
             width: 18px;
             height: 18px;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translateX(0);
+            transition: opacity 0.28s ease, transform 0.28s ease;
         }
 
         .company-card:hover .company-arrow {
-            display: inline-block;
+            opacity: 1;
+            visibility: visible;
             transform: translateX(6px);
         }
 
@@ -1343,6 +1431,92 @@
             color: var(--text-secondary);
             line-height: 1.6;
             display: block;
+        }
+
+        .blog-section {
+            margin-bottom: 80px;
+        }
+
+        .blog-section h2 {
+            font-size: 1.875rem;
+            font-weight: 200;
+            color: var(--text-primary);
+            margin-bottom: 28px;
+            letter-spacing: 0.025em;
+        }
+
+        .blog-strip {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .blog-strip::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .blog-strip::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.14);
+            border-radius: 999px;
+        }
+
+        .blog-card {
+            min-width: 260px;
+            max-width: 320px;
+            flex: 0 0 auto;
+            scroll-snap-align: start;
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .blog-card .blog-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+        }
+
+        .blog-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .blog-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .show-more-btn {
+            margin-top: 18px;
+            padding: 12px 18px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: transparent;
+            color: var(--text-primary);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .show-more-btn:hover {
+            transform: translateY(-1px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 14px 30px rgba(251, 191, 36, 0.16);
         }
 
         .final-section.last-updated h2 {
@@ -2043,9 +2217,18 @@
                             <span>viraj325</span>
                         </div>
                     </div>
-                </div>
-            </div>
 
+                </div>
+
+                <button class="terminal-cta" id="heroTerminalCTA" type="button" aria-label="Open terminal mode">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="4 17 10 11 4 5"></polyline>
+                        <line x1="12" y1="19" x2="20" y2="19"></line>
+                    </svg>
+                    Try out the terminal mode
+                    <span class="terminal-cursor" aria-hidden="true"></span>
+                </button>
+            </div>
             <!-- Contact Methods Section -->
             <section class="section">
                 <h2><span class="accent">Get</span> in Touch</h2>
@@ -2058,18 +2241,18 @@
                         <span>virajpatel325@gmail.com</span>
                     </a>
 
-                    <a href="https://github.com/viraj325" class="contact-item">
+                    <a href="https://github.com/viraj325" class="contact-item" target="_blank" rel="noreferrer noopener">
                         <svg fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                         </svg>
-                        <span>https://github.com/viraj325</span>
+                        <span>GitHub</span>
                     </a>
 
-                    <a href="https://www.linkedin.com/in/viraj-patel-b9baa3143/" class="contact-item">
+                    <a href="https://www.linkedin.com/in/viraj-patel-b9baa3143/" class="contact-item" target="_blank" rel="noreferrer noopener">
                         <svg fill="currentColor" viewBox="0 0 24 24">
                             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                         </svg>
-                        <span>https://www.linkedin.com/in/viraj-patel-b9baa3143/</span>
+                        <span>LinkedIn</span>
                     </a>
 
                     <!-- <a href="https://play.google.com/store/apps/details?id=com.taskmaster.pro" class="contact-item">
@@ -2129,6 +2312,28 @@
             </section>
 
             <!-- Travel Section -->
+            <section class="section blog-section">
+                <h2><span class="accent">Blog</span></h2>
+                <div class="blog-strip" aria-label="Featured blog posts">
+                    <article class="blog-card">
+                        <span class="blog-tag">Design</span>
+                        <h3>Minimal interfaces with meaningful motion</h3>
+                        <p>How thoughtful layout, color, and animation make content feel premium without adding noise.</p>
+                    </article>
+                    <article class="blog-card">
+                        <span class="blog-tag">Product</span>
+                        <h3>Building trust through transparent UI</h3>
+                        <p>Simple patterns that help users feel confident when exploring features and personal data.</p>
+                    </article>
+                    <article class="blog-card">
+                        <span class="blog-tag">Tech</span>
+                        <h3>Why terminal-style interactions still work</h3>
+                        <p>Using command-based experiences for discovery, experimentation, and lightweight navigation.</p>
+                    </article>
+                </div>
+                <button class="show-more-btn" type="button">Show more</button>
+            </section>
+
             <section class="section travel-section">
                 <h2><span class="accent">Traveling</span></h2>
                 <p class="travel-copy">
@@ -2232,6 +2437,9 @@
                     '<span class="tag">about</span> Learn about my work and background',
                     '<span class="tag">contact</span> Show contact links',
                     '<span class="tag">products</span> Describe current active applications',
+                    '<span class="tag">companies</span> Show notable company work',
+                    '<span class="tag">traveling</span> Show travel and globe status',
+                    '<span class="tag">version</span> Show last updated and build information',
                     '<span class="tag">open &lt;site&gt;</span> Open links (linkedin, github, email, appstore)',
                     '<span class="tag">theme &lt;mode&gt;</span> Switch theme (light, dark)',
                     '<span class="tag">resume</span> Request a resume summary',
@@ -2266,6 +2474,28 @@
                     'Resume summary:',
                     '  Experience building consumer mobile products, developer tools, and product experiences.',
                     '  Available upon request via email or LinkedIn.'
+                ]);
+            },
+            companies: () => {
+                printLines([
+                    'Company highlights:',
+                    '  • Wells Fargo — supported secure banking workflows and enterprise fintech integration.',
+                    '  • NetJets — contributed to aviation experience design and operational customer journey flows.',
+                    '  • JPMorgan Chase — supported banking product infrastructure, compliance tooling, and delivery coordination.'
+                ]);
+            },
+            traveling: () => {
+                printLines([
+                    'Travel status:',
+                    '  Active globe tracking is enabled on this portfolio page.',
+                    '  Explore locations, routes, and travel history via the interactive map.'
+                ]);
+            },
+            version: () => {
+                printLines([
+                    'Portfolio CLI v1.0.0',
+                    'Last updated: May 3, 2026',
+                    'Build: web portfolio viewer'
                 ]);
             },
             clear: () => {
@@ -2600,6 +2830,11 @@
                 closeTerminal();
             }
         });
+
+        const heroTerminalCTA = document.getElementById('heroTerminalCTA');
+        if (heroTerminalCTA) {
+            heroTerminalCTA.addEventListener('click', openTerminal);
+        }
 
         terminalClose.addEventListener('click', closeTerminal);
 
