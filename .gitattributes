@@ -1,0 +1,2 @@
+# Minimize recurring merge conflicts for generated entrypoint
+index.html merge=ours
