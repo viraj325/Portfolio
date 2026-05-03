@@ -1522,47 +1522,11 @@
             margin-bottom: 28px;
             letter-spacing: 0.025em;
         }
-
-        .blog-strip-wrap {
-            position: relative;
-            overflow: hidden;
-            margin: 0 -10px;
-            padding: 0 10px;
-        }
-
-        .blog-strip-wrap::before,
-        .blog-strip-wrap::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            width: clamp(44px, 8vw, 96px);
-            height: 100%;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        .blog-strip-wrap::before {
-            left: 0;
-            background: linear-gradient(to left, rgba(0, 0, 0, 0), var(--bg-primary));
-        }
-
-        .blog-strip-wrap::after {
-            right: 0;
-            background: linear-gradient(to right, rgba(0, 0, 0, 0), var(--bg-primary));
-        }
-
-        .blog-strip {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            padding: 12px 24px 26px 6px;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        .blog-strip::-webkit-scrollbar {
-            display: none;
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 22px;
+            padding: 8px 0 20px;
         }
 
         .blog-card {
@@ -2476,33 +2440,31 @@
             <!-- Travel Section -->
             <section class="section blog-section">
                 <h2><span class="accent">Blog</span></h2>
-                <div class="blog-strip-wrap">
-                    <div class="blog-strip" aria-label="Featured blog posts">
+                <div class="blog-grid" aria-label="Featured blog posts">
                     <article class="blog-card">
                         <div class="blog-meta">
                             <span class="blog-tag">Design</span>
                             <span class="blog-source">Google Docs</span>
                         </div>
-                        <h3>Minimal interfaces with meaningful motion</h3>
-                        <p>How thoughtful layout, color, and animation make content feel premium without adding noise.</p>
+                        <h3>Designing calm, high-clarity product surfaces</h3>
+                        <p>A practical breakdown of spacing, hierarchy, and restraint to keep interfaces modern without over-styling.</p>
                     </article>
                     <article class="blog-card">
                         <div class="blog-meta">
                             <span class="blog-tag">Product</span>
                             <span class="blog-source">Medium</span>
                         </div>
-                        <h3>Building trust through transparent UI</h3>
-                        <p>Simple patterns that help users feel confident when exploring features and personal data.</p>
+                        <h3>Product trust patterns users instantly understand</h3>
+                        <p>How status cues, predictable flows, and transparent messaging reduce hesitation in critical user journeys.</p>
                     </article>
                     <article class="blog-card">
                         <div class="blog-meta">
                             <span class="blog-tag">Tech</span>
                             <span class="blog-source">Markdown</span>
                         </div>
-                        <h3>Why terminal-style interactions still work</h3>
-                        <p>Using command-based experiences for discovery, experimentation, and lightweight navigation.</p>
+                        <h3>When minimal interactions outperform complex flows</h3>
+                        <p>Examples of compact interaction models that improve speed, reduce clutter, and still feel intuitive.</p>
                     </article>
-                </div>
                 </div>
                 <button class="show-more-btn" type="button">Show more</button>
             </section>
@@ -2513,7 +2475,7 @@
                     I like learning places through transit, food, neighborhoods, and the quiet routines that make a city feel lived in.
                 </p>
                 <div class="travel-globe-wrap">
-                    <canvas class="travel-globe" id="travelGlobe" role="img" aria-label="Interactive dotted world map"></canvas>
+                    <img class="travel-globe" id="travelGlobe" src="https://upload.wikimedia.org/wikipedia/commons/4/4d/BlankMap-World.svg" alt="Minimal outline world map" loading="lazy" />
                 </div>
             </section>
 
@@ -2870,105 +2832,7 @@
             if (terminalInput) terminalInput.value = '';
         }
 
-        function initTravelGlobe() {
-            const canvas = document.getElementById('travelGlobe');
-            if (!canvas) return;
-
-            const context = canvas.getContext('2d');
-            if (!context) return;
-
-            const pointer = {
-                x: 0,
-                y: 0,
-                active: false
-            };
-            const landPolygons = [
-                [[72, -168], [70, -142], [61, -134], [52, -126], [46, -123], [33, -118], [24, -108], [17, -96], [9, -84], [15, -75], [24, -80], [31, -81], [40, -75], [49, -66], [58, -60], [69, -76], [75, -106], [72, -168]],
-                [[82, -72], [78, -42], [71, -18], [63, -22], [60, -42], [63, -60], [71, -74], [82, -72]],
-                [[13, -82], [8, -76], [1, -79], [-9, -78], [-18, -74], [-33, -71], [-54, -70], [-55, -64], [-45, -61], [-35, -56], [-24, -47], [-10, -38], [1, -50], [9, -62], [13, -82]],
-                [[37, -17], [35, -4], [32, 12], [33, 28], [25, 42], [12, 51], [-5, 43], [-18, 35], [-34, 23], [-35, 17], [-24, 13], [-12, 12], [1, 9], [10, 1], [17, -12], [28, -17], [37, -17]],
-                [[36, -10], [44, -7], [52, 0], [61, 18], [68, 45], [72, 82], [66, 118], [58, 154], [48, 163], [38, 145], [31, 124], [21, 112], [8, 106], [7, 79], [20, 72], [25, 57], [34, 48], [41, 35], [45, 22], [42, 8], [36, -10]],
-                [[30, 68], [24, 74], [17, 77], [8, 78], [8, 88], [17, 90], [25, 84], [30, 76], [30, 68]],
-                [[24, 96], [15, 101], [4, 100], [-6, 107], [-8, 118], [-3, 128], [5, 128], [8, 114], [16, 108], [24, 96]],
-                [[31, 129], [36, 135], [42, 140], [45, 143], [41, 146], [35, 140], [31, 129]],
-                [[-11, 113], [-22, 114], [-35, 117], [-39, 145], [-29, 154], [-16, 145], [-11, 129], [-11, 113]],
-                [[-41, 172], [-45, 168], [-47, 171], [-43, 176], [-41, 172]],
-                [[58, -8], [54, -5], [50, -4], [51, 1], [56, 0], [58, -8]],
-                [[-12, 43], [-20, 44], [-25, 48], [-22, 50], [-15, 49], [-12, 43]]
-            ];
-
-            const projectPoint = (lat, lon, mapLeft, mapTop, mapWidth, mapHeight) => ({
-                x: mapLeft + ((lon + 180) / 360) * mapWidth,
-                y: mapTop + ((84 - lat) / 150) * mapHeight
-            });
-
-            let width = 0;
-            let height = 0;
-
-            const resizeMap = () => {
-                const rect = canvas.getBoundingClientRect();
-                const dpr = Math.min(window.devicePixelRatio || 1, 2);
-                width = Math.max(1, rect.width);
-                height = Math.max(1, rect.height);
-                canvas.width = Math.floor(width * dpr);
-                canvas.height = Math.floor(height * dpr);
-                context.setTransform(dpr, 0, 0, dpr, 0, 0);
-                drawMap();
-            };
-
-            const drawMap = () => {
-                const isDark = body.getAttribute('data-theme') === 'dark';
-                const stroke = isDark ? 'rgba(209, 213, 219, 0.68)' : 'rgba(31, 41, 55, 0.64)';
-                const activeStroke = isDark ? 'rgba(251, 191, 36, 0.95)' : 'rgba(217, 119, 6, 0.9)';
-                const mapWidth = Math.min(width * 0.96, height * 1.95);
-                const mapHeight = mapWidth * 0.52;
-                const mapLeft = (width - mapWidth) / 2;
-                const mapTop = (height - mapHeight) / 2;
-
-                context.clearRect(0, 0, width, height);
-                context.lineWidth = 1.1;
-                context.lineJoin = 'round';
-                context.lineCap = 'round';
-
-                landPolygons.forEach((polygon) => {
-                    let minDistance = Infinity;
-                    context.beginPath();
-
-                    polygon.forEach(([lat, lon], idx) => {
-                        const point = projectPoint(lat, lon, mapLeft, mapTop, mapWidth, mapHeight);
-
-                        if (pointer.active) {
-                            minDistance = Math.min(minDistance, Math.hypot(point.x - pointer.x, point.y - pointer.y));
-                        }
-
-                        if (idx === 0) context.moveTo(point.x, point.y);
-                        else context.lineTo(point.x, point.y);
-                    });
-
-                    context.closePath();
-                    const isNear = pointer.active && minDistance < 44;
-                    context.strokeStyle = isNear ? activeStroke : stroke;
-                    context.stroke();
-                });
-            };
-
-            canvas.addEventListener('pointermove', (event) => {
-                const rect = canvas.getBoundingClientRect();
-                pointer.x = event.clientX - rect.left;
-                pointer.y = event.clientY - rect.top;
-                pointer.active = true;
-                drawMap();
-            });
-
-            canvas.addEventListener('pointerleave', () => {
-                pointer.active = false;
-                drawMap();
-            });
-
-            window.addEventListener('resize', resizeMap);
-            window.__drawTravelMap = drawMap;
-            resizeMap();
-        }
+        function initTravelGlobe() {}
 
         themeToggle.addEventListener('click', () => {
             const currentTheme = body.getAttribute('data-theme');
