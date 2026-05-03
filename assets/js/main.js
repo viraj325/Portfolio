@@ -7,11 +7,24 @@ const themeToggle = document.getElementById('themeToggle');
         const cursor = document.getElementById('cursor');
         const nfcCard = document.getElementById('nfcCard');
         const body = document.body;
+        const heroQuote = document.getElementById('heroQuote');
 
         let currentCommand = '';
 
         const savedTheme = localStorage.getItem('theme') || 'light';
         body.setAttribute('data-theme', savedTheme);
+        const quotes = [
+            '“Travel teaches you what no classroom can.”',
+            '“Collect moments, not just miles.”',
+            '“Every place leaves a new perspective behind.”',
+            '“The world feels smaller when you explore it.”',
+            '“Good journeys change how you see home.”'
+        ];
+
+        if (heroQuote) {
+            const selected = quotes[Math.floor(Math.random() * quotes.length)];
+            heroQuote.textContent = selected;
+        }
 
         const companyMarketData = [
             {

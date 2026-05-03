@@ -79,6 +79,7 @@
                 <p class="subtitle">
                     <span class="accent">Software</span> Engineer, Senior
                 </p>
+                <p class="hero-quote" id="heroQuote" aria-live="polite"></p>
                 <div class="nfc-card" id="nfcCard" hidden>
                     <span class="nfc-card-disclaimer">Opened via NFC</span>
                     <div class="nfc-card-top">
@@ -230,11 +231,23 @@
             <section class="section travel-section">
                 <h2><span class="accent">Traveling</span></h2>
                 <p class="travel-copy">
-                    I like learning places through transit, food, neighborhoods, and the quiet routines that make a city feel lived in.
+                    Here are the places where I've traveled so far and a quick visual of the regions that shaped those experiences.
                 </p>
+                <div class="travel-places">
+                    <span class="travel-place">Switzerland</span>
+                    <span class="travel-place">France</span>
+                    <span class="travel-place">Rome</span>
+                </div>
                 <div class="travel-globe-wrap">
                     <svg class="travel-globe" id="travelGlobe" viewBox="0 0 1000 520" role="img" aria-label="Minimal outline continents map" xmlns="http://www.w3.org/2000/svg">
-                        <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.72">
+                        <defs>
+                            <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#f59e0b"/>
+                                <stop offset="45%" stop-color="#fbbf24"/>
+                                <stop offset="100%" stop-color="#d97706"/>
+                            </linearGradient>
+                        </defs>
+                        <g fill="none" stroke="url(#mapGradient)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8">
                             <path d="M78 146 C96 126, 126 124, 150 128 C176 131, 206 128, 224 112 C248 92, 284 84, 318 84 C350 84, 380 76, 410 72 C432 69, 452 72, 458 80 C464 88, 456 98, 442 109 C426 121, 420 132, 404 136 C389 140, 379 149, 374 161 C370 171, 359 176, 349 166 C337 154, 336 136, 346 122 C355 110, 354 97, 343 93 C332 90, 322 99, 315 111 C304 131, 296 141, 306 151 C318 163, 337 170, 341 183 C345 196, 333 203, 318 205 C304 207, 292 218, 282 231 C270 246, 256 259, 248 275 C241 290, 226 293, 218 281 C209 267, 195 260, 185 266 C176 271, 174 281, 185 288 C196 295, 201 304, 193 311 C184 318, 171 315, 160 304 C149 293, 141 278, 140 262 C139 245, 129 231, 111 226 C96 221, 82 209, 80 192 C78 171, 93 160, 106 148 C119 136, 123 121, 114 109 C103 94, 83 92, 66 99 C51 106, 45 115, 36 116 C27 117, 24 108, 32 101 C43 92, 53 79, 62 68"/>
                             <path d="M490 118 C506 98, 528 91, 558 92 C590 93, 614 89, 640 76 C665 64, 692 58, 722 59 C759 60, 792 64, 828 68 C861 71, 894 74, 925 78 C948 81, 966 92, 962 102 C956 114, 940 125, 932 138 C925 150, 917 156, 909 151 C900 145, 896 133, 887 128 C879 124, 872 130, 866 140 C857 155, 847 165, 833 170 C818 176, 809 190, 808 206 C807 221, 799 231, 783 235 C766 238, 758 250, 760 264 C762 279, 772 289, 789 294 C805 299, 819 309, 828 323 C837 336, 853 344, 871 347 C887 349, 899 357, 902 368 C905 379, 898 389, 883 393 C867 397, 851 392, 839 382 C826 372, 812 367, 797 369 C780 371, 767 363, 758 348 C751 335, 740 327, 724 324 C708 321, 697 311, 695 297 C694 282, 688 271, 675 266 C662 260, 650 251, 646 237 C642 225, 634 217, 623 214 C610 211, 602 216, 602 227 C602 240, 611 250, 626 258 C640 267, 646 278, 640 287 C634 296, 622 297, 610 290 C596 282, 583 269, 572 252 C560 233, 546 220, 527 215 C509 210, 493 201, 487 184 C481 167, 481 146, 490 118"/>
                             <path d="M250 276 C269 276, 286 282, 302 292 C319 304, 332 319, 349 325 C367 332, 382 344, 384 362 C386 380, 380 398, 375 418 C370 438, 362 455, 342 459 C326 462, 309 456, 300 444 C290 431, 290 413, 293 395 C296 379, 292 365, 279 356 C267 346, 258 333, 259 317 C261 301, 255 289, 244 282"/>
@@ -243,6 +256,7 @@
                         </g>
                     </svg>
                 </div>
+                <button class="show-more-btn travel-view-all-btn" type="button">View all</button>
             </section>
 
             <!-- Companies Section -->

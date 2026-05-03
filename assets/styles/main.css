@@ -1034,6 +1034,13 @@
         .hero .subtitle .accent {
             color: var(--accent-primary);
         }
+        .hero-quote {
+            margin-top: 16px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-style: italic;
+            max-width: 520px;
+        }
 
         .hero .description {
             font-size: 1.125rem;
@@ -1280,6 +1287,24 @@
         .travel-copy {
             margin-bottom: 28px;
         }
+        .travel-places {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .travel-place {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border-primary);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
 
         .travel-globe-wrap {
             width: 100%;
@@ -1318,6 +1343,9 @@
             position: relative;
             z-index: 0;
             color: var(--text-secondary);
+        }
+        .travel-view-all-btn {
+            margin-top: 16px;
         }
 
         .contact-list {
