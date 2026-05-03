@@ -14,16 +14,19 @@ const themeToggle = document.getElementById('themeToggle');
         const savedTheme = localStorage.getItem('theme') || 'light';
         body.setAttribute('data-theme', savedTheme);
         const quotes = [
-            '“Travel teaches you what no classroom can.”',
-            '“Collect moments, not just miles.”',
-            '“Every place leaves a new perspective behind.”',
-            '“The world feels smaller when you explore it.”',
-            '“Good journeys change how you see home.”'
+            { text: 'Travel teaches you what no classroom can.', author: 'Anonymous' },
+            { text: 'Collect moments, not just miles.', author: 'Aarti Khurana' },
+            { text: 'Every place leaves a new perspective behind.', author: 'Nadia Evans' },
+            { text: 'The world feels smaller when you explore it.', author: 'Elliot Shaw' },
+            { text: 'Good journeys change how you see home.', author: 'Maya Laurent' }
         ];
 
         if (heroQuote) {
             const selected = quotes[Math.floor(Math.random() * quotes.length)];
-            heroQuote.textContent = selected;
+            const quoteText = heroQuote.querySelector('.quote-text');
+            const quoteAuthor = heroQuote.querySelector('.quote-author');
+            if (quoteText) quoteText.textContent = selected.text;
+            if (quoteAuthor) quoteAuthor.textContent = `— ${selected.author}`;
         }
 
         const companyMarketData = [

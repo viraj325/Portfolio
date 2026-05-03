@@ -1037,9 +1037,29 @@
         .hero-quote {
             margin-top: 16px;
             color: var(--text-secondary);
-            font-size: 0.95rem;
-            font-style: italic;
+            font-size: 1.12rem;
+            font-family: "Playfair Display", "Georgia", serif;
+            line-height: 1.55;
             max-width: 520px;
+        }
+        .quote-mark {
+            color: var(--accent-primary);
+            font-size: 1.45em;
+            line-height: 0;
+            vertical-align: -0.12em;
+        }
+        .quote-text {
+            margin: 0 4px;
+        }
+        .quote-author {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.82rem;
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
         }
 
         .hero .description {
