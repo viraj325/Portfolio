@@ -1328,7 +1328,7 @@
             display: block;
             position: relative;
             z-index: 0;
-            cursor: crosshair;
+            color: var(--text-secondary);
         }
 
         .contact-list {
@@ -2465,6 +2465,14 @@
                         <h3>When minimal interactions outperform complex flows</h3>
                         <p>Examples of compact interaction models that improve speed, reduce clutter, and still feel intuitive.</p>
                     </article>
+                    <article class="blog-card">
+                        <div class="blog-meta">
+                            <span class="blog-tag">Engineering</span>
+                            <span class="blog-source">Notes</span>
+                        </div>
+                        <h3>Shipping clean features under tight timelines</h3>
+                        <p>A lightweight framework for planning, scoping, and executing polished releases without sacrificing maintainability.</p>
+                    </article>
                 </div>
                 <button class="show-more-btn" type="button">Show more</button>
             </section>
@@ -2475,7 +2483,15 @@
                     I like learning places through transit, food, neighborhoods, and the quiet routines that make a city feel lived in.
                 </p>
                 <div class="travel-globe-wrap">
-                    <img class="travel-globe" id="travelGlobe" src="https://upload.wikimedia.org/wikipedia/commons/4/4d/BlankMap-World.svg" alt="Minimal outline world map" loading="lazy" />
+                    <svg class="travel-globe" id="travelGlobe" viewBox="0 0 1000 520" role="img" aria-label="Minimal outline continents map" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8">
+                            <path d="M35 118 L106 114 L154 140 L206 170 L250 184 L282 213 L300 250 L336 270 L365 260 L399 230 L433 214 L476 214 L507 234 L531 270 L518 304 L473 329 L434 353 L397 375 L342 390 L295 376 L266 340 L245 305 L204 285 L152 267 L118 238 L96 204 L60 182 Z"/>
+                            <path d="M488 120 L530 102 L592 96 L650 112 L700 130 L744 149 L768 181 L793 213 L826 235 L846 262 L870 290 L842 317 L798 327 L750 310 L715 282 L676 274 L630 266 L588 240 L550 212 L515 186 Z"/>
+                            <path d="M792 346 L824 338 L858 348 L886 372 L872 398 L840 406 L810 396 L790 372 Z"/>
+                            <path d="M470 222 L492 218 L502 236 L488 250 L468 248 L458 234 Z"/>
+                            <path d="M548 286 L570 284 L582 300 L568 314 L546 312 L536 298 Z"/>
+                        </g>
+                    </svg>
                 </div>
             </section>
 
