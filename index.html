@@ -1513,11 +1513,29 @@
             letter-spacing: 0.025em;
         }
 
+        .blog-strip-wrap {
+            position: relative;
+            overflow: hidden;
+            margin: 0 -10px;
+            padding: 0 10px;
+        }
+
+        .blog-strip-wrap::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: clamp(44px, 8vw, 96px);
+            height: 100%;
+            pointer-events: none;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0), var(--bg-primary));
+        }
+
         .blog-strip {
             display: flex;
             gap: 20px;
             overflow-x: auto;
-            padding: 8px 6px 20px;
+            padding: 12px 24px 26px 6px;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
@@ -2438,7 +2456,8 @@
             <!-- Travel Section -->
             <section class="section blog-section">
                 <h2><span class="accent">Blog</span></h2>
-                <div class="blog-strip" aria-label="Featured blog posts">
+                <div class="blog-strip-wrap">
+                    <div class="blog-strip" aria-label="Featured blog posts">
                     <article class="blog-card">
                         <div class="blog-meta">
                             <span class="blog-tag">Design</span>
@@ -2463,6 +2482,7 @@
                         <h3>Why terminal-style interactions still work</h3>
                         <p>Using command-based experiences for discovery, experimentation, and lightweight navigation.</p>
                     </article>
+                </div>
                 </div>
                 <button class="show-more-btn" type="button">Show more</button>
             </section>
@@ -2491,7 +2511,7 @@
                             </svg>
                         </h3>
                         <p class="company-description">One of the largest financial services companies in the world, providing banking, investment, and mortgage services to millions of customers globally.</p>
-                        <p class="company-stock"><span class="stock-icon up" aria-hidden="true">▲</span> WFC · $80.90</p>
+                        <p class="company-stock"><span class="stock-icon up" aria-hidden="true">▲</span> Public · WFC · $80.90</p>
                     </a>
                     </div>
                     <div class="company-card">
@@ -2504,7 +2524,7 @@
                             </svg>
                         </h3>
                         <p class="company-description">Leading fractional aircraft ownership company, enabling accessible private aviation through shared ownership and on-demand charter services worldwide.</p>
-                        <p class="company-stock"><span class="stock-icon up" aria-hidden="true">▲</span> BRK.B · $473.01</p>
+                        <p class="company-stock"><span class="stock-icon up" aria-hidden="true">▲</span> Private · BRK.B · $473.01</p>
                     </a>
                     </div>
                     <div class="company-card">
@@ -2517,7 +2537,7 @@
                             </svg>
                         </h3>
                         <p class="company-description">Leading global financial services firm offering banking, asset management, and capital markets services to corporations, institutions, and individual clients.</p>
-                        <p class="company-stock"><span class="stock-icon down" aria-hidden="true">▼</span> JPM · $312.47</p>
+                        <p class="company-stock"><span class="stock-icon down" aria-hidden="true">▼</span> Public · JPM · $312.47</p>
                     </a>
                     </div>
                 </div>
@@ -2922,43 +2942,32 @@
                 const mapTop = (height - mapHeight) / 2;
                 const dotSize = Math.max(1.15, Math.min(width, height) * 0.0042);
                 const hitRadius = Math.max(7, dotSize * 4.2);
-                let activeIndex = -1;
-                let activeStrength = 0;
+                const influenceRadius = Math.max(24, dotSize * 14);
 
                 context.clearRect(0, 0, width, height);
 
-                if (pointer.active) {
-                    let nearestDistance = Infinity;
-
-                    mapPoints.forEach((point, index) => {
-                        const { x, y } = projectPoint(point.lat, point.lon, mapLeft, mapTop, mapWidth, mapHeight);
-                        const distance = Math.hypot(x - pointer.x, y - pointer.y);
-
-                        if (distance < nearestDistance) {
-                            nearestDistance = distance;
-                            activeIndex = index;
-                        }
-                    });
-
-                    if (nearestDistance > hitRadius) {
-                        activeIndex = -1;
-                    } else {
-                        activeStrength = 1 - nearestDistance / hitRadius;
-                    }
-                }
-
-                mapPoints.forEach((point, index) => {
+                mapPoints.forEach((point) => {
                     const { x, y } = projectPoint(point.lat, point.lon, mapLeft, mapTop, mapWidth, mapHeight);
-                    const isActive = index === activeIndex;
-                    const lift = isActive ? activeStrength : 0;
-                    const size = dotSize + lift * dotSize * 0.45;
-                    const color = isActive ? colors.active : colors.dot;
-                    const alpha = isActive ? 0.98 : 0.72;
-                    const yOffset = lift * 3.5;
+                    let lift = 0;
 
-                    if (isActive) {
-                        context.shadowColor = `rgba(${colors.active}, ${0.2 + lift * 0.28})`;
-                        context.shadowBlur = 7 + lift * 5;
+                    if (pointer.active) {
+                        const distance = Math.hypot(x - pointer.x, y - pointer.y);
+                        if (distance < influenceRadius) {
+                            lift = Math.pow(1 - distance / influenceRadius, 1.8);
+                        }
+                    }
+
+                    const size = dotSize + lift * dotSize * 0.9;
+                    const alpha = 0.56 + lift * 0.42;
+                    const yOffset = lift * 5;
+                    const colorMix = lift;
+                    const color = colorMix > 0
+                        ? `rgba(${colors.active}, ${0.45 + colorMix * 0.5})`
+                        : `rgba(${colors.dot}, ${alpha})`;
+
+                    if (lift > 0.01) {
+                        context.shadowColor = `rgba(${colors.active}, ${0.22 + lift * 0.25})`;
+                        context.shadowBlur = 5 + lift * 12;
                         context.shadowOffsetY = 2;
                     } else {
                         context.shadowColor = 'transparent';
@@ -2966,7 +2975,7 @@
                         context.shadowOffsetY = 0;
                     }
 
-                    context.fillStyle = `rgba(${color}, ${alpha})`;
+                    context.fillStyle = color;
                     context.beginPath();
                     context.arc(x, y - yOffset, size, 0, Math.PI * 2);
                     context.fill();
