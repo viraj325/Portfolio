@@ -913,6 +913,35 @@
             backdrop-filter: blur(8px);
         }
 
+        [data-theme="light"] .nfc-card {
+            border-color: rgba(217, 119, 6, 0.2);
+            background:
+                linear-gradient(140deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 248, 236, 0.96) 54%, rgba(254, 243, 199, 0.88) 100%);
+            box-shadow: 0 26px 60px rgba(146, 64, 14, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+            color: #2f2923;
+        }
+
+        [data-theme="light"] .nfc-card-label,
+        [data-theme="light"] .nfc-card-role,
+        [data-theme="light"] .nfc-card-meta {
+            color: rgba(75, 85, 99, 0.78);
+        }
+
+        [data-theme="light"] .nfc-card-name,
+        [data-theme="light"] .nfc-card-chip {
+            color: #111827;
+        }
+
+        [data-theme="light"] .nfc-card-chip {
+            border-color: rgba(217, 119, 6, 0.24);
+            background: rgba(255, 255, 255, 0.66);
+        }
+
+        [data-theme="light"] .nfc-card-chip:hover {
+            background: rgba(255, 247, 237, 0.92);
+            border-color: rgba(217, 119, 6, 0.38);
+        }
+
         .terminal-cta {
             width: clamp(280px, 100%, 420px);
             margin: 36px auto 0;
@@ -937,10 +966,24 @@
             overflow: visible;
         }
 
+        [data-theme="light"] .terminal-cta {
+            border-color: rgba(217, 119, 6, 0.38);
+            background: rgba(255, 255, 255, 0.72);
+            color: #111827;
+            box-shadow: 0 18px 36px rgba(146, 64, 14, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(10px);
+        }
+
         .terminal-cta:hover {
             transform: translateY(-1px);
             box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.22), 0 0 36px rgba(251, 191, 36, 0.35);
             border-color: rgba(251, 191, 36, 1);
+        }
+
+        [data-theme="light"] .terminal-cta:hover {
+            border-color: rgba(217, 119, 6, 0.7);
+            background: rgba(255, 248, 236, 0.9);
+            box-shadow: 0 22px 44px rgba(146, 64, 14, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.86);
         }
 
         .terminal-cta svg {
@@ -1433,6 +1476,35 @@
             display: block;
         }
 
+        .company-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .company-pill {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            padding: 5px 9px;
+            border-radius: 999px;
+            border: 1px solid rgba(217, 119, 6, 0.24);
+            background: rgba(217, 119, 6, 0.08);
+            color: var(--accent-primary);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        [data-theme="light"] .company-pill {
+            border-color: rgba(217, 119, 6, 0.22);
+            background: rgba(255, 247, 237, 0.82);
+            color: #7c5219;
+        }
+
         .blog-section {
             margin-bottom: 80px;
         }
@@ -1463,13 +1535,17 @@
             border-radius: 999px;
         }
 
+        [data-theme="light"] .blog-strip::-webkit-scrollbar-thumb {
+            background: rgba(217, 119, 6, 0.22);
+        }
+
         .blog-card {
             min-width: 260px;
             max-width: 320px;
             flex: 0 0 auto;
             scroll-snap-align: start;
-            padding: 24px;
-            border-radius: 20px;
+            padding: 22px;
+            border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             background: rgba(255, 255, 255, 0.03);
             box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
@@ -1477,6 +1553,23 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(251, 191, 36, 0.36);
+        }
+
+        [data-theme="light"] .blog-card {
+            border-color: rgba(217, 119, 6, 0.16);
+            background: rgba(255, 255, 255, 0.78);
+            box-shadow: 0 16px 32px rgba(146, 64, 14, 0.11);
+        }
+
+        [data-theme="light"] .blog-card:hover {
+            border-color: rgba(217, 119, 6, 0.34);
+            box-shadow: 0 20px 38px rgba(146, 64, 14, 0.16);
         }
 
         .blog-card .blog-tag {
@@ -1485,6 +1578,32 @@
             letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--accent-primary);
+        }
+
+        .blog-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .blog-source {
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            padding: 4px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(156, 163, 175, 0.26);
+            background: rgba(156, 163, 175, 0.1);
+            color: var(--text-tertiary);
+            font-size: 0.72rem;
+            font-weight: 500;
+        }
+
+        [data-theme="light"] .blog-source {
+            border-color: rgba(217, 119, 6, 0.18);
+            background: rgba(255, 247, 237, 0.78);
+            color: #6b4a23;
         }
 
         .blog-card h3 {
@@ -1503,7 +1622,7 @@
         .show-more-btn {
             margin-top: 18px;
             padding: 12px 18px;
-            border-radius: 14px;
+            border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.12);
             background: transparent;
             color: var(--text-primary);
@@ -1517,6 +1636,17 @@
             transform: translateY(-1px);
             border-color: var(--accent-primary);
             box-shadow: 0 14px 30px rgba(251, 191, 36, 0.16);
+        }
+
+        [data-theme="light"] .show-more-btn {
+            border-color: rgba(217, 119, 6, 0.22);
+            background: rgba(255, 255, 255, 0.68);
+            box-shadow: 0 10px 22px rgba(146, 64, 14, 0.08);
+        }
+
+        [data-theme="light"] .show-more-btn:hover {
+            border-color: rgba(217, 119, 6, 0.5);
+            box-shadow: 0 14px 28px rgba(146, 64, 14, 0.14);
         }
 
         .final-section.last-updated h2 {
@@ -1545,6 +1675,12 @@
             padding: 4px 8px;
             border-radius: 4px;
             backdrop-filter: blur(4px);
+        }
+
+        [data-theme="light"] .nfc-card-disclaimer {
+            color: rgba(120, 53, 15, 0.72);
+            background: rgba(255, 247, 237, 0.76);
+            border: 1px solid rgba(217, 119, 6, 0.18);
         }
 
         @media (max-width: 768px) {
@@ -2316,17 +2452,26 @@
                 <h2><span class="accent">Blog</span></h2>
                 <div class="blog-strip" aria-label="Featured blog posts">
                     <article class="blog-card">
-                        <span class="blog-tag">Design</span>
+                        <div class="blog-meta">
+                            <span class="blog-tag">Design</span>
+                            <span class="blog-source">Google Docs</span>
+                        </div>
                         <h3>Minimal interfaces with meaningful motion</h3>
                         <p>How thoughtful layout, color, and animation make content feel premium without adding noise.</p>
                     </article>
                     <article class="blog-card">
-                        <span class="blog-tag">Product</span>
+                        <div class="blog-meta">
+                            <span class="blog-tag">Product</span>
+                            <span class="blog-source">Medium</span>
+                        </div>
                         <h3>Building trust through transparent UI</h3>
                         <p>Simple patterns that help users feel confident when exploring features and personal data.</p>
                     </article>
                     <article class="blog-card">
-                        <span class="blog-tag">Tech</span>
+                        <div class="blog-meta">
+                            <span class="blog-tag">Tech</span>
+                            <span class="blog-source">Markdown</span>
+                        </div>
                         <h3>Why terminal-style interactions still work</h3>
                         <p>Using command-based experiences for discovery, experimentation, and lightweight navigation.</p>
                     </article>
@@ -2357,6 +2502,12 @@
                                 <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
                         </h3>
+                        <div class="company-meta">
+                            <span class="company-pill">Public</span>
+                            <span class="company-pill">NYSE: WFC</span>
+                            <span class="company-pill">$80.90</span>
+                            <span class="company-pill">May 1 close</span>
+                        </div>
                         <p class="company-description">One of the largest financial services companies in the world, providing banking, investment, and mortgage services to millions of customers globally.</p>
                     </a>
                     </div>
@@ -2369,6 +2520,10 @@
                                 <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
                         </h3>
+                        <div class="company-meta">
+                            <span class="company-pill">Private</span>
+                            <span class="company-pill">Berkshire subsidiary</span>
+                        </div>
                         <p class="company-description">Leading fractional aircraft ownership company, enabling accessible private aviation through shared ownership and on-demand charter services worldwide.</p>
                     </a>
                     </div>
@@ -2381,6 +2536,12 @@
                                 <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
                         </h3>
+                        <div class="company-meta">
+                            <span class="company-pill">Public</span>
+                            <span class="company-pill">NYSE: JPM</span>
+                            <span class="company-pill">$312.47</span>
+                            <span class="company-pill">May 1 close</span>
+                        </div>
                         <p class="company-description">Leading global financial services firm offering banking, asset management, and capital markets services to corporations, institutions, and individual clients.</p>
                     </a>
                     </div>
@@ -2397,7 +2558,7 @@
 
             <section class="final-section last-updated">
                 <h2>Last <span class="accent">Updated:</span></h2>
-                <p>May 2, 2026</p>
+                <p>May 3, 2026</p>
             </section>
         </div>
     </div>
@@ -2418,6 +2579,33 @@
         const savedTheme = localStorage.getItem('theme') || 'light';
         body.setAttribute('data-theme', savedTheme);
 
+        const companyMarketData = [
+            {
+                name: 'Wells Fargo',
+                status: 'Public',
+                ticker: 'NYSE: WFC',
+                price: '$80.90',
+                priceDate: 'May 1, 2026 close',
+                note: 'Financial services and enterprise banking workflows.'
+            },
+            {
+                name: 'NetJets',
+                status: 'Private',
+                ticker: 'No direct public ticker',
+                price: null,
+                priceDate: null,
+                note: 'Berkshire Hathaway subsidiary; parent BRK.B last close was $473.01 on May 1, 2026.'
+            },
+            {
+                name: 'JPMorgan Chase',
+                status: 'Public',
+                ticker: 'NYSE: JPM',
+                price: '$312.47',
+                priceDate: 'May 1, 2026 close',
+                note: 'Banking product infrastructure, compliance tooling, and delivery coordination.'
+            }
+        ];
+
         if (nfcCard) {
             const query = window.location.search.slice(1);
             const hasCardQuery = new URLSearchParams(window.location.search).has('card') ||
@@ -2437,7 +2625,8 @@
                     '<span class="tag">about</span> Learn about my work and background',
                     '<span class="tag">contact</span> Show contact links',
                     '<span class="tag">products</span> Describe current active applications',
-                    '<span class="tag">companies</span> Show notable company work',
+                    '<span class="tag">companies</span> Show notable company work and market status',
+                    '<span class="tag">stocks</span> Show public/private company ticker data',
                     '<span class="tag">traveling</span> Show travel and globe status',
                     '<span class="tag">version</span> Show last updated and build information',
                     '<span class="tag">open &lt;site&gt;</span> Open links (linkedin, github, email, appstore)',
@@ -2477,12 +2666,10 @@
                 ]);
             },
             companies: () => {
-                printLines([
-                    'Company highlights:',
-                    '  • Wells Fargo — supported secure banking workflows and enterprise fintech integration.',
-                    '  • NetJets — contributed to aviation experience design and operational customer journey flows.',
-                    '  • JPMorgan Chase — supported banking product infrastructure, compliance tooling, and delivery coordination.'
-                ]);
+                printCompanyData('Company highlights:');
+            },
+            stocks: () => {
+                printCompanyData('Company market data:');
             },
             traveling: () => {
                 printLines([
@@ -2502,6 +2689,22 @@
                 terminalBody.innerHTML = '';
             }
         };
+
+        function printCompanyData(title) {
+            const lines = [title];
+
+            companyMarketData.forEach((company) => {
+                const marketLine = company.price
+                    ? `${company.status} — ${company.ticker} — ${company.price} (${company.priceDate})`
+                    : `${company.status} — ${company.ticker}`;
+
+                lines.push(`  • ${company.name}: ${marketLine}`);
+                lines.push(`    ${company.note}`);
+            });
+
+            lines.push('Prices are static portfolio metadata, not investment advice.');
+            printLines(lines);
+        }
 
         const commandPatterns = {
             theme: (value) => {
