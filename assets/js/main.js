@@ -417,11 +417,3 @@ const themeToggle = document.getElementById('themeToggle');
         document.querySelector('.hero').style.opacity = '1';
         document.querySelector('.hero').style.transform = 'translateY(0)';
 
-
-        // Auto-open terminal on desktop/laptop devices
-        const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        if (!isMobile) {
-            setTimeout(() => {
-                openTerminal();
-            }, 1000); // Delay to allow page to load
-        }

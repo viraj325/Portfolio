@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ghost Finance Terminal — Market data. Real insights. Smarter moves.</title>
+    <meta
+      name="description"
+      content="Ghost Finance Terminal is a free, CLI-first financial terminal and local dashboard for tickers, market data, futures, news, sentiment, insider trading, and AI-assisted research."
+    />
+    <meta name="theme-color" content="#070b14" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23070b14'/%3E%3Cpath d='M18 22h9l9 10-9 10h-9l9-10-9-10Z' fill='%234ade80'/%3E%3Cpath d='M36 41h12v5H36z' fill='%238b7cf6'/%3E%3C/svg%3E" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Ghost Finance Terminal" />
+    <meta property="og:description" content="Market data. Real insights. Smarter moves. A free CLI-first finance terminal with a companion dashboard." />
+    <meta property="og:type" content="website" />
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Background grid + glow -->
+    <div class="bg-fx" aria-hidden="true">
+      <div class="bg-grid"></div>
+      <div class="bg-glow bg-glow--green"></div>
+      <div class="bg-glow bg-glow--purple"></div>
+    </div>
+
+    <!-- ===== NAV ===== -->
+    <header class="nav">
+      <a href="#top" class="brand" aria-label="Ghost Finance Terminal home">
+        <!-- <span class="brand__mark" aria-hidden="true">&gt;_</span> -->
+        <span class="brand__text">
+          <span class="brand__prompt">&gt;_</span> ghost<span class="brand__accent">finance</span>
+        </span>
+      </a>
+
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#wealth">Wealth</a>
+        <a href="#macro">Macro</a>
+        <a href="#commands">Commands</a>
+        <a href="#orb">AI Orb</a>
+        <a href="#install">Install</a>
+      </nav>
+
+      <div class="nav__actions">
+        <span class="badge badge--free">100% FREE</span>
+        <a class="btn btn--primary" href="#install">Install</a>
+      </div>
+
+      <button class="nav__menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+
+    <!-- Mobile menu -->
+    <div class="mobile-menu" id="mobileMenu" hidden>
+      <a href="#features">Features</a>
+      <a href="#wealth">Wealth</a>
+      <a href="#macro">Macro</a>
+      <a href="#commands">Commands</a>
+      <a href="#orb">AI Orb</a>
+      <a href="#install">Install</a>
+      <a class="btn btn--primary" href="#install">Install free</a>
+    </div>
+
+    <main id="top">
+      <!-- ===== HERO ===== -->
+      <section class="hero">
+        <!-- Live ticker strip -->
+        <div class="ticker" aria-label="Live market snapshot">
+          <div class="ticker__track" id="tickerTrack"></div>
+          <p class="ticker__note">Prices shown are for May 30th, 2026.</p>
+        </div>
+
+        <div class="hero__grid">
+          <div class="hero__copy">
+            <div class="tagline-pill">
+              <span class="dot"></span> CLI-first finance terminal · runs 100% on your machine
+            </div>
+
+            <h1 class="hero__title">
+              <span class="t-white">Ghost</span><br />
+              <span class="t-green">Finance</span><br />
+              <span class="t-gray">Terminal</span>
+            </h1>
+
+            <p class="hero__sub">
+              <span class="t-green">$</span> Market data.
+              <span class="t-purple">Real insights.</span>
+              <span class="t-green">Smarter moves.</span>
+            </p>
+
+            <p class="hero__desc">
+              An all-in-one finance terminal that revolves around you. Track markets, futures,
+              forex, rates, and macro data — alongside your own wealth, budgets, and portfolio —
+              all from the CLI. Everything lives in a local SQLite database on your machine, so
+              you own 100% of your data. No cloud account, no sign-up, full transparency.
+            </p>
+
+            <div class="hero__cta">
+              <a class="btn btn--primary btn--lg" href="#install">
+                <span class="t-mono">&gt;_</span> Get started — it's free
+              </a>
+              <a class="btn btn--ghost btn--lg" href="#commands">View commands</a>
+            </div>
+
+            <ul class="hero__points">
+              <li>You own everything — local SQLite storage</li>
+              <li>No API keys required to start</li>
+              <li>Works in terminal &amp; browser</li>
+            </ul>
+          </div>
+
+          <!-- Terminal window + mascot -->
+          <div class="hero__visual">
+            <div class="terminal" id="terminal">
+              <div class="terminal__bar">
+                <span class="tdot tdot--red"></span>
+                <span class="tdot tdot--yellow"></span>
+                <span class="tdot tdot--green"></span>
+                <span class="terminal__title">ghost@finance — zsh</span>
+              </div>
+              <pre class="terminal__body" id="termBody"></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== FEATURE PILLARS ===== -->
+      <section class="pillars" id="features">
+        <div class="section-head">
+          <span class="kicker">// what it does</span>
+          <h2>Your markets. Your edge.</h2>
+        </div>
+
+        <div class="pillars__grid">
+          <article class="pillar">
+            <div class="pillar__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="3 17 9 11 13 15 21 7" />
+                <polyline points="15 7 21 7 21 13" />
+              </svg>
+            </div>
+            <h3>MARKETS</h3>
+            <p>Stocks, futures, forex, rates, and macro data — lookups, watchlists, and live snapshots at a glance.</p>
+          </article>
+          <article class="pillar">
+            <div class="pillar__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" />
+                <line x1="21" y1="21" x2="16.5" y2="16.5" />
+              </svg>
+            </div>
+            <h3>ANALYZE</h3>
+            <p>News &amp; sentiment via Yahoo Finance, Alpha Vantage, and NewsAPI with automatic fallbacks.</p>
+          </article>
+          <article class="pillar">
+            <div class="pillar__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 3 14 8 19 8" />
+                <line x1="9" y1="13" x2="15" y2="13" />
+                <line x1="9" y1="17" x2="13" y2="17" />
+              </svg>
+            </div>
+            <h3>WEALTH</h3>
+            <p>Personal wealth management — finance &amp; budget tracking, accounts, transactions, and monthly statements.</p>
+          </article>
+          <article class="pillar">
+            <div class="pillar__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 8 10 12 6 16" />
+                <line x1="13" y1="16" x2="18" y2="16" />
+              </svg>
+            </div>
+            <h3>OWN IT</h3>
+            <p>Full transparency — everything lives in a local SQLite database. Your data never leaves your machine.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ===== COMMANDS ===== -->
+      <section class="commands" id="commands">
+        <div class="commands__inner">
+          <div class="section-head section-head--left">
+            <span class="kicker">// command-line first</span>
+            <h2>A workflow built for the keyboard.</h2>
+            <p class="section-sub">
+              Runs as a single CLI app backed by a local SQLite database for your watchlist,
+              wealth, budgets, preferences, and models. Set a default ticker so commands can
+              omit the symbol — everything stays on your machine.
+            </p>
+          </div>
+
+          <div class="cmd-grid">
+            <div class="cmd-card">
+              <code class="cmd-card__name">ghost watch</code>
+              <p>Track your watchlist of saved tickers in real time.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-card__name">ghost quote</code>
+              <p>Pull a live snapshot for any stock, future, or forex pair.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-card__name">ghost wealth</code>
+              <p>Manage personal finances, budgets, accounts, and transactions.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-card__name">ghost macro</code>
+              <p>Track rates, forex, futures, and broad macro indicators.</p>
+            </div>
+            <div class="cmd-card cmd-card--accent">
+              <code class="cmd-card__name">ghost orb</code>
+              <p>Multi-agent AI research across your markets &amp; finances.</p>
+            </div>
+            <div class="cmd-card">
+              <code class="cmd-card__name">ghost models install</code>
+              <p>Install local models like llama3.2, gpt-oss, or gemma.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== WEALTH MANAGEMENT + FORECAST ===== -->
+      <section class="feature-detail feature-detail--wealth" id="wealth">
+        <div class="feature-detail__inner">
+          <div class="feature-detail__copy">
+            <span class="kicker">// your money, your machine</span>
+            <h2>Wealth management &amp; <span class="t-green">personal forecast</span>.</h2>
+            <p class="section-sub">
+              This is your financial command center. Track every account, transaction, and budget,
+              then let Ghost project where you&apos;re headed — cash flow, net worth, and savings runway —
+              all from the terminal. Your entire financial life lives in one local SQLite database that
+              <strong class="t-white">never leaves your machine</strong>.
+            </p>
+
+            <div class="feat-list">
+              <div class="feat-list__item">
+                <span class="feat-list__mark">&gt;</span>
+                <div>
+                  <h4>Net worth &amp; cash flow tracking</h4>
+                  <p>Accounts, transactions, and monthly statements roll up into a single living picture of your wealth.</p>
+                </div>
+              </div>
+              <div class="feat-list__item">
+                <span class="feat-list__mark">&gt;</span>
+                <div>
+                  <h4>Smart budgets that actually stick</h4>
+                  <p>Set category budgets, watch burn rates in real time, and catch overspend before it happens.</p>
+                </div>
+              </div>
+              <div class="feat-list__item">
+                <span class="feat-list__mark">&gt;</span>
+                <div>
+                  <h4>Personal forecasting</h4>
+                  <p>Project future balances, savings runway, and net worth trajectories from your own history.</p>
+                </div>
+              </div>
+              <div class="feat-list__item">
+                <span class="feat-list__mark">&gt;</span>
+                <div>
+                  <h4>Encrypted &amp; private by design</h4>
+                  <p>Your SQLite database is encrypted at rest. No cloud sync, no accounts — fully transparent and yours alone.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-detail__visual">
+            <div class="mini-term">
+              <div class="mini-term__bar">
+                <span class="tdot tdot--red"></span>
+                <span class="tdot tdot--yellow"></span>
+                <span class="tdot tdot--green"></span>
+                <span class="mini-term__title">ghost wealth — forecast</span>
+              </div>
+<pre class="mini-term__body"><span class="t-dim">$</span> ghost wealth forecast --months 12
+<span class="t-green">✓</span> net worth      <span class="t-green">$184,920</span>  <span class="t-green">▲ +12.4%</span>
+<span class="t-green">✓</span> savings rate   <span class="t-green">27.8%</span>
+<span class="t-green">✓</span> runway         <span class="t-white">18.2 months</span>
+<span class="t-dim">$</span> ghost wealth budget --status
+  groceries   <span class="t-green">$412 / $600</span>
+  dining      <span class="t-red">$318 / $300</span>
+  transport   <span class="t-green">$96 / $200</span>
+<span class="t-dim">$</span> <span class="t-dim">db:</span> <span class="t-green">encrypted</span> · <span class="t-green">local-only</span><span class="cursor">_</span></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== MACRO / FUTURES / FOREX ===== -->
+      <section class="feature-detail feature-detail--macro" id="macro">
+        <div class="feature-detail__inner feature-detail__inner--reverse">
+          <div class="feature-detail__copy">
+            <span class="kicker">// the whole market, one prompt</span>
+            <h2>Macro, futures &amp; <span class="t-purple">forex</span> — at your fingertips.</h2>
+            <p class="section-sub">
+              Zoom out from single tickers to the forces that move them. Ghost pulls rates, macro
+              indicators, futures curves, and live forex pairs straight into your terminal — so you
+              read the whole board before you make a move. Cached locally for speed, owned entirely by you.
+            </p>
+
+            <div class="feat-list">
+              <div class="feat-list__item">
+                <span class="feat-list__mark t-purple">&gt;</span>
+                <div>
+                  <h4>Rates &amp; macro signals</h4>
+                  <p>Interest rates, inflation prints, and key macro indicators in one clean snapshot.</p>
+                </div>
+              </div>
+              <div class="feat-list__item">
+                <span class="feat-list__mark t-purple">&gt;</span>
+                <div>
+                  <h4>Futures across asset classes</h4>
+                  <p>Index, commodity, and crypto futures — track curves and momentum without leaving the CLI.</p>
+                </div>
+              </div>
+              <div class="feat-list__item">
+                <span class="feat-list__mark t-purple">&gt;</span>
+                <div>
+                  <h4>Live forex pairs</h4>
+                  <p>Majors, minors, and crosses with real-time quotes and automatic provider fallbacks.</p>
+                </div>
+              </div>
+              <div class="feat-list__item">
+                <span class="feat-list__mark t-purple">&gt;</span>
+                <div>
+                  <h4>Cached on your machine</h4>
+                  <p>Configurable local cache keeps lookups instant — and keeps your activity off the cloud.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-detail__visual">
+            <div class="mini-term">
+              <div class="mini-term__bar">
+                <span class="tdot tdot--red"></span>
+                <span class="tdot tdot--yellow"></span>
+                <span class="tdot tdot--green"></span>
+                <span class="mini-term__title">ghost macro — board</span>
+              </div>
+<pre class="mini-term__body"><span class="t-dim">$</span> ghost macro rates
+  US 10Y    <span class="t-green">4.21%</span>   FED   <span class="t-white">5.25%</span>
+  CPI YoY   <span class="t-purple">3.1%</span>    GDP   <span class="t-green">2.8%</span>
+<span class="t-dim">$</span> ghost macro futures
+  ES        <span class="t-green">5,418  ▲ +0.62%</span>
+  CL        <span class="t-red">78.40  ▼ -1.10%</span>
+  GC        <span class="t-green">2,344  ▲ +0.34%</span>
+<span class="t-dim">$</span> ghost macro forex
+  EUR/USD   <span class="t-green">1.0872</span>  USD/JPY <span class="t-red">156.21</span>
+<span class="t-dim">$</span> <span class="t-dim">cache:</span> <span class="t-green">local</span><span class="cursor">_</span></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SECURITY BAND ===== -->
+      <section class="security">
+        <div class="security__inner">
+          <div class="section-head">
+            <span class="kicker">// security &amp; ownership</span>
+            <h2>It lives on your machine. <span class="t-green">Period.</span></h2>
+            <p class="section-sub section-sub--center">
+              Ghost has no servers, no accounts, and no telemetry. Everything you do stays in a local,
+              encrypted SQLite database that only you control — radical transparency by design.
+            </p>
+          </div>
+          <div class="security__grid">
+            <article class="security__card">
+              <div class="security__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+              <h3>Encrypted SQLite</h3>
+              <p>Your financial data is encrypted at rest in a local database — secured on your disk, not someone else&apos;s.</p>
+            </article>
+            <article class="security__card">
+              <div class="security__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 12h4l3 8 4-16 3 8h4" />
+                </svg>
+              </div>
+              <h3>Zero cloud, zero accounts</h3>
+              <p>No sign-up, no sync, no tracking. Ghost runs entirely offline-first — you never hand over your data.</p>
+            </article>
+            <article class="security__card">
+              <div class="security__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M9 12l2 2 4-4" />
+                </svg>
+              </div>
+              <h3>Total transparency</h3>
+              <p>You can see, export, and delete everything at any time. It&apos;s your machine, your database, your rules.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== AI ORB ===== -->
+      <section class="orb" id="orb">
+        <div class="orb__card">
+          <div class="orb__visual">
+            <div class="orb__chip">
+              <svg class="orb__spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M9 2.5c.2 0 .38.13.45.32l1.06 2.92a4 4 0 0 0 2.38 2.38l2.92 1.06a.48.48 0 0 1 0 .9l-2.92 1.06a4 4 0 0 0-2.38 2.38l-1.06 2.92a.48.48 0 0 1-.9 0l-1.06-2.92a4 4 0 0 0-2.38-2.38L1.6 9.55a.48.48 0 0 1 0-.9l2.92-1.06a4 4 0 0 0 2.38-2.38l1.06-2.92A.48.48 0 0 1 9 2.5Z" />
+                <path d="M18 13.5c.18 0 .34.11.4.28l.6 1.62a2.5 2.5 0 0 0 1.5 1.5l1.62.6a.43.43 0 0 1 0 .8l-1.62.6a2.5 2.5 0 0 0-1.5 1.5l-.6 1.62a.43.43 0 0 1-.8 0l-.6-1.62a2.5 2.5 0 0 0-1.5-1.5l-1.62-.6a.43.43 0 0 1 0-.8l1.62-.6a2.5 2.5 0 0 0 1.5-1.5l.6-1.62a.43.43 0 0 1 .4-.28Z" />
+              </svg>
+              <span class="orb__chip-text">Ask Orb</span>
+            </div>
+          </div>
+          <div class="orb__copy">
+            <span class="kicker">// multi-agent ai research</span>
+            <h2>Meet the <span class="t-green">Orb</span>.</h2>
+            <p>
+              The Orb runs a multi-agent mode set up to understand every aspect of your finances and
+              investments — markets, wealth, budgets, and macro — then summarizes, analyzes, and answers
+              your questions in plain English. Run it entirely on local models so nothing ever leaves your machine.
+            </p>
+            <div class="orb__models">
+              <span class="orb__models-label">Install local models:</span>
+              <code class="orb__cmd">ghost models install <span class="t-green">llama3.2</span> <span class="t-green">gpt-oss</span> <span class="t-green">gemma</span></code>
+            </div>
+            <ul class="orb__list">
+              <li><span class="t-green">&gt;</span> Multi-agent mode understands your full financial picture</li>
+              <li><span class="t-green">&gt;</span> Supported local models: llama3.2, gpt-oss, gemma</li>
+              <li><span class="t-green">&gt;</span> Watchlist summaries &amp; finance Q&amp;A on demand</li>
+              <li><span class="t-green">&gt;</span> 100% local — full transparency, you own your data</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== INSTALL ===== -->
+      <section class="install" id="install">
+        <div class="section-head">
+          <span class="kicker">// download / install</span>
+          <h2>Install in seconds. Always free.</h2>
+        </div>
+
+        <div class="install__panel">
+          <div class="install__tabs" role="tablist">
+            <button class="tab tab--active" data-tab="npm" role="tab">npm — today</button>
+            <button class="tab" data-tab="node" role="tab">node</button>
+            <button class="tab" data-tab="brew" role="tab">Homebrew</button>
+            <button class="tab" data-tab="choco" role="tab">Chocolatey</button>
+            <button class="tab" data-tab="winget" role="tab">winget</button>
+          </div>
+
+          <div class="install__body">
+            <div class="codeblock" data-panel="npm">
+              <button class="copy-btn" data-copy="npm install&#10;npm run build&#10;npm run link:local">Copy</button>
+<pre><span class="t-dim">$</span> npm install
+<span class="t-dim">$</span> npm run build
+<span class="t-dim">$</span> npm run link:local</pre>
+            </div>
+            <div class="codeblock" data-panel="node" hidden>
+              <button class="copy-btn" data-copy="node dist/index.js">Copy</button>
+<pre><span class="t-dim">$</span> node dist/index.js</pre>
+            </div>
+            <div class="codeblock" data-panel="brew" hidden>
+              <button class="copy-btn" data-copy="brew install ghost-finance-terminal">Copy</button>
+<pre><span class="t-dim">$</span> brew install ghost-finance-terminal <span class="t-purple"># planned</span></pre>
+            </div>
+            <div class="codeblock" data-panel="choco" hidden>
+              <button class="copy-btn" data-copy="choco install ghost-finance-terminal">Copy</button>
+<pre><span class="t-dim">$</span> choco install ghost-finance-terminal <span class="t-purple"># planned</span></pre>
+            </div>
+            <div class="codeblock" data-panel="winget" hidden>
+              <button class="copy-btn" data-copy="winget install ghost-finance-terminal">Copy</button>
+<pre><span class="t-dim">$</span> winget install ghost-finance-terminal <span class="t-purple"># planned</span></pre>
+            </div>
+          </div>
+
+          <p class="install__note">
+            Homebrew, Chocolatey, and winget are planned future install methods. Designed to be
+            extendable to more providers and install methods.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===== CTA BANNER ===== -->
+      <section class="cta-banner">
+        <div class="cta-banner__inner">
+          <div>
+            <p class="cta-banner__title">Your markets.<br />Your edge.</p>
+            <p class="cta-banner__sub"><span class="t-green">&gt;</span> stay ahead<span class="cursor">_</span></p>
+          </div>
+          <a class="btn btn--primary btn--lg" href="#install">Start using Ghost — free</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+      <div class="footer__brand">
+        <!-- <span class="brand__mark brand__mark--footer" aria-hidden="true">&gt;_</span> -->
+        <span><span class="brand__prompt">&gt;_</span> Ghost Finance Terminal</span>
+      </div>
+      <p class="footer__tag">Market data. Real insights. Smarter moves. — free &amp; open source.</p>
+      <a
+        class="btn btn--ghost"
+        href="../index.html"
+      >
+        See more projects by the author
+      </a>
+      <p class="footer__copy" id="footerCopy">© 2026 Ghost Finance Terminal. All rights reserved.</p>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">Copied to clipboard</div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
