@@ -2414,7 +2414,7 @@
             </section>
 
             <!-- Work Experience Section -->
-            <section class="section">
+            <section class="section" id="products">
                 <h2><span class="accent">Application</span> Products</h2>
                 <div class="timeline">
                     <div class="timeline-item">
@@ -2461,6 +2461,24 @@
                             </div>
                             
                             <a class="timeline-description" href="ghost-finance-terminal/index.html">View Ghost Finance Terminal.</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <h3 class="timeline-title">Presence</h3>
+                                <span class="timeline-period">2026 - Present</span>
+                            </div>
+                            <h4 class="timeline-company">Active</h4>
+                            <p class="timeline-description">
+                                A native personal life dashboard for iPhone and iPad. Presence brings work tracking, fitness, travel planning, notes, and configurable everyday tools into one calm, private app.
+                            </p>
+                            <div class="achievements">
+                                <div class="achievement"><span>Built natively with SwiftUI for iOS and iPadOS 18 or newer</span></div>
+                                <div class="achievement"><span>Includes optional private iCloud synchronization and Home Screen widgets</span></div>
+                            </div>
+                            <a class="timeline-description" href="presence-app/index.html">View Presence.</a>
                         </div>
                     </div>
                 </div>
@@ -2553,7 +2571,7 @@
                         </h3>
                         <p class="company-status">Public company</p>
                         <p class="company-description">One of the largest financial services companies in the world, providing banking, investment, and mortgage services to millions of customers globally.</p>
-                        <p class="company-stock"><span class="stock-icon up" aria-hidden="true">▲</span> WFC · $80.90</p>
+                        <p class="company-stock" data-stock-symbol="WFC"><span class="stock-icon up" aria-hidden="true">▲</span> WFC · $80.90</p>
                     </a>
                     </div>
                     <div class="company-card">
@@ -2567,7 +2585,7 @@
                         </h3>
                         <p class="company-status">Private company</p>
                         <p class="company-description">Leading fractional aircraft ownership company, enabling accessible private aviation through shared ownership and on-demand charter services worldwide.</p>
-                        <p class="company-stock"><span class="stock-icon up" aria-hidden="true">▲</span> BRK.B · $473.01</p>
+                        <p class="company-stock" data-stock-symbol="BRK-B"><span class="stock-icon up" aria-hidden="true">▲</span> BRK.B · $473.01</p>
                     </a>
                     </div>
                     <div class="company-card">
@@ -2581,7 +2599,7 @@
                         </h3>
                         <p class="company-status">Public company</p>
                         <p class="company-description">Leading global financial services firm offering banking, asset management, and capital markets services to corporations, institutions, and individual clients.</p>
-                        <p class="company-stock"><span class="stock-icon down" aria-hidden="true">▼</span> JPM · $312.47</p>
+                        <p class="company-stock" data-stock-symbol="JPM"><span class="stock-icon down" aria-hidden="true">▼</span> JPM · $312.47</p>
                     </a>
                     </div>
                 </div>
@@ -2603,7 +2621,7 @@
     </div>
 
         <script src="assets/js/main.js"></script>
-    <script>
+    <script type="text/plain" data-legacy-inline-script>
         const themeToggle = document.getElementById('themeToggle');
         const terminalToggle = document.getElementById('terminalToggle');
         const terminalClose = document.getElementById('terminalClose');
@@ -2669,7 +2687,7 @@
                     '<span class="tag">stocks</span> Show public/private company ticker data',
                     '<span class="tag">traveling</span> Show travel and globe status',
                     '<span class="tag">version</span> Show last updated and build information',
-                    '<span class="tag">open &lt;site&gt;</span> Open links (linkedin, github, email, appstore)',
+                    '<span class="tag">open &lt;site&gt;</span> Open links (linkedin, github, email, appstore, presence, ghost, loop)',
                     '<span class="tag">theme &lt;mode&gt;</span> Switch theme (light, dark)',
                     '<span class="tag">resume</span> Request a resume summary',
                     '<span class="tag">clear</span> Clear terminal output',
@@ -2696,6 +2714,7 @@
                     'Active application products:',
                     '  • Loop — a location-based safety app that provides alerts, safety tips, and community-driven updates.',
                     '  • Ghost Finance Terminal — a CLI-first financial terminal with market data, news, sentiment, insider trading, charts, and AI research.',
+                    '  • Presence — a native personal life dashboard for iPhone and iPad, bringing work, fitness, travel, notes, and everyday tools together.',
                     '  • More projects are coming soon. Stay tuned!'
                 ]);
             },
@@ -2721,9 +2740,10 @@
             },
             version: () => {
                 printLines([
-                    'Portfolio CLI v1.0.0',
-                    'Last updated: May 3, 2026',
-                    'Build: web portfolio viewer'
+                    'Portfolio CLI v1.1.0',
+                    'Last updated: July 12, 2026',
+                    'Build: portfolio viewer with weekly market-data refresh',
+                    'Products: Loop Safety, Ghost Finance Terminal, Presence'
                 ]);
             },
             clear: () => {
@@ -2734,7 +2754,7 @@
         function printCompanyData(title) {
             const lines = [title];
 
-            companyMarketData.forEach((company) => {
+            (window.portfolioMarketData || companyMarketData).forEach((company) => {
                 const marketLine = company.price
                     ? `${company.status} — ${company.ticker} — ${company.price} (${company.priceDate})`
                     : `${company.status} — ${company.ticker}`;
@@ -2743,7 +2763,7 @@
                 lines.push(`    ${company.note}`);
             });
 
-            lines.push('Prices are static portfolio metadata, not investment advice.');
+            lines.push('Prices refresh at most once every seven days and may show the latest cached close. Not investment advice.');
             printLines(lines);
         }
 
@@ -2765,6 +2785,9 @@
                     email: 'mailto:virajpatel325@gmail.com',
                     appstore: 'https://apps.apple.com/us/app/seed-social/id6443686127',
                     'app store': 'https://apps.apple.com/us/app/seed-social/id6443686127',
+                    presence: 'presence-app/index.html',
+                    ghost: 'ghost-finance-terminal/index.html',
+                    loop: 'https://www.loopsafety.online',
                     mail: 'mailto:virajpatel325@gmail.com'
                 };
 
@@ -2772,7 +2795,7 @@
                     window.open(urls[normalized], '_blank');
                     printLines([`Opening ${normalized} in new tab...`]);
                 } else {
-                    printLines([`Unknown link: ${value}`, 'Available: linkedin, github, email, appstore, app store, mail']);
+                    printLines([`Unknown link: ${value}`, 'Available: linkedin, github, email, appstore, presence, ghost, loop, mail']);
                 }
             }
         };

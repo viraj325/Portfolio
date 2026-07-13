@@ -14,11 +14,14 @@ const themeToggle = document.getElementById('themeToggle');
         const savedTheme = localStorage.getItem('theme') || 'light';
         body.setAttribute('data-theme', savedTheme);
         const quotes = [
-            { text: 'Travel teaches you what no classroom can.', author: 'Anonymous' },
-            { text: 'Collect moments, not just miles.', author: 'Aarti Khurana' },
-            { text: 'Every place leaves a new perspective behind.', author: 'Nadia Evans' },
-            { text: 'The world feels smaller when you explore it.', author: 'Elliot Shaw' },
-            { text: 'Good journeys change how you see home.', author: 'Maya Laurent' }
+            { text: 'The impediment to action advances action. What stands in the way becomes the way.', author: 'Marcus Aurelius' },
+            { text: 'No man is free who is not master of himself.', author: 'Epictetus' },
+            { text: 'Luck is what happens when preparation meets opportunity.', author: 'Seneca' },
+            { text: 'He who has a why to live can bear almost any how.', author: 'Friedrich Nietzsche' },
+            { text: 'Act as if what you do makes a difference. It does.', author: 'William James' },
+            { text: 'The only journey is the one within.', author: 'Rainer Maria Rilke' },
+            { text: 'Life shrinks or expands in proportion to one’s courage.', author: 'Anaïs Nin' },
+            { text: 'It is never too late to be what you might have been.', author: 'George Eliot' }
         ];
 
         if (heroQuote) {
@@ -33,6 +36,7 @@ const themeToggle = document.getElementById('themeToggle');
             {
                 name: 'Wells Fargo',
                 status: 'Public',
+                symbol: 'WFC',
                 ticker: 'NYSE: WFC',
                 price: '$80.90',
                 priceDate: 'May 1, 2026 close',
@@ -41,6 +45,7 @@ const themeToggle = document.getElementById('themeToggle');
             {
                 name: 'NetJets',
                 status: 'Private',
+                symbol: 'BRK-B',
                 ticker: 'NYSE: BRK.B (parent)',
                 price: '$473.01',
                 priceDate: 'May 1, 2026 close',
@@ -49,12 +54,81 @@ const themeToggle = document.getElementById('themeToggle');
             {
                 name: 'JPMorgan Chase',
                 status: 'Public',
+                symbol: 'JPM',
                 ticker: 'NYSE: JPM',
                 price: '$312.47',
                 priceDate: 'May 1, 2026 close',
                 note: 'Banking product infrastructure, compliance tooling, and delivery coordination.'
             }
         ];
+
+        const marketCacheKey = 'portfolio-market-data-v1';
+        const marketRefreshInterval = 7 * 24 * 60 * 60 * 1000;
+
+        function readMarketCache() {
+            try {
+                const cache = JSON.parse(localStorage.getItem(marketCacheKey));
+                return cache && Array.isArray(cache.quotes) ? cache : null;
+            } catch {
+                return null;
+            }
+        }
+
+        function applyMarketQuotes(quotes) {
+            quotes.forEach((quote) => {
+                const company = companyMarketData.find((item) => item.symbol === quote.symbol);
+                if (company) {
+                    company.price = `$${quote.price.toFixed(2)}`;
+                    company.priceDate = `${quote.priceDate} close`;
+                    company.direction = quote.direction;
+                }
+
+                document.querySelectorAll(`[data-stock-symbol="${quote.symbol}"]`).forEach((node) => {
+                    const icon = node.querySelector('.stock-icon');
+                    const displaySymbol = quote.symbol === 'BRK-B' ? 'BRK.B' : quote.symbol;
+                    const isUp = quote.direction !== 'down';
+                    if (icon) {
+                        icon.textContent = isUp ? '▲' : '▼';
+                        icon.classList.toggle('up', isUp);
+                        icon.classList.toggle('down', !isUp);
+                    }
+                    node.lastChild.textContent = ` ${displaySymbol} · $${quote.price.toFixed(2)}`;
+                    node.title = `Latest market close: ${quote.priceDate}`;
+                });
+            });
+            window.portfolioMarketData = companyMarketData;
+        }
+
+        async function refreshWeeklyMarketData() {
+            const cache = readMarketCache();
+            if (cache) applyMarketQuotes(cache.quotes);
+            if (cache && Date.now() - cache.updatedAt < marketRefreshInterval) return;
+
+            try {
+                const quotes = await Promise.all(companyMarketData.map(async (company) => {
+                    const response = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${company.symbol}?range=5d&interval=1d`, { cache: 'no-store' });
+                    if (!response.ok) throw new Error(`Market request failed for ${company.symbol}`);
+                    const chart = (await response.json()).chart?.result?.[0];
+                    const price = chart?.meta?.regularMarketPrice;
+                    const previousClose = chart?.meta?.chartPreviousClose ?? chart?.meta?.previousClose;
+                    if (!Number.isFinite(price)) throw new Error(`No market price for ${company.symbol}`);
+                    const timestamp = chart?.meta?.regularMarketTime || chart?.timestamp?.at(-1) || Date.now() / 1000;
+                    return {
+                        symbol: company.symbol,
+                        price,
+                        direction: Number.isFinite(previousClose) && price < previousClose ? 'down' : 'up',
+                        priceDate: new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/New_York' }).format(new Date(timestamp * 1000))
+                    };
+                }));
+                localStorage.setItem(marketCacheKey, JSON.stringify({ updatedAt: Date.now(), quotes }));
+                applyMarketQuotes(quotes);
+            } catch (error) {
+                console.info('Live market data is unavailable; keeping the most recent saved prices.', error);
+            }
+        }
+
+        window.portfolioMarketData = companyMarketData;
+        refreshWeeklyMarketData();
 
         if (nfcCard) {
             const query = window.location.search.slice(1);
@@ -79,7 +153,7 @@ const themeToggle = document.getElementById('themeToggle');
                     '<span class="tag">stocks</span> Show public/private company ticker data',
                     '<span class="tag">traveling</span> Show travel and globe status',
                     '<span class="tag">version</span> Show last updated and build information',
-                    '<span class="tag">open &lt;site&gt;</span> Open links (linkedin, github, email, appstore)',
+                    '<span class="tag">open &lt;site&gt;</span> Open links (linkedin, github, email, appstore, presence, ghost, loop)',
                     '<span class="tag">theme &lt;mode&gt;</span> Switch theme (light, dark)',
                     '<span class="tag">resume</span> Request a resume summary',
                     '<span class="tag">clear</span> Clear terminal output',
@@ -105,6 +179,8 @@ const themeToggle = document.getElementById('themeToggle');
                 printLines([
                     'Active application products:',
                     '  • Loop — a location-based safety app that provides alerts, safety tips, and community-driven updates.',
+                    '  • Ghost Finance Terminal — a CLI-first financial terminal with market data, news, sentiment, insider trading, charts, and AI research.',
+                    '  • Presence — a native personal life dashboard for iPhone and iPad, bringing work, fitness, travel, notes, and everyday tools together.',
                     '  • More projects are coming soon. Stay tuned!'
                 ]);
             },
@@ -130,9 +206,10 @@ const themeToggle = document.getElementById('themeToggle');
             },
             version: () => {
                 printLines([
-                    'Portfolio CLI v1.0.0',
-                    'Last updated: May 3, 2026',
-                    'Build: web portfolio viewer'
+                    'Portfolio CLI v1.1.0',
+                    'Last updated: July 12, 2026',
+                    'Build: portfolio viewer with weekly market-data refresh',
+                    'Products: Loop Safety, Ghost Finance Terminal, Presence'
                 ]);
             },
             clear: () => {
@@ -143,7 +220,7 @@ const themeToggle = document.getElementById('themeToggle');
         function printCompanyData(title) {
             const lines = [title];
 
-            companyMarketData.forEach((company) => {
+            (window.portfolioMarketData || companyMarketData).forEach((company) => {
                 const marketLine = company.price
                     ? `${company.status} — ${company.ticker} — ${company.price} (${company.priceDate})`
                     : `${company.status} — ${company.ticker}`;
@@ -152,7 +229,7 @@ const themeToggle = document.getElementById('themeToggle');
                 lines.push(`    ${company.note}`);
             });
 
-            lines.push('Prices are static portfolio metadata, not investment advice.');
+            lines.push('Prices refresh at most once every seven days and may show the latest cached close. Not investment advice.');
             printLines(lines);
         }
 
@@ -174,6 +251,9 @@ const themeToggle = document.getElementById('themeToggle');
                     email: 'mailto:virajpatel325@gmail.com',
                     appstore: 'https://apps.apple.com/us/app/seed-social/id6443686127',
                     'app store': 'https://apps.apple.com/us/app/seed-social/id6443686127',
+                    presence: 'presence-app/index.html',
+                    ghost: 'ghost-finance-terminal/index.html',
+                    loop: 'https://www.loopsafety.online',
                     mail: 'mailto:virajpatel325@gmail.com'
                 };
 
@@ -181,7 +261,7 @@ const themeToggle = document.getElementById('themeToggle');
                     window.open(urls[normalized], '_blank');
                     printLines([`Opening ${normalized} in new tab...`]);
                 } else {
-                    printLines([`Unknown link: ${value}`, 'Available: linkedin, github, email, appstore, app store, mail']);
+                    printLines([`Unknown link: ${value}`, 'Available: linkedin, github, email, appstore, presence, ghost, loop, mail']);
                 }
             }
         };
@@ -416,4 +496,3 @@ const themeToggle = document.getElementById('themeToggle');
 
         document.querySelector('.hero').style.opacity = '1';
         document.querySelector('.hero').style.transform = 'translateY(0)';
-
