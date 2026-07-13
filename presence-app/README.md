@@ -19,6 +19,14 @@ npm run build
 
 The production-ready static output is written to `dist/`.
 
+## Legal drafts
+
+Privacy Policy and Terms & Conditions are available at `/privacy/` and `/terms/`. Complete every value in `PRESENCE_LEGAL_CONFIG` inside `config.js` before publication. Validation and builds intentionally print a warning while legal placeholders remain unresolved. These drafts require review by the developer and a qualified attorney before release.
+
+## Contact form
+
+The homepage contact form posts to FormSubmit and delivers submissions to `viraj13_2000@yahoo.com`. Submit the form once after deployment, then approve FormSubmit's one-time activation email in that inbox. Until activation is confirmed, normal visitor submissions will not be forwarded.
+
 ## Configure links
 
 Update `config.js` when App Store, privacy, support, or contact destinations are available. Placeholder destinations are intentionally used until real URLs are known.

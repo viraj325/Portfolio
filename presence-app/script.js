@@ -30,6 +30,9 @@ document.querySelectorAll("[data-config-link]").forEach((link) => {
   link.href = config[key];
   if (key === "appStoreUrl") link.setAttribute("aria-label", `${link.textContent.trim()} — ${config.releaseStatus}`);
 });
+document.querySelectorAll("[data-contact-form]").forEach((form) => {
+  form.action = config.contactFormEndpoint;
+});
 document.querySelectorAll("[data-compatibility]").forEach((node) => {
   node.textContent = config.compatibility;
 });
@@ -48,6 +51,10 @@ function updateThemeButton() {
   themeToggle.innerHTML = `<i data-lucide="${dark ? "sun" : "moon"}" aria-hidden="true"></i>`;
   if (window.lucide) window.lucide.createIcons({ nodes: [themeToggle] });
 }
+document.querySelectorAll('[data-lucide="contactless"]').forEach((icon) => {
+  icon.dataset.lucide = "radio";
+});
+
 themeToggle.addEventListener("click", () => {
   const next = currentTheme() === "dark" ? "light" : "dark";
   root.dataset.theme = next;
@@ -55,10 +62,6 @@ themeToggle.addEventListener("click", () => {
   updateThemeButton();
 });
 updateThemeButton();
-
-document.querySelectorAll('[data-lucide="contactless"]').forEach((icon) => {
-  icon.dataset.lucide = "radio";
-});
 if (window.lucide) window.lucide.createIcons({ attrs: { "aria-hidden": "true" } });
 
 const navToggle = document.querySelector("[data-nav-toggle]");
