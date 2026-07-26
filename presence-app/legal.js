@@ -6,21 +6,9 @@ document.querySelectorAll("[data-legal]").forEach((node) => {
 });
 
 document.querySelectorAll("[data-legal-email]").forEach((link) => {
-  const unresolved = legalConfig.contactEmail.startsWith("[");
   link.textContent = legalConfig.contactEmail;
-  link.href = unresolved ? "#legal-contact-placeholder" : `mailto:${legalConfig.contactEmail}`;
+  link.href = `mailto:${legalConfig.contactEmail}`;
 });
-
-const unresolvedLegalValues = Object.entries(legalConfig)
-  .filter(([, value]) => /^\[.+\]$/.test(value))
-  .map(([key, value]) => `${key}: ${value}`);
-
-if (unresolvedLegalValues.length) {
-  console.warn(`Presence legal drafts contain unresolved configuration:\n${unresolvedLegalValues.join("\n")}`);
-  document.querySelectorAll("[data-legal-warning]").forEach((node) => {
-    node.hidden = false;
-  });
-}
 
 const savedTheme = localStorage.getItem("presence-theme");
 if (savedTheme === "light" || savedTheme === "dark") document.documentElement.dataset.theme = savedTheme;

@@ -21,9 +21,9 @@ npm run build
 
 The production-ready static output is written to `dist/`.
 
-## Legal drafts
+## Legal pages
 
-Privacy Policy and Terms & Conditions are available at `/privacy/` and `/terms/`. Complete every value in `PRESENCE_LEGAL_CONFIG` inside `config.js` before publication. Validation and builds intentionally print a warning while legal placeholders remain unresolved. These drafts require review by the developer and a qualified attorney before release.
+Privacy Policy and Terms & Conditions are available at `/privacy/` and `/terms/`. The public legal identity, support email, and effective date are configured in `PRESENCE_LEGAL_CONFIG` inside `config.js`. The pages intentionally omit a mailing address, apply to users of all ages subject to local consent requirements, and do not designate a specific governing jurisdiction. Independent legal review is recommended before release.
 
 ## Contact form
 
@@ -31,7 +31,7 @@ The homepage contact form posts to FormSubmit and delivers submissions to `viraj
 
 ## Configure links
 
-Update `config.js` when App Store, privacy, support, or contact destinations are available. Placeholder destinations are intentionally used until real URLs are known.
+Update `config.js` when the final App Store destination becomes available. Until then, App Store and support actions route visitors to the website contact section.
 
 ## Legacy product images
 
