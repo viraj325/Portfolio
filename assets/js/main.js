@@ -153,7 +153,7 @@ const themeToggle = document.getElementById('themeToggle');
                     '<span class="tag">stocks</span> Show public/private company ticker data',
                     '<span class="tag">traveling</span> Show travel and globe status',
                     '<span class="tag">version</span> Show last updated and build information',
-                    '<span class="tag">open &lt;site&gt;</span> Open links (linkedin, github, email, appstore, presence, ghost, loop)',
+                    '<span class="tag">open &lt;site&gt;</span> Open links (linkedin, github, email, appstore, presence, seed, ghost, loop)',
                     '<span class="tag">theme &lt;mode&gt;</span> Switch theme (light, dark)',
                     '<span class="tag">resume</span> Request a resume summary',
                     '<span class="tag">clear</span> Clear terminal output',
@@ -181,6 +181,7 @@ const themeToggle = document.getElementById('themeToggle');
                     '  • Loop — a location-based safety app that provides alerts, safety tips, and community-driven updates.',
                     '  • Ghost Finance Terminal — a CLI-first financial terminal with market data, news, sentiment, insider trading, charts, and AI research.',
                     '  • Presence — a native personal life dashboard for iPhone and iPad, bringing work, fitness, travel, notes, and everyday tools together.',
+                    '  • Seed — a calm, local-first startup intelligence app for founders and startup explorers.',
                     '  • More projects are coming soon. Stay tuned!'
                 ]);
             },
@@ -207,9 +208,9 @@ const themeToggle = document.getElementById('themeToggle');
             version: () => {
                 printLines([
                     'Portfolio CLI v1.1.0',
-                    'Last updated: July 12, 2026',
+                    'Last updated: July 26, 2026',
                     'Build: portfolio viewer with weekly market-data refresh',
-                    'Products: Loop Safety, Ghost Finance Terminal, Presence'
+                    'Products: Loop Safety, Ghost Finance Terminal, Presence, Seed'
                 ]);
             },
             clear: () => {
@@ -252,6 +253,7 @@ const themeToggle = document.getElementById('themeToggle');
                     appstore: 'https://apps.apple.com/us/app/seed-social/id6443686127',
                     'app store': 'https://apps.apple.com/us/app/seed-social/id6443686127',
                     presence: 'presence-app/index.html',
+                    seed: 'seed/index.html',
                     ghost: 'ghost-finance-terminal/index.html',
                     loop: 'https://www.loopsafety.online',
                     mail: 'mailto:virajpatel325@gmail.com'
@@ -261,7 +263,7 @@ const themeToggle = document.getElementById('themeToggle');
                     window.open(urls[normalized], '_blank');
                     printLines([`Opening ${normalized} in new tab...`]);
                 } else {
-                    printLines([`Unknown link: ${value}`, 'Available: linkedin, github, email, appstore, presence, ghost, loop, mail']);
+                    printLines([`Unknown link: ${value}`, 'Available: linkedin, github, email, appstore, presence, seed, ghost, loop, mail']);
                 }
             }
         };
