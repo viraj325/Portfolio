@@ -2,7 +2,7 @@ import { readFile, access } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
-for (const page of ["index.html", "privacy/index.html", "terms/index.html"]) {
+for (const page of ["index.html", "index-old.html", "privacy/index.html", "terms/index.html"]) {
   const html = await readFile(resolve(root, page), "utf8");
   const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]));
   const duplicateIds = [...ids].filter((id) => html.match(new RegExp(`\\sid="${id}"`, "g"))?.length > 1);
@@ -15,7 +15,16 @@ for (const page of ["index.html", "privacy/index.html", "terms/index.html"]) {
   }
 }
 
-for (const asset of ["styles.css", "script.js", "legal.css", "legal.js", "config.js", "assets/app-icon.png"]) {
+for (const asset of [
+  "styles.css",
+  "script.js",
+  "styles-old.css",
+  "script-old.js",
+  "legal.css",
+  "legal.js",
+  "config.js",
+  "assets/app-icon.png"
+]) {
   await access(resolve(root, asset));
 }
 

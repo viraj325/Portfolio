@@ -1,6 +1,8 @@
 # Presence marketing site
 
-A dependency-free, responsive marketing site grounded in the native Presence app's `WorkTheme` and product surfaces.
+A dependency-free, responsive marketing site grounded in the native Presence app's warm stone, gold, olive, amber, and clay visual language.
+
+The active homepage is a screenshot-free editorial redesign. The previous screenshot-slot layout remains available at `/index-old.html` with its original CSS and JavaScript preserved.
 
 ## Run locally
 
@@ -31,9 +33,9 @@ The homepage contact form posts to FormSubmit and delivers submissions to `viraj
 
 Update `config.js` when App Store, privacy, support, or contact destinations are available. Placeholder destinations are intentionally used until real URLs are known.
 
-## Add real product images
+## Legacy product images
 
-All product image slots are centralized in `config.js` under `PRESENCE_PRODUCT_IMAGES`. Add optimized local paths such as `"assets/screenshots/hero-iphone.webp"` to the matching key. A null or empty value deliberately renders the labeled placeholder.
+The active redesign does not use screenshots or product-image placeholders. The image configuration below is retained only for `/index-old.html`.
 
 - `heroIPhone`: iPhone portrait, 9:19.5
 - `heroIPad`: iPad landscape, 4:3
