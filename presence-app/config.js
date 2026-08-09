@@ -1,5 +1,5 @@
 window.PRESENCE_CONFIG = Object.freeze({
-  appStoreUrl: "#contact",
+  appStoreUrl: "https://apps.apple.com/us/app/presence-your-life-together/id6790247479",
   privacyUrl: "privacy/",
   termsUrl: "terms/",
   supportUrl: "#contact",
@@ -7,7 +7,7 @@ window.PRESENCE_CONFIG = Object.freeze({
   contactFormEndpoint: "https://formsubmit.co/viraj13_2000@yahoo.com",
   creatorSiteUrl: "../index.html#products",
   compatibility: "Requires iOS or iPadOS 18 or newer",
-  releaseStatus: "Presence is coming soon to the App Store"
+  releaseStatus: "Presence is available on the App Store"
 });
 
 window.PRESENCE_LEGAL_CONFIG = Object.freeze({
