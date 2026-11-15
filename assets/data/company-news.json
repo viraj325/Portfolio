@@ -3,8 +3,14 @@
     {
       "id": "wells-fargo",
       "name": "Wells Fargo",
-      "employment": { "start": "2026-03-01", "end": null },
-      "stock": { "symbol": "NYSE:WFC", "label": "WFC · Wells Fargo" },
+      "employment": {
+        "start": "2026-03-01",
+        "end": null
+      },
+      "stock": {
+        "symbol": "NYSE:WFC",
+        "label": "WFC · Wells Fargo"
+      },
       "news": [
         {
           "date": "2026-03-05",
@@ -18,9 +24,15 @@
     {
       "id": "netjets",
       "name": "NetJets",
-      "employment": { "start": "2025-05-01", "end": "2026-02-28" },
-      "stock": null,
-      "marketNote": "Privately held · No standalone publicly traded stock.",
+      "employment": {
+        "start": "2025-05-01",
+        "end": "2026-02-28"
+      },
+      "stock": {
+        "symbol": "NYSE:BRK.B",
+        "label": "BRK.B · Berkshire Hathaway (parent company)"
+      },
+      "marketNote": "NetJets is a privately held subsidiary of Berkshire Hathaway. The stock tile shows its parent company, NYSE: BRK.B.",
       "news": [
         {
           "date": "2025-07",
@@ -41,8 +53,14 @@
     {
       "id": "jpmorgan-chase",
       "name": "JPMorgan Chase",
-      "employment": { "start": "2022-07-01", "end": "2025-05-31" },
-      "stock": { "symbol": "NYSE:JPM", "label": "JPM · JPMorgan Chase" },
+      "employment": {
+        "start": "2022-07-01",
+        "end": "2025-05-31"
+      },
+      "stock": {
+        "symbol": "NYSE:JPM",
+        "label": "JPM · JPMorgan Chase"
+      },
       "news": [
         {
           "date": "2023-05-01",

@@ -46,7 +46,7 @@ const themeToggle = document.getElementById('themeToggle');
                 name: 'NetJets',
                 status: 'Private',
                 symbol: 'BRK-B',
-                ticker: 'NYSE: BRK.B (parent)',
+                ticker: 'NYSE: BRK.B (Berkshire Hathaway, parent company)',
                 price: '$473.01',
                 priceDate: 'May 1, 2026 close',
                 note: 'Private subsidiary of Berkshire Hathaway; BRK.B shown as parent market proxy.'
@@ -85,7 +85,7 @@ const themeToggle = document.getElementById('themeToggle');
 
                 document.querySelectorAll(`[data-stock-symbol="${quote.symbol}"]`).forEach((node) => {
                     const icon = node.querySelector('.stock-icon');
-                    const displaySymbol = quote.symbol === 'BRK-B' ? 'BRK.B' : quote.symbol;
+                    const displaySymbol = quote.symbol === 'BRK-B' ? 'BRK.B (Berkshire Hathaway · parent)' : quote.symbol;
                     const isUp = quote.direction !== 'down';
                     if (icon) {
                         icon.textContent = isUp ? '▲' : '▼';
@@ -151,9 +151,12 @@ const themeToggle = document.getElementById('themeToggle');
                     '<span class="tag">products</span> Describe current active applications',
                     '<span class="tag">companies</span> Show notable company work and market status',
                     '<span class="tag">stocks</span> Show public/private company ticker data',
+                    '<span class="tag">experience</span> Show employment history and dates',
+                    '<span class="tag">news</span> Read company milestones from my employment periods',
+                    '<span class="tag">xbox</span> Show my Xbox gamer tag and profile',
                     '<span class="tag">traveling</span> Show travel and globe status',
                     '<span class="tag">version</span> Show last updated and build information',
-                    '<span class="tag">open &lt;site&gt;</span> Open links (linkedin, github, email, appstore, presence, seed, ghost, loop)',
+                    '<span class="tag">open &lt;site&gt;</span> Open links (linkedin, github, email, appstore, presence, seed, ghost, loop, xbox, news)',
                     '<span class="tag">theme &lt;mode&gt;</span> Switch theme (light, dark)',
                     '<span class="tag">resume</span> Request a resume summary',
                     '<span class="tag">clear</span> Clear terminal output',
@@ -162,9 +165,9 @@ const themeToggle = document.getElementById('themeToggle');
             },
             about: () => {
                 printLines([
-                    'I am Viraj Patel, a product-focused software engineer building mobile-first applications.',
-                    'My portfolio page highlights active application products, contact methods, and collaboration goals.',
-                    'Try `contact` or `products` for a quick summary.'
+                    'I am Viraj Patel, a Senior Software Engineer building mobile-first applications.',
+                    'My portfolio highlights Loop Safety, Ghost Finance Terminal, Presence, Seed, and company milestones from my career.',
+                    'Try `experience`, `news`, `contact`, `products`, or `xbox` to explore.'
                 ]);
             },
             contact: () => {
@@ -172,7 +175,9 @@ const themeToggle = document.getElementById('themeToggle');
                     'Contact information:',
                     '  Email: virajpatel325@gmail.com',
                     '  GitHub: https://github.com/viraj325',
-                    '  LinkedIn: https://www.linkedin.com/in/viraj-patel-b9baa3143/'
+                    '  LinkedIn: https://www.linkedin.com/in/viraj-patel-b9baa3143/',
+                    '  Xbox: viraj325 — https://www.xbox.com/play/user/viraj325',
+                    '  Location: Columbus, OH'
                 ]);
             },
             products: () => {
@@ -185,11 +190,14 @@ const themeToggle = document.getElementById('themeToggle');
                     '  • More projects are coming soon. Stay tuned!'
                 ]);
             },
-            resume: () => {
+            resume: () => printCareerHistory(true),
+            experience: () => printCareerHistory(),
+            news: () => printCareerNews(),
+            xbox: () => {
                 printLines([
-                    'Resume summary:',
-                    '  Experience building consumer mobile products, developer tools, and product experiences.',
-                    '  Available upon request via email or LinkedIn.'
+                    'Xbox gamer tag: viraj325',
+                    'Profile: https://www.xbox.com/play/user/viraj325',
+                    'Use `open xbox` to visit my profile.'
                 ]);
             },
             companies: () => {
@@ -207,16 +215,79 @@ const themeToggle = document.getElementById('themeToggle');
             },
             version: () => {
                 printLines([
-                    'Portfolio CLI v1.1.0',
-                    'Last updated: July 26, 2026',
-                    'Build: portfolio viewer with weekly market-data refresh',
-                    'Products: Loop Safety, Ghost Finance Terminal, Presence, Seed'
+                    'Portfolio CLI v1.2.0',
+                    'Last updated: November 15, 2026',
+                    'Build: career history, curated company news, Xbox profile, and weekly market-data refresh',
+                    'Products: Loop Safety, Ghost Finance Terminal, Presence, Seed',
+                    'News: company-news/index.html (TradingView tiles for WFC, JPM, and Berkshire Hathaway parent BRK.B)'
                 ]);
             },
             clear: () => {
                 terminalBody.innerHTML = '';
             }
         };
+
+        // The page and terminal share the same editable career/news data and date filtering.
+        let careerDataPromise;
+        function loadCareerData() {
+            if (!careerDataPromise) {
+                careerDataPromise = Promise.all([
+                    fetch('assets/data/company-news.json').then(response => {
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        return response.json();
+                    }),
+                    import('./company-news.js')
+                ]).then(([data, helpers]) => ({ data: helpers.validateData(data), helpers }))
+                    .catch(error => { careerDataPromise = null; throw error; });
+            }
+            return careerDataPromise;
+        }
+
+        function terminalText(value) {
+            return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+        }
+
+        function careerDate(value) {
+            return new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
+                .format(new Date(`${value.length === 7 ? value + '-01' : value}T00:00:00Z`));
+        }
+
+        async function printCareerHistory(resume = false) {
+            try {
+                const { data } = await loadCareerData();
+                const lines = [resume ? 'Resume summary — Viraj Patel, Senior Software Engineer:' : 'Employment history:'];
+                for (const company of data.companies) {
+                    const period = `${careerDate(company.employment.start)} — ${company.employment.end ? careerDate(company.employment.end) : 'Present'}`;
+                    lines.push(`  • ${terminalText(company.name)}: ${period}`);
+                }
+                if (resume) lines.push('  Products: Loop Safety, Ghost Finance Terminal, Presence, Seed.', '  Full resume available upon request via email or LinkedIn.');
+                lines.push('Use `news` for company milestones or `open news` for the visual timeline.');
+                printLines(lines);
+            } catch (error) {
+                printLines(['Career history is unavailable. Please try again or use `open news`.']);
+            }
+        }
+
+        async function printCareerNews() {
+            try {
+                const { data, helpers } = await loadCareerData();
+                const lines = ['Company news during my employment (oldest first per company):'];
+                for (const company of data.companies) {
+                    lines.push('', terminalText(company.name));
+                    const events = helpers.timelineEvents(company);
+                    if (!events.length) lines.push('  No milestones added for this chapter yet.');
+                    for (const event of events) {
+                        lines.push(`  • ${terminalText(event.date)} — ${terminalText(event.title)}`,
+                            `    ${terminalText(event.description)}`,
+                            `    Source: <a href="${terminalText(event.url)}" target="_blank" rel="noopener noreferrer">${terminalText(event.source)} ↗</a>`);
+                    }
+                }
+                lines.push('', 'Use `open news` for horizontal timelines and current TradingView stock tiles.', 'This is a curated history, updated by hand.');
+                printLines(lines);
+            } catch (error) {
+                printLines(['Company news is unavailable. Please try again or use `open news`.']);
+            }
+        }
 
         function printCompanyData(title) {
             const lines = [title];
@@ -249,6 +320,9 @@ const themeToggle = document.getElementById('themeToggle');
                 const urls = {
                     linkedin: 'https://www.linkedin.com/in/viraj-patel-b9baa3143/',
                     github: 'https://github.com/viraj325',
+                    xbox: 'https://www.xbox.com/play/user/viraj325',
+                    news: 'company-news/index.html',
+                    timeline: 'company-news/index.html',
                     email: 'mailto:virajpatel325@gmail.com',
                     appstore: 'https://apps.apple.com/us/app/seed-venture-beyond/id6443686127',
                     'app store': 'https://apps.apple.com/us/app/seed-venture-beyond/id6443686127',
@@ -260,10 +334,10 @@ const themeToggle = document.getElementById('themeToggle');
                 };
 
                 if (urls[normalized]) {
-                    window.open(urls[normalized], '_blank');
+                    window.open(urls[normalized], '_blank', 'noopener,noreferrer');
                     printLines([`Opening ${normalized} in new tab...`]);
                 } else {
-                    printLines([`Unknown link: ${value}`, 'Available: linkedin, github, email, appstore, presence, seed, ghost, loop, mail']);
+                    printLines([`Unknown link: ${value}`, 'Available: linkedin, github, email, appstore, presence, seed, ghost, loop, mail, xbox, news, timeline']);
                 }
             }
         };
@@ -305,19 +379,19 @@ const themeToggle = document.getElementById('themeToggle');
                 const isMobile = window.innerWidth <= 640;
                 const introMessage = isMobile ? [
                     '<span class="terminal-command">viraj@portfolio:~$ whoami</span>',
-                    'Software Engineer | Product Builder',
+                    'Senior Software Engineer | Product Builder',
                     '',
                     '<span class="terminal-command">viraj@portfolio:~$ ls commands/</span>',
-                    '<span class="tag">help</span> <span class="tag">about</span> <span class="tag">contact</span> <span class="tag">products</span>',
+                    '<span class="tag">help</span> <span class="tag">experience</span> <span class="tag">news</span> <span class="tag">xbox</span>',
                     '',
                     '<span class="terminal-command">viraj@portfolio:~$ echo "Ready to explore?"</span>',
                     'Ready to explore.'
                 ] : [
                     '<span class="terminal-command">viraj@portfolio:~$ whoami</span>',
-                    'Software Engineer | Product Builder | Tech Enthusiast',
+                    'Senior Software Engineer | Product Builder | Tech Enthusiast',
                     '',
-                    '<span class="terminal-command">viraj@portfolio:~$ ls skills/</span>',
-                    '<span class="tag">React</span> <span class="tag">Node.js</span> <span class="tag">Express</span> <span class="tag">MongoDB</span> <span class="tag">JavaScript</span>',
+                    '<span class="terminal-command">viraj@portfolio:~$ ls commands/</span>',
+                    '<span class="tag">products</span> <span class="tag">experience</span> <span class="tag">news</span> <span class="tag">xbox</span>',
                     '',
                     '<span class="terminal-command">viraj@portfolio:~$ cat mission.txt</span>',
                     '"Building useful products."',

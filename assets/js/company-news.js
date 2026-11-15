@@ -67,6 +67,7 @@ function marketTile(company, theme) {
         tile.append(element('p', 'news-note', company.marketNote || 'No publicly traded stock available.'));
         return tile;
     }
+    if (company.marketNote) tile.append(element('p', 'news-note', company.marketNote));
     const container = element('div', 'tradingview-widget-container');
     container.append(element('div', 'tradingview-widget-container__widget'));
     const script = document.createElement('script');
@@ -187,4 +188,4 @@ async function init() {
     }
 }
 
-if (typeof document !== 'undefined') init();
+if (typeof document !== 'undefined' && document.getElementById('newsStatus')) init();

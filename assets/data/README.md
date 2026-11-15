@@ -18,6 +18,8 @@ Append news entries like this to a company's `news` array:
 
 Use `YYYY-MM` when the source gives only a month. Events are automatically sorted oldest first and shown only within employment dates (through today for current employment). Month-only entries are included when their month overlaps employment. Entries outside the range stay in JSON but are hidden.
 
-Use a TradingView exchange-qualified stock symbol such as `NYSE:WFC`, with a display `label`. Set `stock` to `null` for private companies or unavailable symbols and optionally provide `marketNote`. NetJets has no standalone public stock, so it has no stock widget. TradingView tiles show current market context, not historical prices at the time of each event; they require external network access. Each tile keeps a direct chart link available if the widget is blocked.
+Use a TradingView exchange-qualified stock symbol such as `NYSE:WFC`, with a display `label`. Set `stock` to `null` for private companies or unavailable symbols and optionally provide `marketNote`. NetJets is a privately held subsidiary of Berkshire Hathaway. Its stock widget uses `NYSE:BRK.B` and is explicitly labeled as parent-company market data. A `marketNote` explains the relationship beside the tile. TradingView tiles show current market context, not historical prices at the time of each event; they require external network access. Each tile keeps a direct chart link available if the widget is blocked.
 
 Initial news is sourced from the Federal Reserve, NetJets newsroom, and JPMorgan Chase, with source links in each entry. This is a curated list, not an automatic news feed. Validate data and date filtering with `node --test tools/company-news.test.mjs`.
+
+The portfolio terminal reads this same file for `experience`, `resume`, and `news`. Use `open news` to open the visual timeline. After editing JSON, reload the portfolio to refresh terminal data.
