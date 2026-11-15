@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company News &amp; Career Timeline — Viraj Patel</title>
+    <meta name="description" content="Company milestones from my time at Wells Fargo, NetJets, and JPMorgan Chase.">
+    <link rel="icon" type="image/svg+xml" href="../assets/icons/terminal-favicon.svg">
+    <link rel="stylesheet" href="../assets/styles/main.css">
+    <link rel="stylesheet" href="../assets/styles/company-news.css">
+    <script src="../assets/js/company-news.js" type="module"></script>
+</head>
+<body data-theme="light">
+    <main class="news-page">
+        <nav class="news-nav" aria-label="Page navigation">
+            <a href="../index.html">← Viraj Patel / Portfolio</a>
+            <button id="newsTheme" type="button">Switch theme</button>
+        </nav>
+        <header class="news-hero">
+            <p class="eyebrow">A career in context</p>
+            <h1>My time there.<br><span class="accent">Their story, unfolding.</span></h1>
+            <p>Company news and milestones from the chapters of my career. Explore what was happening while I was there.</p>
+        </header>
+        <nav id="companyFilters" class="company-filters" aria-label="Filter companies"></nav>
+        <p id="newsStatus" role="status">Loading company history…</p>
+        <div id="companyNews"></div>
+        <noscript><p>Enable JavaScript to view company news and stock tiles.</p></noscript>
+        <footer class="news-footer">A curated history, updated by hand. Stock tiles show current market context, independently of the historical timeline. Market data may be delayed.</footer>
+    </main>
+</body>
+</html>

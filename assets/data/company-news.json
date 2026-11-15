@@ -1,0 +1,57 @@
+{
+  "companies": [
+    {
+      "id": "wells-fargo",
+      "name": "Wells Fargo",
+      "employment": { "start": "2026-03-01", "end": null },
+      "stock": { "symbol": "NYSE:WFC", "label": "WFC · Wells Fargo" },
+      "news": [
+        {
+          "date": "2026-03-05",
+          "title": "Federal Reserve ends 2018 enforcement action",
+          "description": "The Federal Reserve terminated its 2018 enforcement action after determining that Wells Fargo had met all required conditions for governance and risk management improvements.",
+          "source": "Federal Reserve",
+          "url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260305a.htm"
+        }
+      ]
+    },
+    {
+      "id": "netjets",
+      "name": "NetJets",
+      "employment": { "start": "2025-05-01", "end": "2026-02-28" },
+      "stock": null,
+      "marketNote": "Privately held · No standalone publicly traded stock.",
+      "news": [
+        {
+          "date": "2025-07",
+          "title": "FlightPulse brings safety insights to pilots",
+          "description": "NetJets introduced the FlightPulse app to give its pilots additional safety insights, becoming the first shared ownership provider to implement the app.",
+          "source": "NetJets newsroom",
+          "url": "https://www.netjets.com/en-us/news"
+        },
+        {
+          "date": "2025-12",
+          "title": "Starlink connectivity planned across the fleet",
+          "description": "NetJets announced an agreement with Starlink to bring high-speed Wi-Fi to approximately 600 aircraft across its global fleet by the end of 2026.",
+          "source": "NetJets newsroom",
+          "url": "https://www.netjets.com/en-us/news"
+        }
+      ]
+    },
+    {
+      "id": "jpmorgan-chase",
+      "name": "JPMorgan Chase",
+      "employment": { "start": "2022-07-01", "end": "2025-05-31" },
+      "stock": { "symbol": "NYSE:JPM", "label": "JPM · JPMorgan Chase" },
+      "news": [
+        {
+          "date": "2023-05-01",
+          "title": "First Republic acquisition announced",
+          "description": "JPMorgan Chase acquired the substantial majority of First Republic Bank’s assets and assumed its deposits and certain other liabilities from the FDIC.",
+          "source": "JPMorgan Chase",
+          "url": "https://www.jpmorganchase.com/ir/news/2023/jpmc-acquires-substantial-majority-of-assets-and-assumes-certain-liabilities-of-first-republic-bank"
+        }
+      ]
+    }
+  ]
+}
