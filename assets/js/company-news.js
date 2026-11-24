@@ -29,6 +29,14 @@ export function validateData(data) {
             throw new Error(`Invalid employment dates for ${company.name}.`);
         }
         if (company.stock && (!/^[A-Z0-9_]+:[A-Z0-9_.-]+$/.test(company.stock.symbol) || !company.stock.label)) throw new Error(`Invalid stock for ${company.name}.`);
+        if (company.profile) {
+            const profile = company.profile;
+            const isWebUrl = value => /^https?:$/.test(new URL(value).protocol);
+            if (!isWebUrl(profile.website) || !profile.description || !Array.isArray(profile.highlights) || !Array.isArray(profile.metrics)) throw new Error(`Invalid profile for ${company.name}.`);
+            for (const metric of profile.metrics) {
+                if (!metric.value || !metric.label || !metric.asOf || !metric.source || !isWebUrl(metric.url)) throw new Error(`Invalid metric for ${company.name}.`);
+            }
+        }
         if (!Array.isArray(company.news)) throw new Error(`Expected news for ${company.name}.`);
         for (const event of company.news) {
             if (!validDate(event.date) || !event.title || !event.description || !event.source || !/^https?:$/.test(new URL(event.url).protocol)) {
@@ -82,6 +90,49 @@ function marketTile(company, theme) {
     return tile;
 }
 
+function profileIcon(kind) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '1.5');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.classList.add('company-profile-icon');
+    const path = document.createElementNS(svg.namespaceURI, 'path');
+    const paths = {
+        bank: 'M3 9h18L12 3 3 9Zm2 3v7m5-7v7m4-7v7m5-7v7M2 22h20',
+        plane: 'm22 2-7 20-4-9-9-4 20-7ZM11 13l6-6',
+        globe: 'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z'
+    };
+    path.setAttribute('d', paths[kind] || paths.bank);
+    svg.append(path);
+    return svg;
+}
+
+function companyProfile(company, details) {
+    const profile = company.profile;
+    if (!profile) return null;
+    const website = externalLink(profile.website, new URL(profile.website).hostname.replace(/^www\./, '') + ' ↗', 'company-website');
+    website.prepend(profileIcon('globe'));
+    website.setAttribute('aria-label', `${company.name} official website`);
+    details.append(website);
+    const overview = element('div', 'company-overview');
+    overview.append(element('p', 'company-summary', profile.description));
+    const highlights = element('ul', 'company-highlights');
+    for (const text of profile.highlights) highlights.append(element('li', '', text));
+    overview.append(highlights);
+    details.append(overview);
+    const metrics = element('div', 'company-metrics');
+    metrics.setAttribute('aria-label', `${company.name} business scale`);
+    for (const metric of profile.metrics) {
+        const card = element('div', 'company-metric');
+        card.append(element('strong', '', metric.value), element('p', '', metric.label),
+            element('small', '', metric.asOf), externalLink(metric.url, metric.source + ' ↗'));
+        metrics.append(card);
+    }
+    return metrics;
+}
+
 const timelineObservers = [];
 
 function renderCompany(company, theme) {
@@ -93,9 +144,13 @@ function renderCompany(company, theme) {
     details.append(element('p', 'eyebrow', company.employment.end ? 'Previous chapter' : 'Current chapter'));
     const title = element('h2', '', company.name);
     title.id = `${company.id}-title`;
-    details.append(title, element('p', 'tenure', `${formatDate(company.employment.start, true)} — ${company.employment.end ? formatDate(company.employment.end, true) : 'Present'}`));
+    const identity = element('div', 'company-identity');
+    identity.append(profileIcon(company.profile?.icon), title);
+    details.append(identity, element('p', 'tenure', `${formatDate(company.employment.start, true)} — ${company.employment.end ? formatDate(company.employment.end, true) : 'Present'}`));
+    const metrics = companyProfile(company, details);
     heading.append(details, marketTile(company, theme));
     section.append(heading);
+    if (metrics) section.append(metrics, element('p', 'metric-context', 'Business scale reflects the dates shown, independently of my employment period. AUM, client assets, and balance-sheet assets are different measures.'));
     const events = timelineEvents(company);
     const timelineHeading = element('div', 'timeline-heading');
     timelineHeading.append(element('h3', '', `During my time · ${events.length} ${events.length === 1 ? 'event' : 'events'}`));

@@ -37,3 +37,19 @@
 .news-footer { border-top: 1px solid var(--border-primary); padding-top: 24px; font-size: .8rem; max-width: 720px; }
 @media (max-width: 680px) { .news-page { padding: 24px 20px 48px; } .news-hero { padding-top: 56px; } .company-heading { flex-direction: column; } .market-tile { width: 100%; } .event-card { flex-basis: min(300px, 82vw); } .news-nav { gap: 12px; font-size: .8rem; } }
 @media (prefers-reduced-motion: reduce) { .news-page *, body { transition: none !important; scroll-behavior: auto !important; } }
+.news-page a { text-decoration: none; }
+.company-identity { display: flex; align-items: center; gap: 12px; }
+.company-profile-icon { width: 28px; height: 28px; flex-shrink: 0; color: var(--accent-primary); }
+.company-website { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; font-size: .9rem; }
+.company-website svg { width: 18px; height: 18px; }
+.company-overview { max-width: 620px; margin-top: 20px; }
+.company-summary { color: var(--text-secondary); font-size: .95rem; }
+.company-highlights { display: flex; gap: 8px; flex-wrap: wrap; list-style: none; padding: 16px 0 0; }
+.company-highlights li { border: 1px solid var(--border-primary); border-radius: 999px; padding: 5px 12px; font-size: .75rem; color: var(--text-secondary); }
+.company-metrics { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 16px; margin-top: 24px; }
+.company-metric { border: 1px solid var(--border-primary); border-radius: 14px; padding: 20px; }
+.company-metric strong { display: block; font-size: 1.8rem; font-weight: 400; color: var(--accent-primary); }
+.company-metric p { font-size: .9rem; margin: 4px 0 10px; }
+.company-metric small, .metric-context { color: var(--text-tertiary); font-size: .75rem; display: block; }
+.company-metric a { font-size: .75rem; display: inline-block; margin-top: 8px; }
+.metric-context { margin-top: 10px; }

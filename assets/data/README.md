@@ -2,7 +2,7 @@
 
 Edit `company-news.json` to add companies, change employment dates, or add news. No build step or API key is required. Serve the portfolio over HTTP (for example, `python3 -m http.server 4173` at the repository root); opening the HTML as a local file cannot fetch JSON.
 
-Each company has a unique `id`, `name`, `employment`, `stock`, and `news` array. Employment dates use `YYYY-MM-DD`; `end: null` means present. Dates currently reflect month-level employment information: Wells Fargo March 2026–present, NetJets May 2025–February 2026 (interpreted as the ten months preceding Wells Fargo), and JPMorgan Chase July 2022–May 2025. Adjust exact days as needed.
+Each company has a unique `id`, `name`, `employment`, `stock`, and `news` array. Employment dates use `YYYY-MM-DD`; `end: null` means present. Dates currently reflect month-level employment information: Wells Fargo March 2026–present, NetJets May 2025–February 2026 (interpreted as the ten months preceding Wells Fargo), and JPMorganChase July 2022–May 2025. Adjust exact days as needed.
 
 Append news entries like this to a company's `news` array:
 
@@ -20,6 +20,10 @@ Use `YYYY-MM` when the source gives only a month. Events are automatically sorte
 
 Use a TradingView exchange-qualified stock symbol such as `NYSE:WFC`, with a display `label`. Set `stock` to `null` for private companies or unavailable symbols and optionally provide `marketNote`. NetJets is a privately held subsidiary of Berkshire Hathaway. Its stock widget uses `NYSE:BRK.B` and is explicitly labeled as parent-company market data. A `marketNote` explains the relationship beside the tile. TradingView tiles show current market context, not historical prices at the time of each event; they require external network access. Each tile keeps a direct chart link available if the widget is blocked.
 
-Initial news is sourced from the Federal Reserve, NetJets newsroom, and JPMorgan Chase, with source links in each entry. This is a curated list, not an automatic news feed. Validate data and date filtering with `node --test tools/company-news.test.mjs`.
+Initial news is sourced from the Federal Reserve, NetJets newsroom, and JPMorganChase, with source links in each entry. This is a curated list, not an automatic news feed. Validate data and date filtering with `node --test tools/company-news.test.mjs`.
 
 The portfolio terminal reads this same file for `experience`, `resume`, and `news`. Use `open news` to open the visual timeline. After editing JSON, reload the portfolio to refresh terminal data.
+
+Company profiles live in each company's `profile` object: `website`, `icon` (`bank` or `plane`), `description`, `highlights`, and `metrics`. Each metric includes a value, label, reporting date or verification date (`asOf`), source name, and source URL. These are curated business-scale figures, not live metrics or market-share estimates. Update them when new reports are published.
+
+Homepage quotes now use TradingView Single Ticker embeds loaded on each visit, replacing the weekly localStorage/Yahoo fetch and fixed historical prices. The provider controls quote availability and market delays; no API key is required. If blocked, the chart links remain available. The terminal directs visitors to those tiles rather than presenting stale numeric quotes.

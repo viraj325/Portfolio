@@ -19,7 +19,26 @@
           "source": "Federal Reserve",
           "url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260305a.htm"
         }
-      ]
+      ],
+      "profile": {
+        "website": "https://www.wellsfargo.com",
+        "icon": "bank",
+        "description": "A diversified financial services company serving consumers, small businesses, institutions, and corporations with banking, lending, investment, and mortgage services.",
+        "highlights": [
+          "Consumer banking and lending",
+          "Commercial banking and corporate finance",
+          "Wealth and investment management"
+        ],
+        "metrics": [
+          {
+            "value": "≈ $2.3T",
+            "label": "Total company assets",
+            "asOf": "Q3 2026 · reported Oct 13, 2026",
+            "source": "Wells Fargo Q3 2026 results",
+            "url": "https://newsroom.wf.com/news-releases/news-details/2026/Wells-Fargo-Reports-Third-Quarter-2026-Financial-Results/default.aspx"
+          }
+        ]
+      }
     },
     {
       "id": "netjets",
@@ -48,28 +67,80 @@
           "source": "NetJets newsroom",
           "url": "https://www.netjets.com/en-us/news"
         }
-      ]
+      ],
+      "profile": {
+        "website": "https://www.netjets.com",
+        "icon": "plane",
+        "description": "A Berkshire Hathaway subsidiary providing private aviation through fractional aircraft ownership, jet cards, and aircraft management. Its shared fleet gives customers access to private flights without owning and operating an entire aircraft.",
+        "highlights": [
+          "Fractional ownership and jet card programs",
+          "Global private aviation operations",
+          "Berkshire Hathaway subsidiary"
+        ],
+        "metrics": [
+          {
+            "value": "1,000+",
+            "label": "Aircraft maintained and operated",
+            "asOf": "Company website · checked Nov 25, 2026",
+            "source": "NetJets aviation provider guide",
+            "url": "https://www.netjets.com/en-gb/choosing-aviation-provider"
+          },
+          {
+            "value": "5,000+",
+            "label": "Airports accessible worldwide",
+            "asOf": "Company website · checked Nov 25, 2026",
+            "source": "NetJets aviation provider guide",
+            "url": "https://www.netjets.com/en-gb/choosing-aviation-provider"
+          }
+        ]
+      }
     },
     {
       "id": "jpmorgan-chase",
-      "name": "JPMorgan Chase",
+      "name": "JPMorganChase",
       "employment": {
         "start": "2022-07-01",
         "end": "2025-05-31"
       },
       "stock": {
         "symbol": "NYSE:JPM",
-        "label": "JPM · JPMorgan Chase"
+        "label": "JPM · JPMorganChase"
       },
       "news": [
         {
           "date": "2023-05-01",
           "title": "First Republic acquisition announced",
-          "description": "JPMorgan Chase acquired the substantial majority of First Republic Bank’s assets and assumed its deposits and certain other liabilities from the FDIC.",
-          "source": "JPMorgan Chase",
+          "description": "JPMorganChase acquired the substantial majority of First Republic Bank’s assets and assumed its deposits and certain other liabilities from the FDIC.",
+          "source": "JPMorganChase",
           "url": "https://www.jpmorganchase.com/ir/news/2023/jpmc-acquires-substantial-majority-of-assets-and-assumes-certain-liabilities-of-first-republic-bank"
         }
-      ]
+      ],
+      "profile": {
+        "website": "https://www.jpmorganchase.com",
+        "icon": "bank",
+        "description": "A global financial services firm bringing together Chase consumer and business banking with J.P. Morgan investment banking, markets, payments, asset management, and private banking.",
+        "highlights": [
+          "Consumer and community banking",
+          "Commercial and investment banking",
+          "Asset and wealth management"
+        ],
+        "metrics": [
+          {
+            "value": "$5.2T",
+            "label": "Assets under management (AUM)",
+            "asOf": "Sep 30, 2026 · Asset & Wealth Management",
+            "source": "JPMorganChase Q3 2026 report",
+            "url": "https://www.jpmorganchase.com/content/dam/jpmc/jpmorgan-chase-and-co/investor-relations/documents/quarterly-earnings/2026/3rd-quarter/corp-q3-2026.pdf"
+          },
+          {
+            "value": "$7.9T",
+            "label": "Client assets",
+            "asOf": "Sep 30, 2026 · Asset & Wealth Management",
+            "source": "JPMorganChase Q3 2026 report",
+            "url": "https://www.jpmorganchase.com/content/dam/jpmc/jpmorgan-chase-and-co/investor-relations/documents/quarterly-earnings/2026/3rd-quarter/corp-q3-2026.pdf"
+          }
+        ]
+      }
     }
   ]
 }

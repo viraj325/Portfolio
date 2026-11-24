@@ -41,3 +41,12 @@ test('unsafe source links, duplicate company IDs, and reversed employment dates 
     reversed.companies[0].employment.end = '2020-01-01';
     assert.throws(() => validateData(reversed));
 });
+
+test('company metric sources must be safe web URLs and include reporting context', () => {
+    const unsafe = structuredClone(data);
+    unsafe.companies[0].profile.metrics[0].url = 'javascript:alert(1)';
+    assert.throws(() => validateData(unsafe));
+    const undated = structuredClone(data);
+    delete undated.companies[0].profile.metrics[0].asOf;
+    assert.throws(() => validateData(undated));
+});

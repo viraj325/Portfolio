@@ -38,8 +38,8 @@ const themeToggle = document.getElementById('themeToggle');
                 status: 'Public',
                 symbol: 'WFC',
                 ticker: 'NYSE: WFC',
-                price: '$80.90',
-                priceDate: 'May 1, 2026 close',
+                price: null,
+                priceDate: null,
                 note: 'Financial services and enterprise banking workflows.'
             },
             {
@@ -47,88 +47,45 @@ const themeToggle = document.getElementById('themeToggle');
                 status: 'Private',
                 symbol: 'BRK-B',
                 ticker: 'NYSE: BRK.B (Berkshire Hathaway, parent company)',
-                price: '$473.01',
-                priceDate: 'May 1, 2026 close',
+                price: null,
+                priceDate: null,
                 note: 'Private subsidiary of Berkshire Hathaway; BRK.B shown as parent market proxy.'
             },
             {
-                name: 'JPMorgan Chase',
+                name: 'JPMorganChase',
                 status: 'Public',
                 symbol: 'JPM',
                 ticker: 'NYSE: JPM',
-                price: '$312.47',
-                priceDate: 'May 1, 2026 close',
+                price: null,
+                priceDate: null,
                 note: 'Banking product infrastructure, compliance tooling, and delivery coordination.'
             }
         ];
 
-        const marketCacheKey = 'portfolio-market-data-v1';
-        const marketRefreshInterval = 7 * 24 * 60 * 60 * 1000;
-
-        function readMarketCache() {
-            try {
-                const cache = JSON.parse(localStorage.getItem(marketCacheKey));
-                return cache && Array.isArray(cache.quotes) ? cache : null;
-            } catch {
-                return null;
-            }
-        }
-
-        function applyMarketQuotes(quotes) {
-            quotes.forEach((quote) => {
-                const company = companyMarketData.find((item) => item.symbol === quote.symbol);
-                if (company) {
-                    company.price = `$${quote.price.toFixed(2)}`;
-                    company.priceDate = `${quote.priceDate} close`;
-                    company.direction = quote.direction;
-                }
-
-                document.querySelectorAll(`[data-stock-symbol="${quote.symbol}"]`).forEach((node) => {
-                    const icon = node.querySelector('.stock-icon');
-                    const displaySymbol = quote.symbol === 'BRK-B' ? 'BRK.B (Berkshire Hathaway · parent)' : quote.symbol;
-                    const isUp = quote.direction !== 'down';
-                    if (icon) {
-                        icon.textContent = isUp ? '▲' : '▼';
-                        icon.classList.toggle('up', isUp);
-                        icon.classList.toggle('down', !isUp);
-                    }
-                    node.lastChild.textContent = ` ${displaySymbol} · $${quote.price.toFixed(2)}`;
-                    node.title = `Latest market close: ${quote.priceDate}`;
+        function renderHomepageQuotes() {
+            document.querySelectorAll('[data-tradingview-symbol]').forEach(tile => {
+                const container = document.createElement('div');
+                container.className = 'tradingview-widget-container';
+                const widget = document.createElement('div');
+                widget.className = 'tradingview-widget-container__widget';
+                const script = document.createElement('script');
+                script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js';
+                script.async = true;
+                script.textContent = JSON.stringify({
+                    symbol: tile.dataset.tradingviewSymbol,
+                    width: '100%', colorTheme: body.getAttribute('data-theme'),
+                    isTransparent: true, locale: 'en'
                 });
+                script.addEventListener('error', () => {
+                    widget.textContent = 'Quote unavailable. View on TradingView below.';
+                });
+                container.append(widget, script);
+                tile.querySelector('.quote-widget').replaceChildren(container);
             });
-            window.portfolioMarketData = companyMarketData;
-        }
-
-        async function refreshWeeklyMarketData() {
-            const cache = readMarketCache();
-            if (cache) applyMarketQuotes(cache.quotes);
-            if (cache && Date.now() - cache.updatedAt < marketRefreshInterval) return;
-
-            try {
-                const quotes = await Promise.all(companyMarketData.map(async (company) => {
-                    const response = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${company.symbol}?range=5d&interval=1d`, { cache: 'no-store' });
-                    if (!response.ok) throw new Error(`Market request failed for ${company.symbol}`);
-                    const chart = (await response.json()).chart?.result?.[0];
-                    const price = chart?.meta?.regularMarketPrice;
-                    const previousClose = chart?.meta?.chartPreviousClose ?? chart?.meta?.previousClose;
-                    if (!Number.isFinite(price)) throw new Error(`No market price for ${company.symbol}`);
-                    const timestamp = chart?.meta?.regularMarketTime || chart?.timestamp?.at(-1) || Date.now() / 1000;
-                    return {
-                        symbol: company.symbol,
-                        price,
-                        direction: Number.isFinite(previousClose) && price < previousClose ? 'down' : 'up',
-                        priceDate: new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/New_York' }).format(new Date(timestamp * 1000))
-                    };
-                }));
-                localStorage.setItem(marketCacheKey, JSON.stringify({ updatedAt: Date.now(), quotes }));
-                applyMarketQuotes(quotes);
-            } catch (error) {
-                console.info('Live market data is unavailable; keeping the most recent saved prices.', error);
-            }
         }
 
         window.portfolioMarketData = companyMarketData;
-        refreshWeeklyMarketData();
+        renderHomepageQuotes();
 
         if (nfcCard) {
             const query = window.location.search.slice(1);
@@ -215,9 +172,9 @@ const themeToggle = document.getElementById('themeToggle');
             },
             version: () => {
                 printLines([
-                    'Portfolio CLI v1.2.0',
-                    'Last updated: November 15, 2026',
-                    'Build: career history, curated company news, Xbox profile, and weekly market-data refresh',
+                    'Portfolio CLI v1.3.0',
+                    'Last updated: November 25, 2026',
+                    'Build: career history, curated company news, Xbox profile, and TradingView quotes loaded on every visit',
                     'Products: Loop Safety, Ghost Finance Terminal, Presence, Seed',
                     'News: company-news/index.html (TradingView tiles for WFC, JPM, and Berkshire Hathaway parent BRK.B)'
                 ]);
@@ -301,7 +258,7 @@ const themeToggle = document.getElementById('themeToggle');
                 lines.push(`    ${company.note}`);
             });
 
-            lines.push('Prices refresh at most once every seven days and may show the latest cached close. Not investment advice.');
+            lines.push('Current quotes load on each homepage visit in the TradingView tiles; provider data may be delayed.', 'Use `open news` for company profiles, metrics, and charts.');
             printLines(lines);
         }
 
@@ -346,6 +303,7 @@ const themeToggle = document.getElementById('themeToggle');
             body.setAttribute('data-theme', themeName);
             localStorage.setItem('theme', themeName);
             window.__drawTravelMap?.();
+            renderHomepageQuotes();
         }
 
         function printLine(text, className = '') {

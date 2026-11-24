@@ -2300,3 +2300,10 @@
                 padding: 10px;
             }
         }
+
+/* Company links and quotes share the portfolio's understated link treatment. */
+.companies-section a { text-decoration: none; }
+.company-quote { margin-top: 16px; min-width: 0; }
+.company-quote .quote-widget { min-height: 128px; }
+.company-quote .quote-source { color: var(--accent-primary); font-size: .72rem; overflow-wrap: anywhere; }
+.quote-disclaimer { color: var(--text-tertiary); font-size: .75rem; margin-top: 24px; }
