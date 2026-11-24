@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="assets/styles/main.css?v=2026-11-25">
+        <link rel="stylesheet" href="assets/styles/main.css?v=2026-11-25-brands-4">
     <style>
         :root {
             --amber-25: #fffbf0;
@@ -2584,7 +2584,6 @@
             <!-- Companies Section -->
             <section class="companies-section">
                 <h2><span class="accent">Companies</span></h2>
-                <p style="margin-bottom: 24px;"><a href="company-news/index.html" style="color: var(--accent-primary); text-decoration: none;">Explore company news &amp; my career timeline →</a></p>
                 <div class="companies-grid">
                     <div class="company-card">
                         <a href="https://www.wellsfargo.com" target="_blank" rel="noopener noreferrer">
@@ -2598,10 +2597,11 @@
                         <p class="company-status">Public company</p>
                         <p class="company-description">One of the largest financial services companies in the world, providing banking, investment, and mortgage services to millions of customers globally.</p>
                         </a>
-                        <div class="company-quote" data-tradingview-symbol="NYSE:WFC" data-market-label="WFC">
-                            <div class="quote-widget"></div>
-                            <a class="quote-source" href="https://www.tradingview.com/symbols/NYSE-WFC/" target="_blank" rel="noopener noreferrer">WFC on TradingView ↗</a>
-                        </div>
+                        <p class="company-stock" data-stock-symbol="WFC" aria-label="WFC quote loading">
+                            <span class="stock-icon" aria-hidden="true">•</span>
+                            <span class="stock-value">WFC · Loading…</span>
+                        </p>
+                        <small class="stock-quote-date" data-quote-date="WFC"></small>
                     </div>
                     <div class="company-card">
                         <a href="https://www.netjets.com" target="_blank" rel="noopener noreferrer">
@@ -2615,10 +2615,11 @@
                         <p class="company-status">Berkshire Hathaway subsidiary · Private company</p>
                         <p class="company-description">Leading fractional aircraft ownership company, enabling accessible private aviation through shared ownership and on-demand charter services worldwide.</p>
                         </a>
-                        <div class="company-quote" data-tradingview-symbol="NYSE:BRK.B" data-market-label="BRK.B · Berkshire Hathaway (parent)">
-                            <div class="quote-widget"></div>
-                            <a class="quote-source" href="https://www.tradingview.com/symbols/NYSE-BRK.B/" target="_blank" rel="noopener noreferrer">BRK.B · Berkshire Hathaway (parent) on TradingView ↗</a>
-                        </div>
+                        <p class="company-stock" data-stock-symbol="BRK-B" aria-label="BRK.B (parent) quote loading">
+                            <span class="stock-icon" aria-hidden="true">•</span>
+                            <span class="stock-value">BRK.B · Loading…</span>
+                        </p>
+                        <small class="stock-quote-date" data-quote-date="BRK-B"></small>
                     </div>
                     <div class="company-card">
                         <a href="https://www.jpmorganchase.com" target="_blank" rel="noopener noreferrer">
@@ -2632,13 +2633,15 @@
                         <p class="company-status">Public company</p>
                         <p class="company-description">Leading global financial services firm offering banking, asset management, and capital markets services to corporations, institutions, and individual clients.</p>
                         </a>
-                        <div class="company-quote" data-tradingview-symbol="NYSE:JPM" data-market-label="JPM">
-                            <div class="quote-widget"></div>
-                            <a class="quote-source" href="https://www.tradingview.com/symbols/NYSE-JPM/" target="_blank" rel="noopener noreferrer">JPM on TradingView ↗</a>
-                        </div>
+                        <p class="company-stock" data-stock-symbol="JPM" aria-label="JPM quote loading">
+                            <span class="stock-icon" aria-hidden="true">•</span>
+                            <span class="stock-value">JPM · Loading…</span>
+                        </p>
+                        <small class="stock-quote-date" data-quote-date="JPM"></small>
                     </div>
                 </div>
-                <p class="quote-disclaimer">Quotes load on each visit via TradingView and may be delayed. BRK.B represents NetJets’ parent, Berkshire Hathaway.</p>
+                <p class="company-news-cta"><a class="company-news-link" href="company-news/index.html">Explore company news &amp; my career timeline →</a></p>
+                <p class="quote-disclaimer">Monthly price snapshots</p>
             </section>
 
             <!-- Simple Connect Section -->
@@ -2656,7 +2659,7 @@
         </div>
     </div>
 
-        <script src="assets/js/main.js?v=2026-11-25"></script>
+        <script src="assets/js/main.js?v=2026-11-25-monthly-2"></script>
     <script type="text/plain" data-legacy-inline-script>
         const themeToggle = document.getElementById('themeToggle');
         const terminalToggle = document.getElementById('terminalToggle');

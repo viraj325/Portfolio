@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 
 // Import the browser module without changing the repository's module settings.
 const code = await readFile(new URL('../assets/js/company-news.js', import.meta.url), 'utf8');
-const { validDate, timelineEvents, validateData } = await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
+const { validDate, timelineEvents, validateData, entireTimeline, mergeOverviews, enableDrag } = await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
 const data = JSON.parse(await readFile(new URL('../assets/data/company-news.json', import.meta.url)));
 
 test('curated news data is valid and every seeded event falls within employment', () => {
@@ -49,4 +49,47 @@ test('company metric sources must be safe web URLs and include reporting context
     const undated = structuredClone(data);
     delete undated.companies[0].profile.metrics[0].asOf;
     assert.throws(() => validateData(undated));
+});
+
+
+test('entire timeline combines employer chapters and tenure-filtered news in date order', () => {
+    const timeline = entireTimeline(data.companies, '2026-11-25');
+    assert.equal(timeline.length, 9);
+    assert.equal(timeline[0].title, 'Joined JPMorganChase');
+    assert.equal(timeline.at(-1).companyId, 'wells-fargo');
+    assert.deepEqual(timeline.map(item => item.date), timeline.map(item => item.date).toSorted());
+    assert.ok(timeline.filter(item => item.kind === 'career').every(item => item.date.length === 7));
+});
+
+test('monthly overview merge updates metrics while preserving curated news, descriptions, and employment', () => {
+    const old = structuredClone(data);
+    const metrics = [{value: '$9T', label: 'Test metric', asOf: '2026-09-30', source: 'Official report', url: 'https://example.com/report'}];
+    const merged = mergeOverviews(data, {companies: {'wells-fargo': {metrics, status: 'ok', lastSyncedAt: '2026-11-25T00:00:00Z'}}});
+    validateData(merged);
+    assert.deepEqual(merged.companies[0].profile.metrics, metrics);
+    assert.deepEqual(merged.companies[0].news, data.companies[0].news);
+    assert.equal(merged.companies[0].profile.description, data.companies[0].profile.description);
+    assert.deepEqual(merged.companies[0].employment, data.companies[0].employment);
+    assert.deepEqual(data, old);
+});
+
+test('synced report links cannot introduce executable URLs', () => {
+    const merged = mergeOverviews(data, {companies: {'wells-fargo': {latestReport: {title: 'Report', url: 'javascript:alert(1)'}}}});
+    assert.throws(() => validateData(merged));
+});
+
+
+test('mouse drag scrolls the timeline and suppresses the resulting card click', () => {
+    const handlers = {};
+    const rail = {scrollLeft: 100, classList: {add() {}, remove() {}}, addEventListener(type, fn) {handlers[type] = fn;}, setPointerCapture() {}};
+    enableDrag(rail);
+    handlers.pointerdown({pointerType: 'mouse', button: 0, pointerId: 1, clientX: 200});
+    let prevented = false;
+    handlers.pointermove({buttons: 1, clientX: 100, preventDefault() {prevented = true;}});
+    assert.equal(rail.scrollLeft, 200);
+    assert.equal(prevented, true);
+    handlers.pointerup();
+    let suppressed = false;
+    handlers.click({preventDefault() {}, stopImmediatePropagation() {suppressed = true;}});
+    assert.equal(suppressed, true);
 });

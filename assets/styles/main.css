@@ -2303,7 +2303,12 @@
 
 /* Company links and quotes share the portfolio's understated link treatment. */
 .companies-section a { text-decoration: none; }
-.company-quote { margin-top: 16px; min-width: 0; }
-.company-quote .quote-widget { min-height: 128px; }
-.company-quote .quote-source { color: var(--accent-primary); font-size: .72rem; overflow-wrap: anywhere; }
 .quote-disclaimer { color: var(--text-tertiary); font-size: .75rem; margin-top: 24px; }
+
+.stock-quote-date { display: block; margin-top: 4px; color: var(--text-tertiary); font-size: .65rem; }
+
+.company-news-cta { margin-top: 56px; }
+.company-news-link { position: relative; display: inline-block; padding-bottom: 5px; color: var(--accent-primary); }
+.company-news-link::after { content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .28s ease; }
+.company-news-link:hover::after, .company-news-link:focus-visible::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) { .company-news-link::after { transition: none; } }

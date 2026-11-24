@@ -1,0 +1,57 @@
+name: Refresh monthly company data
+
+on:
+  schedule:
+    - cron: '0 12 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: monthly-stock-quotes
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install overview parser
+        run: python3 -m pip install -r tools/overview-requirements.txt
+      - name: Fetch latest available market quotes
+        id: quotes
+        continue-on-error: true
+        run: python3 tools/update_stock_quotes.py
+      - name: Sync official company overview metrics
+        id: overviews
+        continue-on-error: true
+        run: python3 tools/update_company_overviews.py
+      - name: Commit updated snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/data/stock-quotes.json assets/data/company-overviews.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Refresh monthly company data snapshots"
+          git push
+      - name: Rebuild branch-published GitHub Pages site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Bot pushes do not automatically trigger GitHub Pages branch builds.
+          if gh api "repos/$GITHUB_REPOSITORY/pages" > /tmp/pages.json; then
+            build_type=$(jq -r '.build_type // "legacy"' /tmp/pages.json)
+            source_branch=$(jq -r '.source.branch' /tmp/pages.json)
+            if [ "$build_type" = "legacy" ] && [ "$source_branch" = "$GITHUB_REF_NAME" ]; then
+              gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds"
+            fi
+          fi
+      - name: Report source refresh failures
+        if: steps.quotes.outcome == 'failure' || steps.overviews.outcome == 'failure'
+        run: |
+          echo "Some sources could not refresh. Previous verified data is retained; inspect the refresh logs."
+          exit 1

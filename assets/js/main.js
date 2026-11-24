@@ -62,30 +62,54 @@ const themeToggle = document.getElementById('themeToggle');
             }
         ];
 
-        function renderHomepageQuotes() {
-            document.querySelectorAll('[data-tradingview-symbol]').forEach(tile => {
-                const container = document.createElement('div');
-                container.className = 'tradingview-widget-container';
-                const widget = document.createElement('div');
-                widget.className = 'tradingview-widget-container__widget';
-                const script = document.createElement('script');
-                script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js';
-                script.async = true;
-                script.textContent = JSON.stringify({
-                    symbol: tile.dataset.tradingviewSymbol,
-                    width: '100%', colorTheme: body.getAttribute('data-theme'),
-                    isTransparent: true, locale: 'en'
+        async function loadMonthlyQuotes() {
+            try {
+                const response = await fetch('assets/data/stock-quotes.json', { cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const snapshot = await response.json();
+                if (!Array.isArray(snapshot.quotes)) throw new Error('Invalid quote snapshot');
+                for (const company of companyMarketData) {
+                    const quote = snapshot.quotes.find(item => item.symbol === company.symbol);
+                    if (!quote || !Number.isFinite(quote.price) || quote.price <= 0 ||
+                        !Number.isFinite(Date.parse(quote.asOf)) || !['up', 'down', 'unchanged'].includes(quote.direction)) {
+                        throw new Error(`Invalid quote for ${company.symbol}`);
+                    }
+                }
+                for (const quote of snapshot.quotes) {
+                    const company = companyMarketData.find(item => item.symbol === quote.symbol);
+                    if (!company) continue;
+                    const date = new Intl.DateTimeFormat('en-US', {
+                        month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/New_York'
+                    }).format(new Date(quote.asOf));
+                    const price = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(quote.price);
+                    company.price = price;
+                    company.priceDate = `as of ${date} · monthly snapshot`;
+                    const label = quote.symbol === 'BRK-B' ? 'BRK.B' : quote.symbol;
+                    document.querySelectorAll(`[data-stock-symbol="${quote.symbol}"]`).forEach(node => {
+                        const icon = node.querySelector('.stock-icon');
+                        icon.textContent = { up: '▲', down: '▼', unchanged: '•' }[quote.direction];
+                        icon.classList.toggle('up', quote.direction === 'up');
+                        icon.classList.toggle('down', quote.direction === 'down');
+                        node.querySelector('.stock-value').textContent = `${label} · ${price}`;
+                        node.setAttribute('aria-label', `${label}, ${price}, ${quote.direction} versus previous close, as of ${date}, monthly snapshot`);
+                        node.title = `Monthly snapshot from ${snapshot.source || 'market data'} · Quote time: ${quote.asOf}`;
+                    });
+                    document.querySelectorAll(`[data-quote-date="${quote.symbol}"]`).forEach(node => {
+                        node.textContent = `As of ${date}`;
+                    });
+                }
+            } catch (error) {
+                document.querySelectorAll('[data-stock-symbol]').forEach(node => {
+                    const label = node.dataset.stockSymbol === 'BRK-B' ? 'BRK.B' : node.dataset.stockSymbol;
+                    node.querySelector('.stock-value').textContent = `${label} · Unavailable`;
+                    node.setAttribute('aria-label', `${label} quote unavailable`);
                 });
-                script.addEventListener('error', () => {
-                    widget.textContent = 'Quote unavailable. View on TradingView below.';
-                });
-                container.append(widget, script);
-                tile.querySelector('.quote-widget').replaceChildren(container);
-            });
+                console.info('Monthly quote snapshot unavailable.', error);
+            }
         }
 
         window.portfolioMarketData = companyMarketData;
-        renderHomepageQuotes();
+        loadMonthlyQuotes();
 
         if (nfcCard) {
             const query = window.location.search.slice(1);
@@ -174,7 +198,7 @@ const themeToggle = document.getElementById('themeToggle');
                 printLines([
                     'Portfolio CLI v1.3.0',
                     'Last updated: November 25, 2026',
-                    'Build: career history, curated company news, Xbox profile, and TradingView quotes loaded on every visit',
+                    'Build: career history, curated company news, Xbox profile, and monthly stock snapshots and company profiles',
                     'Products: Loop Safety, Ghost Finance Terminal, Presence, Seed',
                     'News: company-news/index.html (TradingView tiles for WFC, JPM, and Berkshire Hathaway parent BRK.B)'
                 ]);
@@ -258,7 +282,7 @@ const themeToggle = document.getElementById('themeToggle');
                 lines.push(`    ${company.note}`);
             });
 
-            lines.push('Current quotes load on each homepage visit in the TradingView tiles; provider data may be delayed.', 'Use `open news` for company profiles, metrics, and charts.');
+            lines.push('Prices are monthly snapshots, not live quotes. Each price includes its quote date.', 'Use `open news` for company profiles, metrics, and charts.');
             printLines(lines);
         }
 
@@ -303,7 +327,6 @@ const themeToggle = document.getElementById('themeToggle');
             body.setAttribute('data-theme', themeName);
             localStorage.setItem('theme', themeName);
             window.__drawTravelMap?.();
-            renderHomepageQuotes();
         }
 
         function printLine(text, className = '') {
