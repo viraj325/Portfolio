@@ -22,7 +22,7 @@ Use a TradingView exchange-qualified stock symbol such as `NYSE:WFC`, with a dis
 
 Initial news is sourced from the Federal Reserve, NetJets newsroom, and JPMorganChase, with source links in each entry. This is a curated list, not an automatic news feed. Validate data and date filtering with `node --test tools/company-news.test.mjs`.
 
-The portfolio terminal reads this same file for `experience`, `resume`, and `news`. Use `open news` to open the visual timeline. After editing JSON, reload the portfolio to refresh terminal data.
+The portfolio terminal reads this same file for `experience`, `resume`, `news`, and `timeline`. `companies` merges the monthly overview snapshot with curated profiles, including sourced metrics and leadership highlights. `updates` shows per-company sync status and the dates of monthly stock snapshots; `stocks` waits for that shared snapshot to load. Use `open news` or `open timeline` to open the company experience. After editing JSON, reload the portfolio to refresh terminal data. Validate terminal formatting with `node --test tools/terminal-company-data.test.mjs`.
 
 Company profiles live in each company's `profile` object: `website`, `icon` (`bank` or `plane`), `description`, `highlights`, and `metrics`. Each metric includes a value, label, reporting date or verification date (`asOf`), source name, and source URL. These are curated business-scale figures, not live metrics or market-share estimates. Update them when new reports are published.
 

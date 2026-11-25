@@ -109,7 +109,7 @@ const themeToggle = document.getElementById('themeToggle');
         }
 
         window.portfolioMarketData = companyMarketData;
-        loadMonthlyQuotes();
+        const monthlyQuotePromise = loadMonthlyQuotes();
 
         if (nfcCard) {
             const query = window.location.search.slice(1);
@@ -130,14 +130,16 @@ const themeToggle = document.getElementById('themeToggle');
                     '<span class="tag">about</span> Learn about my work and background',
                     '<span class="tag">contact</span> Show contact links',
                     '<span class="tag">products</span> Describe current active applications',
-                    '<span class="tag">companies</span> Show notable company work and market status',
+                    '<span class="tag">companies</span> Show company descriptions, sourced metrics, and websites',
                     '<span class="tag">stocks</span> Show public/private company ticker data',
                     '<span class="tag">experience</span> Show employment history and dates',
                     '<span class="tag">news</span> Read company milestones from my employment periods',
+                    '<span class="tag">timeline</span> Show all career events in chronological order',
+                    '<span class="tag">updates</span> Show monthly overview sync and stock snapshot dates',
                     '<span class="tag">xbox</span> Show my Xbox gamer tag and profile',
                     '<span class="tag">traveling</span> Show travel and globe status',
                     '<span class="tag">version</span> Show last updated and build information',
-                    '<span class="tag">open &lt;site&gt;</span> Open links (linkedin, github, email, appstore, presence, seed, ghost, loop, xbox, news)',
+                    '<span class="tag">open &lt;site&gt;</span> Open links (linkedin, github, email, appstore, presence, seed, ghost, loop, xbox, news, timeline)',
                     '<span class="tag">theme &lt;mode&gt;</span> Switch theme (light, dark)',
                     '<span class="tag">resume</span> Request a resume summary',
                     '<span class="tag">clear</span> Clear terminal output',
@@ -148,7 +150,7 @@ const themeToggle = document.getElementById('themeToggle');
                 printLines([
                     'I am Viraj Patel, a Senior Software Engineer building mobile-first applications.',
                     'My portfolio highlights Loop Safety, Ghost Finance Terminal, Presence, Seed, and company milestones from my career.',
-                    'Try `experience`, `news`, `contact`, `products`, or `xbox` to explore.'
+                    'Try `timeline`, `companies`, `updates`, `experience`, `products`, or `xbox` to explore.'
                 ]);
             },
             contact: () => {
@@ -164,7 +166,7 @@ const themeToggle = document.getElementById('themeToggle');
             products: () => {
                 printLines([
                     'Active application products:',
-                    '  • Loop — a location-based safety app that provides alerts, safety tips, and community-driven updates.',
+                    '  • Loop Safety — a location-based safety app that provides alerts, safety tips, and community-driven updates.',
                     '  • Ghost Finance Terminal — a CLI-first financial terminal with market data, news, sentiment, insider trading, charts, and AI research.',
                     '  • Presence — a native personal life dashboard for iPhone and iPad, bringing work, fitness, travel, notes, and everyday tools together.',
                     '  • Seed — a calm, local-first startup intelligence app for founders and startup explorers.',
@@ -174,6 +176,8 @@ const themeToggle = document.getElementById('themeToggle');
             resume: () => printCareerHistory(true),
             experience: () => printCareerHistory(),
             news: () => printCareerNews(),
+            timeline: () => printEntireCareerTimeline(),
+            updates: () => printDataUpdates(),
             xbox: () => {
                 printLines([
                     'Xbox gamer tag: viraj325',
@@ -181,9 +185,7 @@ const themeToggle = document.getElementById('themeToggle');
                     'Use `open xbox` to visit my profile.'
                 ]);
             },
-            companies: () => {
-                printCompanyData('Company highlights:');
-            },
+            companies: () => printCompanyOverviews(),
             stocks: () => {
                 printCompanyData('Company market data:');
             },
@@ -196,11 +198,13 @@ const themeToggle = document.getElementById('themeToggle');
             },
             version: () => {
                 printLines([
-                    'Portfolio CLI v1.3.0',
+                    'Portfolio CLI v1.4.0',
                     'Last updated: November 25, 2026',
-                    'Build: career history, curated company news, Xbox profile, and monthly stock snapshots and company profiles',
+                    'Build: scroll-drawn career pathway, branded company views, monthly overviews and stock snapshots',
                     'Products: Loop Safety, Ghost Finance Terminal, Presence, Seed',
-                    'News: company-news/index.html (TradingView tiles for WFC, JPM, and Berkshire Hathaway parent BRK.B)'
+                    'Timeline: company-news/index.html — curved pathway with scroll-revealed event panels',
+                    'Views: Entire Timeline (orange), Wells Fargo (neutral whites/grays with red/yellow accents), JPMorganChase (gold/sand), NetJets (navy/neutral)',
+                    'Charts: WFC, JPM, and BRK.B (Berkshire Hathaway, NetJets parent company)'
                 ]);
             },
             clear: () => {
@@ -213,12 +217,23 @@ const themeToggle = document.getElementById('themeToggle');
         function loadCareerData() {
             if (!careerDataPromise) {
                 careerDataPromise = Promise.all([
-                    fetch('assets/data/company-news.json').then(response => {
+                    fetch('assets/data/company-news.json', { cache: 'no-store' }).then(response => {
                         if (!response.ok) throw new Error(`HTTP ${response.status}`);
                         return response.json();
                     }),
-                    import('./company-news.js')
-                ]).then(([data, helpers]) => ({ data: helpers.validateData(data), helpers }))
+                    import('./company-news.js?v=journey-5'),
+                    import('./terminal-company-data.js?v=2026-11-25')
+                ]).then(async ([raw, helpers, formatters]) => {
+                    let data = helpers.validateData(raw);
+                    let overviewsAvailable = false;
+                    try {
+                        const response = await fetch('assets/data/company-overviews.json', { cache: 'no-store' });
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        data = helpers.validateData(helpers.mergeOverviews(data, await response.json()));
+                        overviewsAvailable = true;
+                    } catch { /* Curated company figures remain available when the monthly snapshot cannot load. */ }
+                    return { data, helpers, formatters, overviewsAvailable };
+                })
                     .catch(error => { careerDataPromise = null; throw error; });
             }
             return careerDataPromise;
@@ -242,7 +257,7 @@ const themeToggle = document.getElementById('themeToggle');
                     lines.push(`  • ${terminalText(company.name)}: ${period}`);
                 }
                 if (resume) lines.push('  Products: Loop Safety, Ghost Finance Terminal, Presence, Seed.', '  Full resume available upon request via email or LinkedIn.');
-                lines.push('Use `news` for company milestones or `open news` for the visual timeline.');
+                lines.push('Use `timeline` for the full career journey, `companies` for current overviews, or `open timeline` for the curved pathway.');
                 printLines(lines);
             } catch (error) {
                 printLines(['Career history is unavailable. Please try again or use `open news`.']);
@@ -263,14 +278,43 @@ const themeToggle = document.getElementById('themeToggle');
                             `    Source: <a href="${terminalText(event.url)}" target="_blank" rel="noopener noreferrer">${terminalText(event.source)} ↗</a>`);
                     }
                 }
-                lines.push('', 'Use `open news` for horizontal timelines and current TradingView stock tiles.', 'This is a curated history, updated by hand.');
+                lines.push('', 'Use `open timeline` for the scroll-drawn pathway, or `open news` and select a company for its overview and TradingView chart.', 'This is a curated history, updated by hand.');
                 printLines(lines);
             } catch (error) {
                 printLines(['Company news is unavailable. Please try again or use `open news`.']);
             }
         }
 
-        function printCompanyData(title) {
+        async function printCompanyOverviews() {
+            try {
+                const { data, formatters, overviewsAvailable } = await loadCareerData();
+                printLines(formatters.companyOverviewLines(data, overviewsAvailable));
+            } catch {
+                printLines(['Company overviews are unavailable. Please try again or use `open news`.']);
+            }
+        }
+
+        async function printEntireCareerTimeline() {
+            try {
+                const { data, helpers, formatters } = await loadCareerData();
+                printLines(formatters.careerTimelineLines(helpers.entireTimeline(data.companies)));
+            } catch {
+                printLines(['Career timeline is unavailable. Please try again or use `open timeline`.']);
+            }
+        }
+
+        async function printDataUpdates() {
+            try {
+                const { data, formatters, overviewsAvailable } = await loadCareerData();
+                await monthlyQuotePromise;
+                printLines(formatters.companyUpdateLines(data, companyMarketData, overviewsAvailable));
+            } catch {
+                printLines(['Update status is unavailable. Please try again or use `open news`.']);
+            }
+        }
+
+        async function printCompanyData(title) {
+            await monthlyQuotePromise;
             const lines = [title];
 
             (window.portfolioMarketData || companyMarketData).forEach((company) => {
@@ -363,7 +407,7 @@ const themeToggle = document.getElementById('themeToggle');
                     'Senior Software Engineer | Product Builder',
                     '',
                     '<span class="terminal-command">viraj@portfolio:~$ ls commands/</span>',
-                    '<span class="tag">help</span> <span class="tag">experience</span> <span class="tag">news</span> <span class="tag">xbox</span>',
+                    '<span class="tag">help</span> <span class="tag">experience</span> <span class="tag">timeline</span> <span class="tag">companies</span> <span class="tag">updates</span> <span class="tag">xbox</span>',
                     '',
                     '<span class="terminal-command">viraj@portfolio:~$ echo "Ready to explore?"</span>',
                     'Ready to explore.'
@@ -372,7 +416,7 @@ const themeToggle = document.getElementById('themeToggle');
                     'Senior Software Engineer | Product Builder | Tech Enthusiast',
                     '',
                     '<span class="terminal-command">viraj@portfolio:~$ ls commands/</span>',
-                    '<span class="tag">products</span> <span class="tag">experience</span> <span class="tag">news</span> <span class="tag">xbox</span>',
+                    '<span class="tag">products</span> <span class="tag">experience</span> <span class="tag">timeline</span> <span class="tag">companies</span> <span class="tag">updates</span> <span class="tag">xbox</span>',
                     '',
                     '<span class="terminal-command">viraj@portfolio:~$ cat mission.txt</span>',
                     '"Building useful products."',
