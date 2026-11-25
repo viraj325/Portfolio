@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 
 // Import the browser module without changing the repository's module settings.
 const code = await readFile(new URL('../assets/js/company-news.js', import.meta.url), 'utf8');
-const { validDate, timelineEvents, validateData, entireTimeline, mergeOverviews, enableDrag } = await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
+const { validDate, timelineEvents, validateData, entireTimeline, mergeOverviews, enableDrag, journeyGeometry, journeyProgress } = await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
 const data = JSON.parse(await readFile(new URL('../assets/data/company-news.json', import.meta.url)));
 
 test('curated news data is valid and every seeded event falls within employment', () => {
@@ -51,6 +51,16 @@ test('company metric sources must be safe web URLs and include reporting context
     assert.throws(() => validateData(undated));
 });
 
+test('leadership highlights require safe sources and dated context', () => {
+    for (const company of data.companies) assert.ok(company.profile.strengths.length >= 3);
+    const unsafe = structuredClone(data);
+    unsafe.companies[0].profile.strengths[0].url = 'javascript:alert(1)';
+    assert.throws(() => validateData(unsafe));
+    const undated = structuredClone(data);
+    delete undated.companies[0].profile.strengths[0].asOf;
+    assert.throws(() => validateData(undated));
+});
+
 
 test('entire timeline combines employer chapters and tenure-filtered news in date order', () => {
     const timeline = entireTimeline(data.companies, '2026-11-25');
@@ -92,4 +102,25 @@ test('mouse drag scrolls the timeline and suppresses the resulting card click', 
     let suppressed = false;
     handlers.click({preventDefault() {}, stopImmediatePropagation() {suppressed = true;}});
     assert.equal(suppressed, true);
+});
+
+
+test('curved route keeps event anchors between panels and in chronological vertical order', () => {
+    const { points, height } = journeyGeometry(9);
+    assert.equal(points.length, 9);
+    assert.ok(points.every((point, index) => point.x > 370 && point.x < 630 && point.y > 0 && point.y < height && (index === 0 || point.y > points[index - 1].y)));
+    const mobile = journeyGeometry(9, true);
+    assert.ok(mobile.points.every(point => point.x < 150));
+    assert.ok(mobile.height < height);
+    assert.ok(!journeyGeometry(0).path.includes('NaN'));
+});
+
+
+test('scroll progress reaches the end when the bottom of the route enters the viewport', () => {
+    for (const viewport of [700, 844]) {
+        assert.equal(journeyProgress(viewport * .68, 2160, viewport), 0);
+        assert.equal(journeyProgress(viewport - 2160, 2160, viewport), 1);
+        assert.equal(journeyProgress(-2160, 2160, viewport), 1);
+        assert.ok(journeyProgress(0, 2160, viewport) > 0 && journeyProgress(0, 2160, viewport) < 1);
+    }
 });

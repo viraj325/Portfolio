@@ -28,7 +28,22 @@ def latest_assets(payload, today):
 
 
 def money(value):
-    return f'${value / 1e12:.2f}T' if value >= 1e12 else f'${value / 1e9:.1f}B'
+    return f'${value / 1e12:.2f}T' if value >= 1e12 else f'${value / 1e9:.2f}B'
+
+
+def period_fact(payload, tag, end, today, duration=False):
+    facts = payload['facts']['us-gaap'][tag]['units']['USD']
+    reports = [fact for fact in facts if fact.get('end') == end
+               and fact.get('filed', '') <= today and fact.get('form') in ('10-Q', '10-K')
+               and isinstance(fact.get('val'), (int, float))]
+    if duration:
+        # Select the actual quarter, never a nine-month/YTD amount with the same end date.
+        lower, upper = (350, 370) if duration == 'annual' else (70, 100)
+        reports = [fact for fact in reports if fact.get('start')
+                   and lower <= (datetime.fromisoformat(end) - datetime.fromisoformat(fact['start'])).days <= upper]
+    if not reports:
+        raise ValueError(f'No verified {tag} for {end}')
+    return max(reports, key=lambda fact: fact['filed'])
 
 
 def parse_aum(text):
@@ -75,11 +90,29 @@ def parse_fleet(html):
 
 def financial_overview(company_id, cik, today):
     url = f'https://data.sec.gov/api/xbrl/companyfacts/CIK{cik:010d}.json'
-    fact = latest_assets(json.loads(fetch(url)), today)
+    payload = json.loads(fetch(url))
+    fact = latest_assets(payload, today)
     metrics = [{'value': money(fact['val']), 'label': 'Total company assets',
                 'asOf': fact['end'], 'source': 'SEC company facts', 'url': url}]
     latest_report = {'title': f"Financial report · {fact['end']}",
                      'url': f'https://www.sec.gov/Archives/edgar/data/{cik}/{fact["accn"].replace("-", "")}/'}
+    if company_id == 'wells-fargo':
+        deposits = period_fact(payload, 'Deposits', fact['end'], today)
+        metrics.append({'value': money(deposits['val']), 'label': 'Total deposits',
+                        'asOf': fact['end'], 'source': 'SEC company facts', 'url': url})
+        for tag, label in [('RevenuesNetOfInterestExpense', 'Revenue, net of interest expense'),
+                           ('NetIncomeLoss', 'Net income')]:
+            try:
+                amount = period_fact(payload, tag, fact['end'], today, duration=True)
+                period_label = 'Quarter'
+            except ValueError:
+                # SEC annual filings may omit a standalone Q4 fact. Label the full year explicitly.
+                if not fact['end'].endswith('-12-31'):
+                    raise
+                amount = period_fact(payload, tag, fact['end'], today, duration='annual')
+                period_label = 'Year'
+            metrics.append({'value': money(amount['val']), 'label': label,
+                            'asOf': f"{period_label} ended {fact['end']}", 'source': 'SEC company facts', 'url': url})
     if company_id == 'jpmorgan-chase':
         from pypdf import PdfReader
         year, month, _ = fact['end'].split('-')

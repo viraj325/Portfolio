@@ -31,7 +31,7 @@ export function mergeOverviews(data, snapshot) {
     return { ...data, companies: data.companies.map(company => {
         const overview = snapshot?.companies?.[company.id];
         if (!overview) return company;
-        return { ...company, profile: { ...company.profile, metrics: overview.metrics || company.profile.metrics }, sync: overview };
+        return { ...company, profile: { ...company.profile, metrics: overview.metrics || company.profile.metrics, strengths: (company.profile.strengths || []).map(strength => overview.strengths?.find(item => item.id === strength.id) || strength) }, sync: overview };
     }) };
 }
 
@@ -50,6 +50,10 @@ export function validateData(data) {
             const profile = company.profile;
             const isWebUrl = value => /^https?:$/.test(new URL(value).protocol);
             if (!isWebUrl(profile.website) || !profile.description || !Array.isArray(profile.highlights) || !Array.isArray(profile.metrics)) throw new Error(`Invalid profile for ${company.name}.`);
+            if (profile.strengths && !Array.isArray(profile.strengths)) throw new Error(`Invalid highlights for ${company.name}.`);
+            for (const strength of profile.strengths || []) {
+                if (!strength.id || !strength.title || !strength.description || !strength.asOf || !strength.source || !isWebUrl(strength.url)) throw new Error(`Invalid highlight source for ${company.name}.`);
+            }
             for (const metric of profile.metrics) {
                 if (!metric.value || !metric.label || !metric.asOf || !metric.source || !isWebUrl(metric.url)) throw new Error(`Invalid metric for ${company.name}.`);
             }
@@ -175,6 +179,19 @@ function renderCompany(company, theme, includeEvents = true) {
     const metrics = companyProfile(company, details);
     heading.append(details, marketTile(company, theme));
     section.append(heading);
+    if (company.profile?.strengths?.length) {
+        const strengths = element('section', 'company-strengths');
+        strengths.setAttribute('aria-label', `${company.name} scale and leadership highlights`);
+        const heading = element('h3', 'strengths-heading', 'Scale & leadership');
+        const cards = element('div', 'strengths-grid');
+        for (const strength of company.profile.strengths) {
+            const card = element('article', 'strength-card');
+            card.append(element('h4', '', strength.title), element('p', '', strength.description), element('small', '', strength.asOf), externalLink(strength.url, strength.source + ' ↗'));
+            cards.append(card);
+        }
+        strengths.append(heading, cards);
+        section.append(strengths);
+    }
     if (metrics) section.append(metrics, element('p', 'metric-context', 'Business scale reflects the dates shown, independently of my employment period. AUM, client assets, and balance-sheet assets are different measures.'));
     if (company.sync) {
         const sync = company.sync;
@@ -251,96 +268,122 @@ export function enableDrag(rail) {
     rail.addEventListener('click', event => { if (moved) { event.preventDefault(); event.stopImmediatePropagation(); moved = false; } }, true);
 }
 
-function renderEntireTimeline(data, theme, selectCompany) {
-    const view = element('section', 'entire-timeline');
+export function journeyGeometry(count, narrow = false) {
+    const step = narrow ? 208 : 240;
+    const height = Math.max(count, 1) * step;
+    const middle = narrow ? 90 : 500;
+    const points = Array.from({ length: count }, (_, index) => ({
+        x: narrow ? (index % 2 ? 108 : 72) : (index % 2 ? 570 : 430),
+        y: (index + .5) * step
+    }));
+    let path = `M ${middle} 0`;
+    let previous = { x: middle, y: 0 };
+    for (const point of points) {
+        const halfway = (previous.y + point.y) / 2;
+        path += ` C ${previous.x} ${halfway}, ${point.x} ${halfway}, ${point.x} ${point.y}`;
+        previous = point;
+    }
+    path += ` C ${previous.x} ${height - step / 4}, ${middle} ${height - step / 4}, ${middle} ${height}`;
+    return { path, points, height, step };
+}
+
+export function journeyProgress(top, height, viewportHeight) {
+    const anchor = viewportHeight * .68;
+    // Finish when the route's bottom reaches the viewport bottom, not below it.
+    const distance = Math.max(1, height - viewportHeight + anchor);
+    return Math.min(1, Math.max(0, (anchor - top) / distance));
+}
+
+function renderEntireTimeline(data) {
+    const view = element('section', 'entire-timeline journey-timeline');
     view.setAttribute('aria-label', 'Entire career timeline');
-    const top = element('div', 'timeline-heading');
-    const intro = element('div');
-    intro.append(element('p', 'eyebrow', 'One journey / every chapter'), element('h2', '', 'Entire Timeline'), element('p', 'timeline-help', 'Drag or scroll to travel through time. Select a moment to open its story.'));
-    const controls = element('div', 'timeline-controls');
-    const rail = element('ol', 'career-rail');
-    rail.id = 'entireTimelineRail';
-    rail.tabIndex = 0;
-    rail.setAttribute('aria-label', 'Chronological career events. Scroll horizontally or use arrow keys.');
-    enableDrag(rail);
-    const overview = element('div', 'active-overview');
+    const heading = element('div', 'journey-heading');
+    heading.append(element('p', 'eyebrow', 'One journey / every chapter'), element('h2', '', 'Entire Timeline'));
+    view.append(heading);
     const events = entireTimeline(data.companies);
-    let activeCompany = '';
-    const cards = [];
-    function activate(index) {
-        cards.forEach((card, i) => card.classList.toggle('is-current', i === index));
-        const company = data.companies.find(item => item.id === events[index].companyId);
-        if (activeCompany === company.id) return;
-        activeCompany = company.id;
-        overview.replaceChildren(renderCompany(company, theme, false));
+    if (!events.length) { view.append(element('p', 'empty-timeline', 'No milestones added yet.')); return view; }
+    const canvas = element('div', 'journey-canvas');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.classList.add('journey-route');
+    svg.setAttribute('preserveAspectRatio', 'none');
+    svg.setAttribute('aria-hidden', 'true');
+    const track = document.createElementNS(svg.namespaceURI, 'path');
+    track.classList.add('journey-track');
+    const progress = document.createElementNS(svg.namespaceURI, 'path');
+    progress.classList.add('journey-progress');
+    const definitions = document.createElementNS(svg.namespaceURI, 'defs');
+    const clip = document.createElementNS(svg.namespaceURI, 'clipPath');
+    clip.id = 'journeyProgressClip';
+    clip.setAttribute('clipPathUnits', 'userSpaceOnUse');
+    const clipArea = document.createElementNS(svg.namespaceURI, 'rect');
+    clipArea.setAttribute('width', '1000');
+    clipArea.setAttribute('height', '0');
+    clip.append(clipArea);
+    definitions.append(clip);
+    progress.setAttribute('clip-path', 'url(#journeyProgressClip)');
+    const traveler = document.createElementNS(svg.namespaceURI, 'circle');
+    traveler.classList.add('journey-traveler');
+    traveler.setAttribute('r', '6');
+    svg.append(definitions, track, progress, traveler);
+    const list = element('ol', 'journey-events');
+    list.setAttribute('aria-label', 'Career and company events in chronological order');
+    for (const event of events) {
+        const item = element('li', 'journey-step');
+        const dot = element('span', 'journey-dot');
+        dot.setAttribute('aria-hidden', 'true');
+        const panel = element('article', 'journey-panel');
+        panel.append(element('p', 'journey-company', event.companyName), element('h3', '', event.title));
+        item.append(dot, panel);
+        list.append(item);
     }
-    function showStory(event, trigger) {
-        const company = data.companies.find(item => item.id === event.companyId);
-        const dialog = document.getElementById('eventDialog');
-        const content = element('div', 'story-content');
-        content.dataset.company = company.id;
-        const close = element('button', 'dialog-close', 'Close ×');
-        close.type = 'button';
-        close.addEventListener('click', () => dialog.close());
-        const title = element('h2', '', event.title);
-        title.id = 'storyTitle';
-        content.append(close, element('p', 'eyebrow', company.name), element('time', '', formatDate(event.date)), title, element('p', 'story-description', event.description));
-        if (event.url) content.append(externalLink(event.url, `${event.source} ↗`));
-        const companyButton = element('button', 'story-company', `Explore ${company.name}`);
-        companyButton.type = 'button';
-        companyButton.addEventListener('click', () => { dialog.close(); selectCompany(company.id); });
-        content.append(companyButton);
-        dialog.replaceChildren(content);
-        dialog.onclose = () => { if (trigger.isConnected) trigger.focus({ preventScroll: true }); };
-        dialog.showModal();
+    canvas.append(svg, list);
+    view.append(canvas);
+    let geometry;
+    let routeLength = 0;
+    let frame = null;
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    const items = [...list.children];
+    function updateProgress() {
+        frame = null;
+        if (!view.isConnected) return;
+        const rect = canvas.getBoundingClientRect();
+        const fraction = reducedMotion.matches ? 1 : journeyProgress(rect.top, rect.height, innerHeight);
+        const point = track.getPointAtLength(routeLength * fraction);
+        // The route is monotonic in Y: clip at the very same point used by the marker.
+        // Unlike dash lengths, this stays aligned under responsive SVG scaling.
+        clipArea.setAttribute('height', String(point.y));
+        traveler.setAttribute('cx', point.x);
+        traveler.setAttribute('cy', point.y);
+        traveler.style.opacity = fraction > 0 && fraction < 1 ? '1' : '0';
+        items.forEach((item, index) => item.classList.toggle('is-passed', geometry.points[index].y <= point.y));
     }
-    for (const [index, event] of events.entries()) {
-        const item = element('li', 'career-moment');
-        item.dataset.company = event.companyId;
-        const card = element('button', 'moment-card');
-        card.type = 'button';
-        card.setAttribute('aria-haspopup', 'dialog');
-        const date = element('time', '', formatDate(event.date));
-        date.dateTime = event.date;
-        card.append(element('span', 'moment-company', event.companyName), date, element('h3', '', event.title), element('span', 'moment-kind', event.kind === 'career' ? 'Career milestone' : 'Company news'), element('span', 'moment-open', 'Read the story ↗'));
-        card.addEventListener('click', () => { activate(index); showStory(event, card); });
-        card.addEventListener('focus', () => activate(index));
-        item.append(card);
-        rail.append(item);
-        cards.push(item);
+    function queueProgress() { if (frame === null) frame = requestAnimationFrame(updateProgress); }
+    function layout() {
+        geometry = journeyGeometry(events.length, matchMedia('(max-width: 680px)').matches);
+        canvas.style.setProperty('--journey-step', `${geometry.step}px`);
+        svg.setAttribute('viewBox', `0 0 1000 ${geometry.height}`);
+        track.setAttribute('d', geometry.path);
+        progress.setAttribute('d', geometry.path);
+        items.forEach((item, index) => item.style.setProperty('--node-x', `${geometry.points[index].x / 10}%`));
+        routeLength = track.getTotalLength();
+        queueProgress();
     }
-    for (const [label, direction] of [['Earlier events', -1], ['Later events', 1]]) {
-        const button = element('button', '', direction < 0 ? '←' : '→');
-        button.type = 'button';
-        button.setAttribute('aria-label', label);
-        button.setAttribute('aria-controls', rail.id);
-        button.addEventListener('click', () => rail.scrollBy({ left: direction * 310, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }));
-        controls.append(button);
-    }
-    top.append(intro, controls);
-    view.append(top, rail, overview);
-    let frame;
-    rail.addEventListener('scroll', () => {
-        if (frame) return;
-        frame = requestAnimationFrame(() => {
-            frame = null;
-            const x = rail.getBoundingClientRect().left + 80;
-            let nearest = 0, distance = Infinity;
-            cards.forEach((card, index) => { const delta = Math.abs(card.getBoundingClientRect().left - x); if (delta < distance) { nearest = index; distance = delta; } });
-            activate(nearest);
-        });
-    }, { passive: true });
-    rail.addEventListener('keydown', event => {
-        if (event.target !== rail) return;
-        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
-            event.preventDefault();
-            rail.scrollBy({ left: event.key === 'ArrowRight' ? 310 : -310, behavior: 'auto' });
-        }
-    });
-    const reveal = new IntersectionObserver(entries => entries.forEach(entry => entry.target.classList.toggle('is-visible', entry.isIntersecting)), { root: rail, threshold: .15 });
-    cards.forEach(card => reveal.observe(card));
-    timelineObservers.push(reveal);
-    activate(0);
+    const reveal = new IntersectionObserver(entries => {
+        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); });
+    }, { threshold: .22, rootMargin: '0px 0px -8% 0px' });
+    items.forEach(item => reveal.observe(item));
+    const resize = new ResizeObserver(layout);
+    resize.observe(canvas);
+    window.addEventListener('scroll', queueProgress, { passive: true });
+    window.addEventListener('resize', layout);
+    reducedMotion.addEventListener('change', queueProgress);
+    timelineObservers.push(reveal, resize, { disconnect() {
+        window.removeEventListener('scroll', queueProgress);
+        window.removeEventListener('resize', layout);
+        reducedMotion.removeEventListener('change', queueProgress);
+        if (frame !== null) cancelAnimationFrame(frame);
+    } });
+    layout();
     return view;
 }
 
@@ -365,7 +408,7 @@ async function init() {
         const host = document.getElementById('companyNews');
         if (selected === 'all') {
             document.body.dataset.company = 'entire';
-            host.replaceChildren(renderEntireTimeline(data, theme, selectCompany));
+            host.replaceChildren(renderEntireTimeline(data));
         }
         else {
             document.body.dataset.company = selected;
@@ -379,8 +422,6 @@ async function init() {
         updateThemeLabel();
         if (data) render();
     });
-    const dialog = document.getElementById('eventDialog');
-    dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
     try {
         const response = await fetch('../assets/data/company-news.json', { cache: 'no-store' });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);

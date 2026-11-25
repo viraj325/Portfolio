@@ -56,16 +56,16 @@
 
 /* Brand palettes stay scoped to the company experience. */
 body[data-company] { background: var(--bg-primary); }
-[data-company="wells-fargo"] { --accent-primary: #c5162e; --accent-secondary: #ffcd41; --border-primary: #e6c67e; --bg-secondary: #fff0bb; --bg-card: #fffdf5; --bg-primary: #fff9e8; --text-primary: #45151e; --text-secondary: #68402d; --text-tertiary: #795339; }
+[data-company="wells-fargo"] { --accent-primary: #d71e28; --accent-secondary: #ffcd41; --border-primary: #e2e1de; --bg-secondary: #f4f4f2; --bg-card: #fff; --bg-primary: #fafaf8; --text-primary: #242424; --text-secondary: #525252; --text-tertiary: #6b6b68; }
 [data-company="netjets"] { --accent-primary: #1c3149; --accent-secondary: #c1af7a; --border-primary: #d4dce1; --bg-secondary: #edf3f6; --bg-card: #fafafa; --bg-primary: #f6f4f2; --text-primary: #1c3149; --text-secondary: #425365; --text-tertiary: #596773; }
 [data-company="jpmorgan-chase"] { --accent-primary: #806128; --accent-secondary: #c9a66b; --border-primary: #dac9a6; --bg-secondary: #f2e7ce; --bg-card: #fffaf0; --bg-primary: #fbf5e8; --text-primary: #372b1d; --text-secondary: #66553a; --text-tertiary: #79664a; }
-[data-theme="dark"][data-company="wells-fargo"], [data-theme="dark"] [data-company="wells-fargo"] { --accent-primary: #ffcd41; --accent-secondary: #ed364b; --bg-primary: #260b10; --bg-secondary: #47131d; --bg-card: #381019; --border-primary: #8f3940; --text-primary: #fff7d8; --text-secondary: #efd6af; --text-tertiary: #dabd92; }
+[data-theme="dark"][data-company="wells-fargo"], [data-theme="dark"] [data-company="wells-fargo"] { --accent-primary: #ff3b3f; --accent-secondary: #ffcd41; --bg-primary: #1b1b1d; --bg-secondary: #252527; --bg-card: #222224; --border-primary: #414144; --text-primary: #f6f6f5; --text-secondary: #d0d0ce; --text-tertiary: #aaa9a5; }
 [data-theme="dark"][data-company="netjets"], [data-theme="dark"] [data-company="netjets"] { --accent-primary: #b7cfe1; --bg-primary: #101820; --bg-secondary: #1c2b38; --bg-card: #17232e; --border-primary: #3c5264; --text-primary: #f6f4f2; --text-secondary: #cfdae2; --text-tertiary: #b0bfcc; }
 [data-theme="dark"][data-company="jpmorgan-chase"], [data-theme="dark"] [data-company="jpmorgan-chase"] { --accent-primary: #e0c38c; --accent-secondary: #c9a66b; --bg-primary: #241f17; --bg-secondary: #3a3021; --bg-card: #30271c; --border-primary: #756044; --text-primary: #fff5df; --text-secondary: #e3d0ae; --text-tertiary: #c9b58f; }
 body[data-company] { transition: background-color .4s, color .4s; }
 .company-wordmark { display: inline-flex; align-items: center; margin: 14px 0 !important; line-height: 1; }
 .company-wordmark img { display: block; width: min(300px, 75vw); height: auto; max-height: 64px; object-fit: contain; object-position: left; }
-[data-company="wells-fargo"] .company-wordmark { background: #d71e28; border-bottom: 4px solid #ffcd41; padding: 18px 20px; border-radius: 2px; }
+[data-company="wells-fargo"] .company-wordmark { background: none; border: 0; padding: 0; border-radius: 0; }
 [data-company="wells-fargo"] .company-wordmark img { width: 220px; }
 [data-company="netjets"] .company-wordmark img { width: 230px; }
 [data-theme="dark"] [data-company="netjets"] .company-wordmark img { filter: invert(1); }
@@ -74,44 +74,55 @@ body[data-company] { transition: background-color .4s, color .4s; }
 .latest-report { display: block; }
 .entire-timeline .timeline-heading { align-items: flex-end; margin-top: 0; }
 .entire-timeline h2 { font-weight: 400; font-size: 2rem; letter-spacing: -.035em; }
-.career-rail { display: flex; gap: 22px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding: 24px 4px 32px; list-style: none; cursor: grab; touch-action: pan-x pan-y; scrollbar-color: var(--accent-primary) var(--bg-primary); }
-.career-rail:focus-visible { outline-offset: 6px; }
-.career-moment { flex: 0 0 286px; scroll-snap-align: start; opacity: .45; transform: translateY(12px) scale(.98); transition: opacity .35s, transform .35s; }
-.career-moment.is-visible { opacity: 1; transform: none; }
-.news-page .moment-card { border-radius: 16px; background: var(--bg-card); border: 1px solid var(--border-primary); border-top: 4px solid var(--accent-primary); padding: 24px; text-align: left; height: 100%; width: 100%; min-height: 258px; color: var(--text-primary); display: flex; flex-direction: column; align-items: flex-start; gap: 16px; white-space: normal; cursor: pointer; }
-.news-page .moment-card:hover, .career-moment.is-current .moment-card { box-shadow: 0 12px 30px #142b4014; border-color: var(--accent-primary); }
-.moment-company { text-transform: uppercase; font-size: .65rem; letter-spacing: .1em; color: var(--accent-primary); }
-.moment-card time { font-size: .8rem; color: var(--text-secondary); }
-.moment-card h3 { font-size: 1.08rem; font-weight: 500; line-height: 1.5; }
-.moment-kind { font-size: .7rem; color: var(--text-tertiary); margin-top: auto; }
-.moment-open { color: var(--accent-primary); font-size: .75rem; }
-.career-rail.is-dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
-.career-rail.is-dragging * { cursor: grabbing; }
-.active-overview { margin-top: 24px; animation: overview-enter .35s ease; }
-@keyframes overview-enter { from { opacity: .3; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-#eventDialog { border: 1px solid var(--border-primary); border-radius: 20px; width: min(620px, calc(100vw - 32px)); max-height: 85vh; overflow: auto; margin: auto; padding: 0; color: var(--text-primary); background: var(--bg-card); }
-#eventDialog::backdrop { background: #071322a6; backdrop-filter: blur(7px); }
-.story-content { padding: 32px; color: var(--text-primary); background: var(--bg-card); }
-.story-content h2 { font-size: clamp(1.5rem, 5vw, 2rem); line-height: 1.35; margin: 20px 0; }
-.story-content time { font-size: .85rem; color: var(--text-secondary); }
-.story-description { line-height: 1.8; margin-bottom: 24px; }
-.dialog-close { display: block; margin-left: auto; margin-bottom: 24px; }
-.story-company { display: block; margin-top: 32px; }
-@media (max-width: 680px) { .career-moment { flex-basis: 82vw; } .story-content { padding: 24px; } .timeline-heading { gap: 12px; } }
-@media (prefers-reduced-motion: reduce) { .career-moment, .active-overview { animation: none; transition: none; transform: none; } }
-
-[data-company="wells-fargo"] .company-highlights li { background: #ffcd4126; border-color: #e0b44f; }
-[data-company="wells-fargo"] .moment-card { border-top-color: #d71e28; border-bottom: 3px solid #ffcd41; }
-[data-company="jpmorgan-chase"] .moment-card { border-top-color: #b79556; }
 .news-hero .accent { color: var(--accent-primary); }
-[data-company="wells-fargo"] .company-filters button[aria-pressed="true"] { background: #ffcd41; border-color: #c5162e; color: #8f1021; }
+[data-company="wells-fargo"] .company-filters button[aria-pressed="true"] { background: var(--bg-card); border-color: var(--accent-primary); color: var(--accent-primary); }
 [data-company="jpmorgan-chase"] .company-filters button[aria-pressed="true"] { background: #d6bb812e; }
-/* Entire Timeline inherits the portfolio palette; brand palettes belong to company views. */
-body[data-company="entire"] .career-moment,
-body[data-company="entire"] .active-overview .news-company {
-    --accent-primary: inherit; --accent-secondary: inherit; --border-primary: inherit;
-    --bg-secondary: inherit; --bg-card: inherit; --bg-primary: inherit;
-    --text-primary: inherit; --text-secondary: inherit; --text-tertiary: inherit;
+
+/* Wells Fargo: white wordmark integrated into a neutral overview, no logo banner. */
+[data-company="wells-fargo"] .company-heading { padding: 32px; border: 1px solid var(--border-primary); border-radius: 20px; background: var(--bg-card); }
+[data-company="wells-fargo"] .company-wordmark img { filter: brightness(0); }
+[data-theme="dark"] [data-company="wells-fargo"] .company-wordmark img { filter: none; }
+[data-company="wells-fargo"] .company-heading .market-tile { --text-primary: #242424; --text-secondary: #525252; --text-tertiary: #6b6b68; --accent-primary: #d71e28; --border-primary: #e2e1de; --bg-card: #fff; }
+[data-theme="dark"] [data-company="wells-fargo"] .company-heading .market-tile { --text-primary: #f6f6f5; --text-secondary: #d0d0ce; --text-tertiary: #aaa9a5; --accent-primary: #ff3b3f; --border-primary: #414144; --bg-card: #222224; }
+[data-company="wells-fargo"] .company-highlights li { background: none; border-color: var(--border-primary); }
+[data-company="wells-fargo"] .company-metric strong { color: var(--text-primary); }
+[data-company="wells-fargo"] .company-metric { border-top: 2px solid var(--accent-secondary); }
+
+/* The Entire Timeline is a quiet winding route, revealed by page scrolling. */
+.journey-heading { margin: 0 0 28px; }
+.journey-heading h2 { margin-top: 8px; }
+.journey-canvas { position: relative; --journey-step: 240px; }
+.journey-route { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.journey-route path { fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-width: 2; }
+.journey-track { stroke: var(--border-primary); }
+.journey-progress { stroke: var(--accent-primary); }
+.journey-traveler { fill: var(--accent-primary); filter: drop-shadow(0 0 6px var(--accent-primary)); pointer-events: none; }
+.journey-events { position: relative; list-style: none; margin: 0; padding: 0; }
+.journey-step { min-height: var(--journey-step); position: relative; display: flex; align-items: center; }
+.journey-step:nth-child(even) { justify-content: flex-end; }
+.journey-dot { position: absolute; left: var(--node-x); top: 50%; width: 12px; height: 12px; transform: translate(-50%, -50%); border-radius: 50%; border: 2px solid var(--border-primary); background: var(--bg-primary); transition: border-color .3s, background-color .3s; }
+.journey-step.is-passed .journey-dot { border-color: var(--accent-primary); background: var(--accent-primary); box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent-primary) 10%, transparent); }
+.journey-panel { width: 37%; padding: 24px 26px; background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: 16px; opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s cubic-bezier(.2,.8,.2,1); }
+.journey-step.is-visible .journey-panel { opacity: 1; transform: none; }
+.journey-step.is-passed .journey-panel { border-color: color-mix(in srgb, var(--accent-primary) 35%, var(--border-primary)); }
+.journey-company { font-size: .72rem; color: var(--accent-primary); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 12px; }
+.journey-panel h3 { font-size: 1.15rem; line-height: 1.5; font-weight: 400; letter-spacing: -.02em; color: var(--text-primary); }
+@media (max-width: 680px) {
+    .journey-panel { width: calc(100% - 68px); padding: 20px; }
+    .journey-step { justify-content: flex-end; }
+    .journey-panel h3 { font-size: 1.05rem; }
+    [data-company="wells-fargo"] .company-heading { padding: 24px; }
 }
-body[data-company="entire"] .moment-card { border-top-color: var(--accent-primary); border-bottom: 1px solid var(--border-primary); }
-body[data-company="entire"] .company-highlights li { background: var(--bg-secondary); border-color: var(--border-primary); }
+@media (prefers-reduced-motion: reduce) {
+    .journey-panel { opacity: 1; transform: none; transition: none; }
+    .journey-dot { transition: none; }
+    .journey-traveler { display: none; }
+}
+.company-strengths { margin-top: 28px; }
+.strengths-heading { font-weight: 400; font-size: 1.1rem; margin-bottom: 14px; }
+.strengths-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 16px; }
+.strength-card { border-left: 2px solid var(--accent-primary); padding: 8px 18px 14px; }
+.strength-card h4 { font-weight: 500; font-size: 1.02rem; margin-bottom: 10px; color: var(--text-primary); }
+.strength-card p { font-size: .85rem; color: var(--text-secondary); line-height: 1.7; }
+.strength-card small { display: block; color: var(--text-tertiary); font-size: .7rem; margin-top: 12px; }
+.strength-card a { display: inline-block; margin-top: 8px; font-size: .72rem; }

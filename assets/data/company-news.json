@@ -31,9 +31,56 @@
         ],
         "metrics": [
           {
-            "value": "≈ $2.3T",
+            "value": "$2.25T",
             "label": "Total company assets",
-            "asOf": "Q3 2026 · reported Oct 13, 2026",
+            "asOf": "2026-09-30",
+            "source": "SEC company facts",
+            "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000072971.json"
+          },
+          {
+            "value": "$1.50T",
+            "label": "Total deposits",
+            "asOf": "2026-09-30",
+            "source": "SEC company facts",
+            "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000072971.json"
+          },
+          {
+            "value": "$21.87B",
+            "label": "Revenue, net of interest expense",
+            "asOf": "Quarter ended 2026-09-30",
+            "source": "SEC company facts",
+            "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000072971.json"
+          },
+          {
+            "value": "$5.95B",
+            "label": "Net income",
+            "asOf": "Quarter ended 2026-09-30",
+            "source": "SEC company facts",
+            "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000072971.json"
+          }
+        ],
+        "strengths": [
+          {
+            "id": "us-bank-rank",
+            "title": "#4 U.S. bank by assets",
+            "description": "Wells Fargo Bank, N.A. ranks fourth among U.S. domestically chartered commercial banks by consolidated assets.",
+            "asOf": "Jun 30, 2026 · Bank-level ranking",
+            "source": "Federal Reserve",
+            "url": "https://www.federalreserve.gov/releases/lbr/current/"
+          },
+          {
+            "id": "us-branches",
+            "title": "4,128 domestic branches",
+            "description": "A large U.S. banking network spanning consumer, business, and institutional customers.",
+            "asOf": "Jun 30, 2026 · Wells Fargo Bank, N.A.",
+            "source": "Federal Reserve",
+            "url": "https://www.federalreserve.gov/releases/lbr/current/"
+          },
+          {
+            "id": "fortune-rank",
+            "title": "Fortune 500 · No. 38",
+            "description": "Wells Fargo reported ranking No. 38 on Fortune’s 2026 list of America’s largest corporations.",
+            "asOf": "2026 ranking · reported Oct 13, 2026",
             "source": "Wells Fargo Q3 2026 results",
             "url": "https://newsroom.wf.com/news-releases/news-details/2026/Wells-Fargo-Reports-Third-Quarter-2026-Financial-Results/default.aspx"
           }
@@ -92,6 +139,32 @@
             "source": "NetJets aviation provider guide",
             "url": "https://www.netjets.com/en-gb/choosing-aviation-provider"
           }
+        ],
+        "strengths": [
+          {
+            "id": "private-fleet",
+            "title": "World’s largest private jet fleet",
+            "description": "NetJets describes its 1,000+ aircraft fleet as the largest and most diverse private fleet in the world.",
+            "asOf": "Company-reported · checked Nov 25, 2026",
+            "source": "NetJets aviation provider guide",
+            "url": "https://www.netjets.com/en-gb/choosing-aviation-provider"
+          },
+          {
+            "id": "global-reach",
+            "title": "Access across 200+ countries and territories",
+            "description": "Owners can access more than 5,000 airports worldwide, including destinations beyond major airline networks.",
+            "asOf": "Company-reported · checked Nov 25, 2026",
+            "source": "NetJets aviation provider guide",
+            "url": "https://www.netjets.com/en-gb/choosing-aviation-provider"
+          },
+          {
+            "id": "berkshire-company",
+            "title": "A Berkshire Hathaway company",
+            "description": "NetJets is listed among Berkshire Hathaway’s subsidiary companies, linking its private aviation business to the wider operating group.",
+            "asOf": "Berkshire subsidiary directory · checked Nov 25, 2026",
+            "source": "Berkshire Hathaway",
+            "url": "https://www.berkshirehathaway.com/subs/sublinks.html"
+          }
         ]
       }
     },
@@ -137,6 +210,32 @@
             "label": "Client assets",
             "asOf": "Sep 30, 2026 · Asset & Wealth Management",
             "source": "JPMorganChase Q3 2026 report",
+            "url": "https://www.jpmorganchase.com/content/dam/jpmc/jpmorgan-chase-and-co/investor-relations/documents/quarterly-earnings/2026/3rd-quarter/corp-q3-2026.pdf"
+          }
+        ],
+        "strengths": [
+          {
+            "id": "us-bank-rank",
+            "title": "#1 U.S. bank by assets",
+            "description": "JPMorgan Chase Bank, N.A. leads the Federal Reserve’s ranking of U.S. domestically chartered commercial banks by consolidated assets.",
+            "asOf": "Jun 30, 2026 · Bank-level ranking",
+            "source": "Federal Reserve",
+            "url": "https://www.federalreserve.gov/releases/lbr/current/"
+          },
+          {
+            "id": "global-bank-rank",
+            "title": "#5 globally by assets",
+            "description": "JPMorganChase ranks fifth in S&P Global Market Intelligence’s 2026 global bank ranking, based primarily on year-end 2025 financial statements.",
+            "asOf": "2026 ranking · primarily Dec 31, 2025 assets",
+            "source": "S&P Global Market Intelligence",
+            "url": "https://www.spglobal.com/market-intelligence/en/news-insights/research/2026/04/the-worlds-largest-banks-by-assets-2026"
+          },
+          {
+            "id": "global-ib-fees",
+            "title": "#1 in global investment-banking fees",
+            "description": "The firm reported the top global investment-banking fee ranking for Q3 2026, according to Dealogic.",
+            "asOf": "Q3 2026 · Not a global bank-size ranking",
+            "source": "JPMorganChase Q3 2026 report / Dealogic",
             "url": "https://www.jpmorganchase.com/content/dam/jpmc/jpmorgan-chase-and-co/investor-relations/documents/quarterly-earnings/2026/3rd-quarter/corp-q3-2026.pdf"
           }
         ]
