@@ -119,6 +119,10 @@ test('curved route keeps event anchors between panels and in chronological verti
     assert.equal(points.length, 9);
     assert.ok(points.every((point, index) => point.x > 370 && point.x < 630 && point.y > 0 && point.y < height && (index === 0 || point.y > points[index - 1].y)));
     const mobile = journeyGeometry(9, true);
+    for (const route of [journeyGeometry(9), mobile]) {
+        assert.ok(route.height - route.points.at(-1).y >= 240, 'current endpoint has a full event gap after the final node');
+        assert.equal(route.height, 9 * route.step + route.tail);
+    }
     assert.ok(mobile.points.every(point => point.x < 150));
     assert.ok(mobile.height < height);
     assert.ok(!journeyGeometry(0).path.includes('NaN'));

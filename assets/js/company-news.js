@@ -271,7 +271,8 @@ export function enableDrag(rail) {
 
 export function journeyGeometry(count, narrow = false) {
     const step = narrow ? 208 : 240;
-    const height = Math.max(count, 1) * step;
+    const tail = narrow ? 136 : 160;
+    const height = Math.max(count, 1) * step + tail;
     const middle = narrow ? 90 : 500;
     const points = Array.from({ length: count }, (_, index) => ({
         x: narrow ? (index % 2 ? 108 : 72) : (index % 2 ? 570 : 430),
@@ -285,7 +286,7 @@ export function journeyGeometry(count, narrow = false) {
         previous = point;
     }
     path += ` C ${previous.x} ${height - step / 4}, ${middle} ${height - step / 4}, ${middle} ${height}`;
-    return { path, points, height, step, endX: middle };
+    return { path, points, height, step, tail, endX: middle };
 }
 
 export function journeyProgress(top, height, viewportHeight) {
@@ -344,6 +345,12 @@ function renderEntireTimeline(data) {
     const endpointDot = element('span', 'journey-endpoint-dot');
     endpointDot.setAttribute('aria-hidden', 'true');
     endpoint.append(endpointDot, element('span', 'journey-endpoint-label', 'Current'));
+    const currentDetails = element('div', 'journey-current-details');
+    for (const company of data.companies.filter(company => company.employment.end === null)) {
+        currentDetails.append(element('p', 'journey-current-company', company.name),
+            element('p', 'journey-current-tenure', `${formatDate(company.employment.start, true)} — Present`));
+    }
+    endpoint.append(currentDetails);
     canvas.append(svg, list, endpoint);
     view.append(canvas);
     let geometry;
@@ -370,6 +377,7 @@ function renderEntireTimeline(data) {
     function layout() {
         geometry = journeyGeometry(events.length, matchMedia('(max-width: 680px)').matches);
         canvas.style.setProperty('--journey-step', `${geometry.step}px`);
+        canvas.style.setProperty('--journey-tail', `${geometry.tail}px`);
         endpoint.style.left = `${geometry.endX / 10}%`;
         svg.setAttribute('viewBox', `0 0 1000 ${geometry.height}`);
         track.setAttribute('d', geometry.path);

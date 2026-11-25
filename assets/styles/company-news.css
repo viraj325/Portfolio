@@ -89,7 +89,7 @@ body[data-company] { transition: background-color .4s, color .4s; }
 [data-company="wells-fargo"] .company-metric { border-top: 2px solid var(--accent-secondary); }
 
 /* The Entire Timeline is a quiet winding route, revealed by page scrolling. */
-.journey-timeline { padding-bottom: clamp(64px, 8vw, 112px); }
+.journey-timeline { padding-bottom: clamp(160px, 12vw, 192px); }
 .journey-heading { margin: 0 0 28px; }
 .journey-heading h2 { margin-top: 8px; }
 .journey-canvas { position: relative; --journey-step: 240px; }
@@ -98,7 +98,7 @@ body[data-company] { transition: background-color .4s, color .4s; }
 .journey-track { stroke: var(--border-primary); }
 .journey-progress { stroke: var(--accent-primary); }
 .journey-traveler { fill: var(--accent-primary); filter: drop-shadow(0 0 6px var(--accent-primary)); pointer-events: none; }
-.journey-events { position: relative; list-style: none; margin: 0; padding: 0; }
+.journey-events { position: relative; list-style: none; margin: 0; padding: 0 0 var(--journey-tail, 160px); }
 .journey-step { min-height: var(--journey-step); position: relative; display: flex; align-items: center; }
 .journey-step:nth-child(even) { justify-content: flex-end; }
 .journey-dot { position: absolute; left: var(--node-x); top: 50%; width: 12px; height: 12px; transform: translate(-50%, -50%); border-radius: 50%; border: 2px solid var(--border-primary); background: var(--bg-primary); transition: border-color .3s, background-color .3s; }
@@ -108,15 +108,20 @@ body[data-company] { transition: background-color .4s, color .4s; }
 .journey-step.is-passed .journey-panel { border-color: color-mix(in srgb, var(--accent-primary) 35%, var(--border-primary)); }
 .journey-company { font-size: .72rem; color: var(--accent-primary); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 12px; }
 .journey-date { display: block; color: var(--text-secondary); font-size: .75rem; margin-bottom: 8px; }
-.journey-endpoint { position: absolute; top: 100%; transform: translate(-50%, -6px); display: flex; flex-direction: column; align-items: center; gap: 16px; opacity: 0; transition: opacity .4s ease; }
+.journey-endpoint { position: absolute; top: 100%; width: 250px; transform: translate(-50%, -6px); display: flex; flex-direction: column; align-items: center; gap: 16px; opacity: 0; transition: opacity .4s ease; }
 .journey-endpoint.is-current { opacity: 1; }
 .journey-endpoint-dot { position: relative; display: block; width: 12px; height: 12px; border-radius: 50%; background: var(--accent-primary); box-shadow: 0 0 16px var(--accent-primary); }
 .journey-endpoint-dot::after { content: ''; position: absolute; inset: -7px; border: 1px solid var(--accent-primary); border-radius: 50%; opacity: 0; }
 .journey-endpoint.is-current .journey-endpoint-dot::after { animation: journey-current-pulse 2.2s ease-out infinite; }
 .journey-endpoint-label { color: var(--accent-primary); font-size: .75rem; letter-spacing: .08em; }
+.journey-current-details { text-align: center; }
+.journey-current-company { color: var(--text-primary); font-size: 1rem; }
+.journey-current-tenure { color: var(--text-secondary); font-size: .78rem; margin-top: 6px; }
 @keyframes journey-current-pulse { 0% { transform: scale(.55); opacity: .7; } 100% { transform: scale(1.8); opacity: 0; } }
 .journey-panel h3 { font-size: 1.15rem; line-height: 1.5; font-weight: 400; letter-spacing: -.02em; color: var(--text-primary); }
 @media (max-width: 680px) {
+    .journey-endpoint { transform: translate(-6px, -6px); align-items: flex-start; width: min(250px, 70vw); }
+    .journey-current-details { text-align: left; }
     .journey-panel { width: calc(100% - 68px); padding: 20px; }
     .journey-step { justify-content: flex-end; }
     .journey-panel h3 { font-size: 1.05rem; }
