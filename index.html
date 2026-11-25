@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="assets/styles/main.css?v=2026-11-25-brands-4">
+        <link rel="stylesheet" href="assets/styles/main.css?v=2026-11-25-map-glow-2">
     <style>
         :root {
             --amber-25: #fffbf0;
@@ -113,8 +113,7 @@
             align-items: center;
         }
 
-        .theme-toggle,
-        .terminal-toggle {
+        .theme-toggle {
             min-width: 44px;
             height: 44px;
             border-radius: 50%;
@@ -132,45 +131,13 @@
             transition: all 0.2s ease;
         }
 
-        [data-theme="dark"] .theme-toggle,
-        [data-theme="dark"] .terminal-toggle {
+        [data-theme="dark"] .theme-toggle {
             background: rgba(17, 24, 39, 0.8);
         }
 
-        .theme-toggle:hover,
-        .terminal-toggle:hover {
+        .theme-toggle:hover {
             background: var(--bg-primary);
             color: var(--accent-primary);
-        }
-
-        .terminal-toggle {
-            min-width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 1px solid var(--border-primary);
-            color: var(--accent-primary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .terminal-toggle:hover {
-            background: var(--bg-primary);
-            color: var(--accent-primary);
-        }
-
-        .terminal-toggle.active {
-            background: var(--bg-primary);
-            color: var(--accent-primary);
-            border-color: var(--border-primary);
-        }
-
-        .terminal-toggle svg {
-            width: 20px;
-            height: 20px;
-            transition: all 0.2s ease;
         }
 
         .terminal-overlay {
@@ -1299,6 +1266,8 @@
             height: clamp(220px, 38vw, 320px);
             position: relative;
             overflow: hidden;
+            background:
+                radial-gradient(ellipse at 52% 48%, rgba(232, 112, 35, 0.075), transparent 66%);
             border-top: 1px solid var(--border-primary);
             border-bottom: 1px solid var(--border-primary);
         }
@@ -1765,16 +1734,6 @@
             .terminal-close svg {
                 width: 20px;
                 height: 20px;
-            }
-
-            .terminal-toggle {
-                min-width: 44px;
-                min-height: 44px;
-            }
-
-            .terminal-toggle svg {
-                width: 18px;
-                height: 18px;
             }
 
             .theme-toggle svg {
@@ -2283,12 +2242,6 @@
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                 </svg>
             </button>
-            <button class="terminal-toggle" id="terminalToggle" aria-label="Toggle terminal mode">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="4,17 10,11 4,5"></polyline>
-                    <line x1="12" y1="19" x2="20" y2="19"></line>
-                </svg>
-            </button>
         </div>
 
         <div class="terminal-overlay hidden" id="terminalOverlay" aria-hidden="true">
@@ -2420,7 +2373,70 @@
                 </div>
             </section>
 
-            <!-- Work Experience Section -->
+            <!-- Companies Section -->
+            <section class="companies-section">
+                <h2><span class="accent">Companies</span></h2>
+                <div class="companies-grid">
+                    <div class="company-card">
+                        <a href="https://www.wellsfargo.com" target="_blank" rel="noopener noreferrer">
+                        <div class="company-logo">Wells Fargo</div>
+                        <h3 class="company-name">
+                            Wells Fargo
+                            <svg class="company-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </h3>
+                        <p class="company-status">Public company</p>
+                        <p class="company-description">One of the largest financial services companies in the world, providing banking, investment, and mortgage services to millions of customers globally.</p>
+                        </a>
+                        <p class="company-stock" data-stock-symbol="WFC" aria-label="WFC quote loading">
+                            <span class="stock-icon" aria-hidden="true">•</span>
+                            <span class="stock-value">WFC · Loading…</span>
+                        </p>
+                        <small class="stock-quote-date" data-quote-date="WFC"></small>
+                    </div>
+                    <div class="company-card">
+                        <a href="https://www.netjets.com" target="_blank" rel="noopener noreferrer">
+                        <div class="company-logo">NetJets</div>
+                        <h3 class="company-name">
+                            NetJets
+                            <svg class="company-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </h3>
+                        <p class="company-status">Berkshire Hathaway subsidiary · Private company</p>
+                        <p class="company-description">Leading fractional aircraft ownership company, enabling accessible private aviation through shared ownership and on-demand charter services worldwide.</p>
+                        </a>
+                        <p class="company-stock" data-stock-symbol="BRK-B" aria-label="BRK.B (parent) quote loading">
+                            <span class="stock-icon" aria-hidden="true">•</span>
+                            <span class="stock-value">BRK.B · Loading…</span>
+                        </p>
+                        <small class="stock-quote-date" data-quote-date="BRK-B"></small>
+                    </div>
+                    <div class="company-card">
+                        <a href="https://www.jpmorganchase.com" target="_blank" rel="noopener noreferrer">
+                        <div class="company-logo">JPMorganChase</div>
+                        <h3 class="company-name">
+                            JPMorganChase
+                            <svg class="company-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </h3>
+                        <p class="company-status">Public company</p>
+                        <p class="company-description">Leading global financial services firm offering banking, asset management, and capital markets services to corporations, institutions, and individual clients.</p>
+                        </a>
+                        <p class="company-stock" data-stock-symbol="JPM" aria-label="JPM quote loading">
+                            <span class="stock-icon" aria-hidden="true">•</span>
+                            <span class="stock-value">JPM · Loading…</span>
+                        </p>
+                        <small class="stock-quote-date" data-quote-date="JPM"></small>
+                    </div>
+                </div>
+                <p class="company-news-cta"><a class="company-news-link" href="company-news/index.html">Explore company news &amp; my career timeline →</a></p>
+                <p class="quote-disclaimer">Monthly price snapshots</p>
+            </section>
+
+            <!-- Application Products Section -->
             <section class="section" id="products">
                 <h2><span class="accent">Application</span> Products</h2>
                 <div class="timeline">
@@ -2560,16 +2576,26 @@
                     <span class="travel-place">Rome</span>
                 </div>
                 <div class="travel-globe-wrap">
-                    <svg class="travel-globe" id="travelGlobe" viewBox="0 0 1000 520" role="img" aria-label="Minimal outline continents map" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="travel-globe" id="travelGlobe" viewBox="0 0 1000 520" role="img" aria-label="World map outlined in a warm orange glow" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#f59e0b"/>
-                                <stop offset="45%" stop-color="#fbbf24"/>
-                                <stop offset="100%" stop-color="#d97706"/>
+                                <stop offset="0%" stop-color="#c96927"/>
+                                <stop offset="32%" stop-color="#ffb76b"/>
+                                <stop offset="58%" stop-color="#f7893d"/>
+                                <stop offset="80%" stop-color="#ffae62"/>
+                                <stop offset="100%" stop-color="#bd5725"/>
                             </linearGradient>
+                            <filter id="mapAmbientGlow" x="-20%" y="-30%" width="140%" height="160%" color-interpolation-filters="sRGB">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="ambient"/>
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="halo"/>
+                                <feMerge>
+                                    <feMergeNode in="ambient"/>
+                                    <feMergeNode in="halo"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
                         </defs>
-                        <g fill="none" stroke="url(#mapGradient)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8">
-                        <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.72">
+                        <g class="travel-map-stroke" fill="none" stroke="url(#mapGradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#mapAmbientGlow)">
                             <path d="M78 146 C96 126, 126 124, 150 128 C176 131, 206 128, 224 112 C248 92, 284 84, 318 84 C350 84, 380 76, 410 72 C432 69, 452 72, 458 80 C464 88, 456 98, 442 109 C426 121, 420 132, 404 136 C389 140, 379 149, 374 161 C370 171, 359 176, 349 166 C337 154, 336 136, 346 122 C355 110, 354 97, 343 93 C332 90, 322 99, 315 111 C304 131, 296 141, 306 151 C318 163, 337 170, 341 183 C345 196, 333 203, 318 205 C304 207, 292 218, 282 231 C270 246, 256 259, 248 275 C241 290, 226 293, 218 281 C209 267, 195 260, 185 266 C176 271, 174 281, 185 288 C196 295, 201 304, 193 311 C184 318, 171 315, 160 304 C149 293, 141 278, 140 262 C139 245, 129 231, 111 226 C96 221, 82 209, 80 192 C78 171, 93 160, 106 148 C119 136, 123 121, 114 109 C103 94, 83 92, 66 99 C51 106, 45 115, 36 116 C27 117, 24 108, 32 101 C43 92, 53 79, 62 68"/>
                             <path d="M490 118 C506 98, 528 91, 558 92 C590 93, 614 89, 640 76 C665 64, 692 58, 722 59 C759 60, 792 64, 828 68 C861 71, 894 74, 925 78 C948 81, 966 92, 962 102 C956 114, 940 125, 932 138 C925 150, 917 156, 909 151 C900 145, 896 133, 887 128 C879 124, 872 130, 866 140 C857 155, 847 165, 833 170 C818 176, 809 190, 808 206 C807 221, 799 231, 783 235 C766 238, 758 250, 760 264 C762 279, 772 289, 789 294 C805 299, 819 309, 828 323 C837 336, 853 344, 871 347 C887 349, 899 357, 902 368 C905 379, 898 389, 883 393 C867 397, 851 392, 839 382 C826 372, 812 367, 797 369 C780 371, 767 363, 758 348 C751 335, 740 327, 724 324 C708 321, 697 311, 695 297 C694 282, 688 271, 675 266 C662 260, 650 251, 646 237 C642 225, 634 217, 623 214 C610 211, 602 216, 602 227 C602 240, 611 250, 626 258 C640 267, 646 278, 640 287 C634 296, 622 297, 610 290 C596 282, 583 269, 572 252 C560 233, 546 220, 527 215 C509 210, 493 201, 487 184 C481 167, 481 146, 490 118"/>
                             <path d="M250 276 C269 276, 286 282, 302 292 C319 304, 332 319, 349 325 C367 332, 382 344, 384 362 C386 380, 380 398, 375 418 C370 438, 362 455, 342 459 C326 462, 309 456, 300 444 C290 431, 290 413, 293 395 C296 379, 292 365, 279 356 C267 346, 258 333, 259 317 C261 301, 255 289, 244 282"/>
@@ -2579,69 +2605,6 @@
                     </svg>
                 </div>
                 <button class="show-more-btn travel-view-all-btn" type="button">View all</button>
-            </section>
-
-            <!-- Companies Section -->
-            <section class="companies-section">
-                <h2><span class="accent">Companies</span></h2>
-                <div class="companies-grid">
-                    <div class="company-card">
-                        <a href="https://www.wellsfargo.com" target="_blank" rel="noopener noreferrer">
-                        <div class="company-logo">Wells Fargo</div>
-                        <h3 class="company-name">
-                            Wells Fargo
-                            <svg class="company-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </svg>
-                        </h3>
-                        <p class="company-status">Public company</p>
-                        <p class="company-description">One of the largest financial services companies in the world, providing banking, investment, and mortgage services to millions of customers globally.</p>
-                        </a>
-                        <p class="company-stock" data-stock-symbol="WFC" aria-label="WFC quote loading">
-                            <span class="stock-icon" aria-hidden="true">•</span>
-                            <span class="stock-value">WFC · Loading…</span>
-                        </p>
-                        <small class="stock-quote-date" data-quote-date="WFC"></small>
-                    </div>
-                    <div class="company-card">
-                        <a href="https://www.netjets.com" target="_blank" rel="noopener noreferrer">
-                        <div class="company-logo">NetJets</div>
-                        <h3 class="company-name">
-                            NetJets
-                            <svg class="company-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </svg>
-                        </h3>
-                        <p class="company-status">Berkshire Hathaway subsidiary · Private company</p>
-                        <p class="company-description">Leading fractional aircraft ownership company, enabling accessible private aviation through shared ownership and on-demand charter services worldwide.</p>
-                        </a>
-                        <p class="company-stock" data-stock-symbol="BRK-B" aria-label="BRK.B (parent) quote loading">
-                            <span class="stock-icon" aria-hidden="true">•</span>
-                            <span class="stock-value">BRK.B · Loading…</span>
-                        </p>
-                        <small class="stock-quote-date" data-quote-date="BRK-B"></small>
-                    </div>
-                    <div class="company-card">
-                        <a href="https://www.jpmorganchase.com" target="_blank" rel="noopener noreferrer">
-                        <div class="company-logo">JPMorganChase</div>
-                        <h3 class="company-name">
-                            JPMorganChase
-                            <svg class="company-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </svg>
-                        </h3>
-                        <p class="company-status">Public company</p>
-                        <p class="company-description">Leading global financial services firm offering banking, asset management, and capital markets services to corporations, institutions, and individual clients.</p>
-                        </a>
-                        <p class="company-stock" data-stock-symbol="JPM" aria-label="JPM quote loading">
-                            <span class="stock-icon" aria-hidden="true">•</span>
-                            <span class="stock-value">JPM · Loading…</span>
-                        </p>
-                        <small class="stock-quote-date" data-quote-date="JPM"></small>
-                    </div>
-                </div>
-                <p class="company-news-cta"><a class="company-news-link" href="company-news/index.html">Explore company news &amp; my career timeline →</a></p>
-                <p class="quote-disclaimer">Monthly price snapshots</p>
             </section>
 
             <!-- Simple Connect Section -->
@@ -2659,10 +2622,10 @@
         </div>
     </div>
 
-        <script src="assets/js/main.js?v=2026-11-25-terminal-1"></script>
+        <script src="assets/js/main.js?v=2026-11-25-terminal-2"></script>
     <script type="text/plain" data-legacy-inline-script>
         const themeToggle = document.getElementById('themeToggle');
-        const terminalToggle = document.getElementById('terminalToggle');
+        const heroTerminalCTA = document.getElementById('heroTerminalCTA');
         const terminalClose = document.getElementById('terminalClose');
         const terminalOverlay = document.getElementById('terminalOverlay');
         const terminalBody = document.getElementById('terminalBody');
@@ -2873,7 +2836,6 @@
             body.classList.add('terminal-open');
             terminalOverlay.classList.remove('hidden');
             terminalOverlay.setAttribute('aria-hidden', 'false');
-            terminalToggle.classList.add('active');
             if (!terminalBody.innerHTML.trim()) {
                 const isMobile = window.innerWidth <= 640;
                 const introMessage = isMobile ? [
@@ -2910,8 +2872,7 @@
             body.classList.remove('terminal-open');
             terminalOverlay.classList.add('hidden');
             terminalOverlay.setAttribute('aria-hidden', 'true');
-            terminalToggle.classList.remove('active');
-            terminalToggle.focus();
+            heroTerminalCTA?.focus();
         }
 
         function handleCommand(command) {
@@ -2965,15 +2926,6 @@
             setTheme(nextTheme);
         });
 
-        terminalToggle.addEventListener('click', () => {
-            if (terminalOverlay.classList.contains('hidden')) {
-                openTerminal();
-            } else {
-                closeTerminal();
-            }
-        });
-
-        const heroTerminalCTA = document.getElementById('heroTerminalCTA');
         if (heroTerminalCTA) {
             heroTerminalCTA.addEventListener('click', openTerminal);
         }

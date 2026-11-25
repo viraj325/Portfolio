@@ -1,5 +1,5 @@
 const themeToggle = document.getElementById('themeToggle');
-        const terminalToggle = document.getElementById('terminalToggle');
+        const heroTerminalCTA = document.getElementById('heroTerminalCTA');
         const terminalClose = document.getElementById('terminalClose');
         const terminalOverlay = document.getElementById('terminalOverlay');
         const terminalBody = document.getElementById('terminalBody');
@@ -399,7 +399,6 @@ const themeToggle = document.getElementById('themeToggle');
             body.classList.add('terminal-open');
             terminalOverlay.classList.remove('hidden');
             terminalOverlay.setAttribute('aria-hidden', 'false');
-            terminalToggle.classList.add('active');
             if (!terminalBody.innerHTML.trim()) {
                 const isMobile = window.innerWidth <= 640;
                 const introMessage = isMobile ? [
@@ -436,8 +435,7 @@ const themeToggle = document.getElementById('themeToggle');
             body.classList.remove('terminal-open');
             terminalOverlay.classList.add('hidden');
             terminalOverlay.setAttribute('aria-hidden', 'true');
-            terminalToggle.classList.remove('active');
-            terminalToggle.focus();
+            heroTerminalCTA?.focus();
         }
 
         function handleCommand(command) {
@@ -489,15 +487,6 @@ const themeToggle = document.getElementById('themeToggle');
             setTheme(nextTheme);
         });
 
-        terminalToggle.addEventListener('click', () => {
-            if (terminalOverlay.classList.contains('hidden')) {
-                openTerminal();
-            } else {
-                closeTerminal();
-            }
-        });
-
-        const heroTerminalCTA = document.getElementById('heroTerminalCTA');
         if (heroTerminalCTA) {
             heroTerminalCTA.addEventListener('click', openTerminal);
         }
