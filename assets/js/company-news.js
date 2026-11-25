@@ -1,8 +1,8 @@
-const datePattern = /^\d{4}-\d{2}(?:-\d{2})?$/;
+const datePattern = /^\d{4}(?:-\d{2}(?:-\d{2})?)?$/;
 
 export function validDate(value) {
     if (typeof value !== 'string' || !datePattern.test(value)) return false;
-    const full = value.length === 7 ? `${value}-01` : value;
+    const full = value.length === 4 ? `${value}-01-01` : value.length === 7 ? `${value}-01` : value;
     const date = new Date(`${full}T00:00:00Z`);
     return !Number.isNaN(date.valueOf()) && date.toISOString().slice(0, 10) === full;
 }
@@ -11,9 +11,9 @@ export function timelineEvents(company, today = new Date().toISOString().slice(0
     const start = company.employment.start;
     const end = company.employment.end || today;
     return company.news.filter(event => {
-        // Month-only sources retain their actual precision; compare overlapping months.
-        const lower = event.date.length === 7 ? start.slice(0, 7) : start;
-        const upper = event.date.length === 7 ? end.slice(0, 7) : end;
+        // Compare overlapping periods without inventing missing months or days.
+        const lower = start.slice(0, event.date.length);
+        const upper = end.slice(0, event.date.length);
         return event.date >= lower && event.date <= upper;
     }).sort((a, b) => a.date.localeCompare(b.date));
 }
@@ -77,7 +77,8 @@ function element(tag, className, text) {
     return node;
 }
 
-function formatDate(value, monthOnly = false) {
+export function formatDate(value, monthOnly = false) {
+    if (value.length === 4) return value;
     const date = new Date(`${value.length === 7 ? `${value}-01` : value}T00:00:00Z`);
     return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', ...(!monthOnly && value.length === 10 ? { day: 'numeric' } : {}), timeZone: 'UTC' }).format(date);
 }
@@ -284,13 +285,14 @@ export function journeyGeometry(count, narrow = false) {
         previous = point;
     }
     path += ` C ${previous.x} ${height - step / 4}, ${middle} ${height - step / 4}, ${middle} ${height}`;
-    return { path, points, height, step };
+    return { path, points, height, step, endX: middle };
 }
 
 export function journeyProgress(top, height, viewportHeight) {
     const anchor = viewportHeight * .68;
-    // Finish when the route's bottom reaches the viewport bottom, not below it.
-    const distance = Math.max(1, height - viewportHeight + anchor);
+    // Finish with breathing room beneath the route and its glowing marker.
+    const finishLine = viewportHeight * .8;
+    const distance = Math.max(1, height - finishLine + anchor);
     return Math.min(1, Math.max(0, (anchor - top) / distance));
 }
 
@@ -332,11 +334,17 @@ function renderEntireTimeline(data) {
         const dot = element('span', 'journey-dot');
         dot.setAttribute('aria-hidden', 'true');
         const panel = element('article', 'journey-panel');
-        panel.append(element('p', 'journey-company', event.companyName), element('h3', '', event.title));
+        const time = element('time', 'journey-date', formatDate(event.date));
+        time.dateTime = event.date;
+        panel.append(element('p', 'journey-company', event.companyName), time, element('h3', '', event.title));
         item.append(dot, panel);
         list.append(item);
     }
-    canvas.append(svg, list);
+    const endpoint = element('div', 'journey-endpoint');
+    const endpointDot = element('span', 'journey-endpoint-dot');
+    endpointDot.setAttribute('aria-hidden', 'true');
+    endpoint.append(endpointDot, element('span', 'journey-endpoint-label', 'Current'));
+    canvas.append(svg, list, endpoint);
     view.append(canvas);
     let geometry;
     let routeLength = 0;
@@ -355,12 +363,14 @@ function renderEntireTimeline(data) {
         traveler.setAttribute('cx', point.x);
         traveler.setAttribute('cy', point.y);
         traveler.style.opacity = fraction > 0 && fraction < 1 ? '1' : '0';
+        endpoint.classList.toggle('is-current', fraction >= 1);
         items.forEach((item, index) => item.classList.toggle('is-passed', geometry.points[index].y <= point.y));
     }
     function queueProgress() { if (frame === null) frame = requestAnimationFrame(updateProgress); }
     function layout() {
         geometry = journeyGeometry(events.length, matchMedia('(max-width: 680px)').matches);
         canvas.style.setProperty('--journey-step', `${geometry.step}px`);
+        endpoint.style.left = `${geometry.endX / 10}%`;
         svg.setAttribute('viewBox', `0 0 1000 ${geometry.height}`);
         track.setAttribute('d', geometry.path);
         progress.setAttribute('d', geometry.path);

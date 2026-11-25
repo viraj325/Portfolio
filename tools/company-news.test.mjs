@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 
 // Import the browser module without changing the repository's module settings.
 const code = await readFile(new URL('../assets/js/company-news.js', import.meta.url), 'utf8');
-const { validDate, timelineEvents, validateData, entireTimeline, mergeOverviews, enableDrag, journeyGeometry, journeyProgress } = await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
+const { validDate, formatDate, timelineEvents, validateData, entireTimeline, mergeOverviews, enableDrag, journeyGeometry, journeyProgress } = await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
 const data = JSON.parse(await readFile(new URL('../assets/data/company-news.json', import.meta.url)));
 
 test('curated news data is valid and every seeded event falls within employment', () => {
@@ -17,6 +17,15 @@ test('curated news data is valid and every seeded event falls within employment'
 test('date validation rejects impossible dates and accepts month precision', () => {
     for (const value of ['2025-02-29', '2026-13', '2026-04-31', 'not-a-date']) assert.equal(validDate(value), false);
     for (const value of ['2024-02-29', '2026-03', '2026-03-01']) assert.equal(validDate(value), true);
+});
+
+test('timeline dates preserve year, month, and day precision', () => {
+    assert.equal(validDate('2026'), true);
+    assert.equal(formatDate('2026'), '2026');
+    assert.equal(formatDate('2026-03'), 'Mar 2026');
+    assert.equal(formatDate('2026-03-05'), 'Mar 5, 2026');
+    const company = { employment: {start: '2025-05-01', end: '2026-02-28'}, news: [{date: '2024'}, {date: '2025'}, {date: '2026'}, {date: '2027'}] };
+    assert.deepEqual(timelineEvents(company).map(event => event.date), ['2025', '2026']);
 });
 
 test('timeline includes boundaries and month overlaps, excludes outside tenure, sorts chronologically', () => {
@@ -116,10 +125,11 @@ test('curved route keeps event anchors between panels and in chronological verti
 });
 
 
-test('scroll progress reaches the end when the bottom of the route enters the viewport', () => {
+test('scroll progress finishes with space below the route inside the viewport', () => {
     for (const viewport of [700, 844]) {
         assert.equal(journeyProgress(viewport * .68, 2160, viewport), 0);
-        assert.equal(journeyProgress(viewport - 2160, 2160, viewport), 1);
+        assert.equal(journeyProgress(viewport * .8 - 2160, 2160, viewport), 1);
+        assert.ok(journeyProgress(viewport - 2160, 2160, viewport) < 1);
         assert.equal(journeyProgress(-2160, 2160, viewport), 1);
         assert.ok(journeyProgress(0, 2160, viewport) > 0 && journeyProgress(0, 2160, viewport) < 1);
     }
